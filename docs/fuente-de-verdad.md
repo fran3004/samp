@@ -1,11 +1,11 @@
 # SAMP — Fuente de verdad
 
-Versión: 2026-11-17. Reemplaza al diseño `docs/superpowers/specs/2026-11-17-samp-design.md` y al plan `docs/superpowers/plans/2026-11-17-samp-implementation.md`, ambos escritos sobre la v1.0.
+Versión: 2026-11-26. Reemplaza al diseño `docs/superpowers/specs/2026-11-17-samp-design.md` y al plan `docs/superpowers/plans/2026-11-17-samp-implementation.md`, ambos escritos sobre la v1.0.
 
 ## 1. Orden de autoridad
-1. **Este documento** (decisiones del equipo tomadas después de la v2.0).
+1. **Este documento** (decisiones del equipo tomadas después de la v2.0 y ajustadas el 2026-11-26).
 2. **`docs/referencias/SAMP-Documentacion-Tecnica-v2.0.pdf`** (requisitos RF-01 a RF-26, módulos, IA, algoritmos) y **`SAMP-UML-Base-de-Datos.svg`** (46 tablas).
-3. `docs/referencias/guia-poo-prog2-01.pdf` (criterios del profesor: los 4 pilares POO).
+3. `docs/referencias/guia-poo-prog2-01.pdf` y rúbrica RAP Momento 1 (criterios del curso Programación II: 4 pilares POO, 4 capas, consola + `ArrayList`, archivos JSON).
 4. La v1.0 (`Especificacion_Tecnica_SAMP.pdf`): solo como historial.
 
 Si dos fuentes chocan, manda la de menor número.
@@ -14,20 +14,21 @@ Si dos fuentes chocan, manda la de menor número.
 
 | Tema | Decisión |
 |---|---|
-| Arquitectura | Monolito modular Spring Boot 3.x + Thymeleaf. Un solo despliegue en Render. Sin frontend separado ni Vercel. |
-| Base de datos | Supabase PostgreSQL con `pgvector`, usada como PostgreSQL normal (JDBC + Flyway, connection pooler). Sin SDK ni auth de Supabase. Reemplaza a Neon. |
-| Scraping | Programado con **GitHub Actions** (`ubuntu-latest`). El runner `self-hosted` (IP residencial) es plan B si las tiendas bloquean las IPs de Actions. |
-| Ejecución del scraper | El **mismo JAR** de Spring Boot con perfil `scraper` (sin servidor web) escribe en Supabase. Reutiliza conectores y dominio. |
-| Extracción | **Híbrida**: APIs oficiales (eBay, Mercado Libre), feeds y scraping HTML (Jsoup; Playwright solo si la página exige JavaScript). Todos implementan `StoreConnector`. |
+| Nombre oficial | **SAMP — Sistema Automatizado de Mejores Precios**. |
+| Arquitectura | Monolito modular Spring Boot 3.x + Thymeleaf (réplica fiel de `mockups/v2/`). Un solo despliegue en Render. Sin frontend separado. |
+| Modos de ejecución | El **mismo JAR** soporta 3 perfiles: **web** (por defecto, Thymeleaf + Supabase), **`scraper`** (sin servidor web, escribe en Supabase desde GitHub Actions) y **`console`** (sin servidor web, menú interactivo con `ArrayList` + CRUD en archivos JSON con Gson, para cumplir Fase 2 e ítem 5.4 de la rúbrica). |
+| Base de datos | Supabase PostgreSQL 17 (`samp`, `fwdjrtmmiqsurxgeruee`, `us-east-1`) con `pgvector`, usada como PostgreSQL normal (JDBC + Flyway). Sin SDK ni auth de Supabase. Localmente: Docker Compose con `pgvector/pgvector:pg17`. |
+| Tiendas objetivo (Colombia) | 5 tiendas para Colombia (`.com.co`): **Mercado Libre**, **Amazon**, **Temu**, **Falabella** y **AliExpress**. |
+| Extracción y respaldo | Se intenta scraping HTTP/Jsoup (Playwright solo si requiere JS) respetando `robots.txt` y pausas de 1–3 s, **sin evadir captchas ni bloqueos**. Toda tienda que bloquee o restrinja el acceso opera con datos **`DEMO`** sembrados y rotulados explícitamente en la interfaz (`stores.data_kind`). |
 | Selección de conector | **Automática con respaldo**: cada tienda puede tener varios conectores ordenados por `priority` y `success_rate`; si uno falla pasa al siguiente; circuit breaker por conector. |
 | Calidad | Cada oferta se valida (campos obligatorios, rangos). Las faltas se registran en `data_quality_issues` y se calcula `completeness_pct` por ejecución. |
-| IA | `AiProvider` intercambiable. Por defecto **Gemini** (plan gratuito) con **`MockProvider`** para pruebas y demo. Modelo y proveedor por configuración (`samp.ai.provider`, `samp.ai.model`). |
+| IA y Armador general | Un único asistente de IA (chat + modo «armar» para cualquier categoría con presupuesto y consultas sobre el catálogo). `AiProvider` intercambiable: **Gemini** (plan gratuito) con **`MockProvider`** por defecto hasta configurar API key. Las tablas de armado (`builds`, `build_items`, `build_validations`, `item_specs`, `item_benchmarks`, `compat_rules`) se generalizan manteniendo las 52 tablas totales. |
 | Embeddings | `vector(768)`, un único modelo por índice; cambiarlo exige reindexar (`content_hash`). |
-| Usuarios | Tablas `users`, `roles`, `user_roles` (M:N) como la v2.0. Roles: visitante, registrado, administrador. |
-| Paquetes | Por módulo: `web`, `service`, `domain`, `repository`, `dto`. Los 4 pilares POO se muestran en `domain` (ver `docs/uml/clases-dominio.md`). |
+| Usuarios | Tablas `users`, `roles`, `user_roles` (M:N) como la v2.0. Roles: `VISITOR`, `REGISTERED`, `ADMIN`. |
+| Paquetes (4 capas, en inglés) | `co.edu.upc.samp.domain` (entidades), `co.edu.upc.samp.repository` (datos), `co.edu.upc.samp.service` (servicios), `co.edu.upc.samp.presentation` (presentación). Todo identificador de código, clase, carpeta y archivo va en inglés; la presentación solo llama a `service` y `service` a `repository`. Cada clase lleva Javadoc. |
 | Imágenes | Solo se guarda la URL (`product_images`, `store_product_images`). No se copian archivos. |
-| Datos monetarios | `numeric(14,2)`; precio de referencia en USD con tasa y fecha guardadas. |
-| Legalidad | Cada conector guarda `evidence_url` (permiso) y `robots_checked_at`. Se respeta `robots.txt` y los términos de cada tienda. No se evaden captchas ni bloqueos. Una fuente sin permiso no se integra. |
+| Datos monetarios | `numeric(14,2)`; precio de referencia en USD con tasa y fecha guardadas; visualización por defecto en COP. |
+| Legalidad y transparencia | Cada conector guarda `evidence_url` y `robots_checked_at`. Se respeta `robots.txt`. No se evaden captchas ni bloqueos. Lo desconocido (envío/impuestos) nunca se muestra como cero. |
 
 ## 3. Herramientas definidas
 

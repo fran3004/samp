@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg17
+    container_name: samp-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${SAMP_LOCAL_DB_NAME:-samp}
+      POSTGRES_USER: ${SAMP_LOCAL_DB_USER:-samp}
+      POSTGRES_PASSWORD: ${SAMP_LOCAL_DB_PASSWORD:-samp_local_dev}
+    ports:
+      - "${SAMP_LOCAL_DB_PORT:-5432}:5432"
+    volumes:
+      - samp_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${SAMP_LOCAL_DB_USER:-samp} -d ${SAMP_LOCAL_DB_NAME:-samp}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  samp_pgdata:
