@@ -1,0 +1,30 @@
+name: Scraper Programado SAMP (cada 6 horas)
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  run-scraper:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Java 21 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Empaquetar SAMP
+        run: chmod +x mvnw && ./mvnw -B package -DskipTests
+
+      - name: Ejecutar perfil scraper hacia Supabase
+        env:
+          SAMP_DB_URL: ${{ secrets.SAMP_DB_URL }}
+          SAMP_DB_USERNAME: ${{ secrets.SAMP_DB_USERNAME }}
+          SAMP_DB_PASSWORD: ${{ secrets.SAMP_DB_PASSWORD }}
+        run: java -jar target/samp-0.1.0-SNAPSHOT.jar --spring.profiles.active=scraper
