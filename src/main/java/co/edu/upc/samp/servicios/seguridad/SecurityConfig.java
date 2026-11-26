@@ -37,6 +37,7 @@ public class SecurityConfig {
     @Profile("!consola & !scraper")
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/", "/index", "/resultados", "/producto/**", "/comparar",
