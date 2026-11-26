@@ -2,7 +2,7 @@
    SAMP · Página de ingreso y registro de usuarios
    ===================================================================== */
 .auth { display: grid; grid-template-columns: 1fr 1fr; min-height: 100dvh; }
-.vis { position: relative; overflow: hidden; background: var(--night); color: #fff; padding: 48px; display: flex; flex-direction: column; }
+.vis { position: relative; overflow: hidden; background: var(--night); color: #fff; padding: 48px; display: flex; flex-direction: column; gap: 28px; }
 .vis .logo { color: #fff; }
 .vis .logo small { color: #8FA1B5; }
 .vis h2 { font-size: clamp(34px, 3.4vw, 48px); max-width: 13ch; margin-top: auto; }

@@ -63,7 +63,7 @@
     <small>
      <span class="chip demo" th:if="${g.bestOffer().dataKind().name() == 'DEMO'}" style="height:22px;font-size:11px">DEMO</span>
      <span class="chip real" th:if="${g.bestOffer().dataKind().name() == 'REAL'}" style="height:22px;font-size:11px">REAL</span>
-     <span th:text="${g.offers().size() + ' oferta(s) · ' + g.bestOffer().storeName()}">Tiendas</span>
+     <span th:text="${(g.offers().size() == 1 ? '1 oferta' : g.offers().size() + ' ofertas') + ' · ' + g.bestOffer().storeName()}">Tiendas</span>
     </small>
    </a>
   </div>

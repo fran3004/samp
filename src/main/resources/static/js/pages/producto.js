@@ -34,7 +34,9 @@
       knob.setAttribute('cx', x);
       knob.setAttribute('cy', y);
       const rect = svg.getBoundingClientRect();
-      tip.style.left = (x / W * rect.width) + 'px';
+      const rawLeft = x / W * rect.width;
+      const clampedLeft = Math.max(78, Math.min(rect.width - 78, rawLeft));
+      tip.style.left = clampedLeft + 'px';
       tip.style.top = (y / H * rect.height) + 'px';
       tip.innerHTML = `<b>$ ${fmt(points[idx][1])} COP</b>${points[idx][0]}`;
     };

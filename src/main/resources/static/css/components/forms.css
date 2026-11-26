@@ -18,9 +18,13 @@
 .input-ic .end { position: absolute; right: 6px; top: 50%; translate: 0 -50%; }
 textarea.input { height: auto; padding: 14px 16px; resize: vertical; min-height: 96px; }
 select.input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
   appearance: none;
   background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' stroke='%235B6B7D' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='m6 8 4 4 4-4'/%3E%3C/svg%3E") no-repeat right 14px center;
-  padding-right: 44px; cursor: pointer;
+  padding-right: 44px;
+  line-height: 1.2;
+  cursor: pointer;
 }
 
 .check { display: flex; align-items: center; gap: 12px; cursor: pointer; font-weight: 500; color: var(--ink-2); padding: 6px 0; }

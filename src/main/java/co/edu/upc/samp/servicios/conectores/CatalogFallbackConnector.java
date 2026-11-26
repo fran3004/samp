@@ -92,7 +92,7 @@ public class CatalogFallbackConnector extends AbstractStoreConnector {
                 new RawOffer("MERCADOLIBRE_CO", "MCO-NUT-01", "Crema de Avellanas Nutella 350g",
                         "https://www.mercadolibre.com.co/p/MCO19901122", new BigDecimal("26900"), "COP",
                         new BigDecimal("8500"), true, BigDecimal.ZERO, true, "IN_STOCK", "Ferrero", "Nutella 350g", "3017620422003",
-                        DataKind.DEMO, List.of("https://images.unsplash.com/photo-1604514628550-37477afdf4e3?w=600"),
+                        DataKind.DEMO, List.of("https://images.openfoodfacts.org/images/products/301/762/042/2003/front_en.633.400.jpg"),
                         Map.of("peso", "350g", "categoria", "Alimentos"), now)
         );
     }

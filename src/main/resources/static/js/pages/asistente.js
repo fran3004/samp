@@ -43,6 +43,7 @@
         <div class="val"><svg class="ic sm"><use href="#i-shield"/></svg><span>Validado (${data.providerUsed} · ${data.modelUsed} · ${data.latencyMs} ms)</span></div></div>`;
       aDiv.querySelector('.txt').textContent = data.answer;
       msgs.appendChild(aDiv);
+      aDiv.scrollIntoView({ behavior: 'smooth', block: 'end' });
       msgs.scrollTop = msgs.scrollHeight;
       const cp = document.getElementById('ctx-prov');
       if (cp) cp.textContent = data.providerUsed;

@@ -32,5 +32,5 @@
   .fil { position: static; }
   .lrow { grid-template-columns: 88px 1fr; }
   .lrow .pr { grid-column: 1/-1; text-align: left; }
-  .cmpbar { bottom: 92px; }
+  .cmpbar { position: static; translate: none; margin: 24px auto 0; width: max-content; max-width: 100%; }
 }

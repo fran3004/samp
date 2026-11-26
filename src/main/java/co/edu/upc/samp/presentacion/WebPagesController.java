@@ -87,7 +87,19 @@ public class WebPagesController {
         List<SearchService.ProductComparisonGroup> groups = response.groups();
         if (onlyComplete) {
             groups = groups.stream()
-                    .filter(g -> g.bestOffer().completeTotal())
+                    .map(g -> {
+                        var completeOffers = g.offers().stream()
+                                .filter(SearchService.ComparedOffer::completeTotal)
+                                .toList();
+                        if (completeOffers.isEmpty()) {
+                            return null;
+                        }
+                        return new SearchService.ProductComparisonGroup(
+                                g.groupKey(), g.canonicalTitle(), g.brand(), g.gtin(), g.imageUrl(),
+                                g.exactMatch(), g.matchBadge(), completeOffers, completeOffers.getFirst(), g.buyAdvice()
+                        );
+                    })
+                    .filter(java.util.Objects::nonNull)
                     .toList();
         }
 

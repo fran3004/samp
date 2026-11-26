@@ -212,16 +212,41 @@ public class CatalogAiToolsConfig {
 
             @Override
             public ToolResult execute(Map<String, Object> args) {
-                String q = String.valueOf(args.getOrDefault("query", ""));
+                String q = String.valueOf(args.getOrDefault("query", "")).toLowerCase();
                 long budget = args.get("budgetCop") instanceof Number n ? n.longValue() : Long.MAX_VALUE;
                 var response = searchService.search(SearchQuery.byText(""), false);
-                List<SearchService.ComparedOffer> selected = response.groups().stream()
+                var candidates = response.groups().stream()
                         .map(SearchService.ProductComparisonGroup::bestOffer)
-                        .filter(o -> q.isBlank() || o.title().toLowerCase().contains(q.toLowerCase())
-                                || budget < Long.MAX_VALUE)
                         .filter(o -> o.totalInTarget().getAmount().longValue() <= budget)
-                        .limit(4)
                         .toList();
+
+                boolean techIntent = q.contains("pc") || q.contains("escritorio") || q.contains("setup")
+                        || q.contains("estudio") || q.contains("audio") || q.contains("gaming");
+                boolean homeIntent = q.contains("hogar") || q.contains("cocina") || q.contains("freidora");
+
+                List<SearchService.ComparedOffer> prioritized = candidates.stream()
+                        .filter(o -> {
+                            String cat = o.attributes().getOrDefault("categoria", "").toLowerCase();
+                            if (techIntent) {
+                                return cat.contains("audio") || cat.contains("periféricos") || cat.contains("accesorios");
+                            }
+                            if (homeIntent) {
+                                return cat.contains("hogar") || cat.contains("alimentos");
+                            }
+                            return q.isBlank() || o.title().toLowerCase().contains(q) || cat.contains(q);
+                        })
+                        .toList();
+
+                List<SearchService.ComparedOffer> pool = prioritized.isEmpty() ? candidates : prioritized;
+                List<SearchService.ComparedOffer> selected = new java.util.ArrayList<>();
+                long running = 0L;
+                for (var item : pool) {
+                    long cost = item.totalInTarget().getAmount().longValue();
+                    if (running + cost <= budget && selected.size() < 4) {
+                        selected.add(item);
+                        running += cost;
+                    }
+                }
                 if (selected.isEmpty()) {
                     return new ToolResult(name(), false, "Ningún artículo cabe individualmente en ese presupuesto.", List.of());
                 }
@@ -229,7 +254,7 @@ public class CatalogAiToolsConfig {
                         .map(o -> String.format("%s ($%,.0f COP en %s)",
                                 o.title(), o.totalInTarget().getAmount(), o.storeName()))
                         .collect(Collectors.joining(" + "));
-                return new ToolResult(name(), true, "Artículos candidatos: " + summary, selected);
+                return new ToolResult(name(), true, "Artículos seleccionados: " + summary, selected);
             }
         };
     }

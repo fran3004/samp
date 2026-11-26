@@ -25,6 +25,7 @@ body { background: var(--surf); }
 .kpi b { font: 800 32px/1.1 var(--f-disp); letter-spacing: -.02em; }
 .tw { background: #fff; border-radius: var(--r-lg); box-shadow: var(--sh-1); overflow: auto; }
 .tw .tbl th { background: #FBFCFD; }
+.tw .tbl td { white-space: normal; }
 
 @media (max-width: 1100px) { .kpis { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 900px) { .adm { grid-template-columns: 1fr; } .sb { display: none; } .cnt { padding: 20px 16px 64px; } }

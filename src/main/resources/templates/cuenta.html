@@ -18,8 +18,8 @@
    <a href="#armados" data-nav="armados"><svg class="ic"><use href="#i-spark"/></svg>Mis armados IA</a>
    <a href="#preferencias" data-nav="preferencias"><svg class="ic"><use href="#i-gear"/></svg>Preferencias</a>
    <a th:if="${isAdmin}" th:href="@{/admin}"><svg class="ic"><use href="#i-shield"/></svg>Panel Admin</a>
-   <form th:action="@{/salir}" method="post" style="margin-top:12px">
-    <button type="submit" class="btn btn-q block" style="color:var(--bad)"><svg class="ic sm"><use href="#i-logout"/></svg>Cerrar sesión</button>
+   <form th:action="@{/salir}" method="post" style="margin-top:8px">
+    <button type="submit" class="mi dg"><svg class="ic"><use href="#i-logout"/></svg>Cerrar sesión</button>
    </form>
   </nav>
 

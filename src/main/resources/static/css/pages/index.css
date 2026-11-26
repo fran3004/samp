@@ -29,12 +29,12 @@
 .mini .gauge { width: 46px; height: 46px; flex: none; }
 
 .fan { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 20px; margin-top: 44px; }
-.fc { background: #fff; border-radius: 32px; padding: 14px 14px 22px; box-shadow: var(--sh-3); transition: transform .4s var(--ease); }
+.fc { position: relative; background: #fff; border-radius: 32px; padding: 14px 14px 22px; box-shadow: var(--sh-3); transition: transform .4s var(--ease); }
 .fc:hover { transform: translateY(-10px); }
 .fc.on { box-shadow: var(--sh-3), 0 0 0 3px var(--act); }
-.fc .p { height: 200px; background: var(--photo); border-radius: 22px; display: grid; place-items: center; position: relative; overflow: hidden; }
-.fc img { max-height: 78%; max-width: 80%; object-fit: contain; border-radius: 14px; }
-.fc .chip { position: absolute; top: 12px; left: 12px; }
+.fc .p { height: 200px; background: var(--photo); border-radius: 22px; display: grid; place-items: center; position: relative; overflow: hidden; padding-top: 30px; }
+.fc img { max-height: 76%; max-width: 80%; object-fit: contain; border-radius: 14px; }
+.fc .p .chip { position: absolute; top: 10px; left: 10px; z-index: 2; }
 .fc b { display: block; font: 800 17px var(--f-disp); margin: 14px 6px 0; }
 .fc .v { display: block; margin: 4px 6px 0; font: 800 24px var(--f-disp); letter-spacing: -.02em; }
 .fc small { margin: 4px 6px 0; color: var(--mut); font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
