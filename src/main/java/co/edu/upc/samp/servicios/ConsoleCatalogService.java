@@ -1,11 +1,17 @@
 package co.edu.upc.samp.servicios;
 
+import co.edu.upc.samp.datos.archivo.JsonProductRepository;
 import co.edu.upc.samp.datos.archivo.JsonStoreRepository;
 import co.edu.upc.samp.datos.archivo.JsonUserRepository;
+import co.edu.upc.samp.entidades.Brand;
+import co.edu.upc.samp.entidades.Category;
 import co.edu.upc.samp.entidades.DataKind;
+import co.edu.upc.samp.entidades.IdentifierType;
+import co.edu.upc.samp.entidades.Product;
 import co.edu.upc.samp.entidades.Role;
 import co.edu.upc.samp.entidades.Store;
 import co.edu.upc.samp.entidades.User;
+import co.edu.upc.samp.entidades.excepciones.EntityNotFoundException;
 import co.edu.upc.samp.entidades.excepciones.ValidationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
@@ -17,16 +23,17 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Servicio de persistencia en archivos JSON respaldados por {@code ArrayList} para el perfil {@code consola}.
+ * Servicio de persistencia en archivos JSON respaldados por {@code ArrayList} para el modo consola.
  *
- * <p>Mantiene intacta la arquitectura de 4 capas: la consola (capa {@code presentacion})
- * solo invoca este servicio y nunca accede directamente a los repositorios de {@code datos}.
+ * <p>Implementa CRUD completo y consistente sobre las tres entidades principales ({@code Store},
+ * {@code Product} y {@code User}), manteniendo intacta la arquitectura de 4 capas.
  */
 @Service
-@Profile("consola")
+@Profile({"consola", "console"})
 public class ConsoleCatalogService {
 
     private final JsonStoreRepository storeRepository;
+    private final JsonProductRepository productRepository;
     private final JsonUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -43,6 +50,7 @@ public class ConsoleCatalogService {
     ) {
         Path basePath = Path.of(jsonDir);
         this.storeRepository = new JsonStoreRepository(basePath);
+        this.productRepository = new JsonProductRepository(basePath);
         this.userRepository = new JsonUserRepository(basePath);
         this.passwordEncoder = passwordEncoder;
         seedDefaultsIfEmpty();
@@ -55,6 +63,13 @@ public class ConsoleCatalogService {
             storeRepository.save(new Store("TEMU_CO", "CN", "Temu Colombia", "https://www.temu.com/co", "COP", DataKind.DEMO));
             storeRepository.save(new Store("FALABELLA_CO", "CO", "Falabella Colombia", "https://www.falabella.com.co", "COP", DataKind.DEMO));
             storeRepository.save(new Store("ALIEXPRESS_CO", "CN", "AliExpress Choice", "https://es.aliexpress.com", "USD", DataKind.DEMO));
+        }
+        if (productRepository.findAll().isEmpty()) {
+            createProduct("Audífonos Sony WH-1000XM5", "Sony", "Audio", "WH-1000XM5", "0027242923232");
+            createProduct("Mouse Gamer Logitech G502 HERO", "Logitech", "Periféricos", "G502 HERO", "0097855141224");
+            createProduct("Freidora de Aire Ninja 5.2L", "Ninja", "Hogar", "AF161", "0622356563093");
+            createProduct("Hub USB-C 7 en 1 HDMI 4K", "Ugreen", "Accesorios", "CM478", "6901234567890");
+            createProduct("Crema de Avellanas Nutella 350g", "Ferrero", "Alimentos", "Nutella 350g", "3017620422003");
         }
         if (userRepository.findAll().isEmpty()) {
             User admin = new User("admin@samp.co", passwordEncoder.encode("AdminSamp2026!"), "Administrador SAMP");
@@ -79,6 +94,38 @@ public class ConsoleCatalogService {
         return userRepository.findByEmail(email)
                 .filter(User::isEnabled)
                 .filter(u -> passwordEncoder.matches(rawPassword, u.getPasswordHash()));
+    }
+
+    /**
+     * Registra un nuevo usuario en {@code users.json} validando formato y unicidad.
+     *
+     * @param email       correo único
+     * @param rawPassword contraseña mínimo 8 caracteres
+     * @param displayName nombre visible
+     * @return usuario creado
+     */
+    public User registerUser(String email, String rawPassword, String displayName) {
+        if (email == null || !email.contains("@") || !email.contains(".")) {
+            throw new ValidationException("El correo electrónico no tiene un formato válido.");
+        }
+        if (displayName == null || displayName.trim().length() < 2) {
+            throw new ValidationException("El nombre debe tener al menos 2 caracteres.");
+        }
+        if (rawPassword == null || rawPassword.length() < 8) {
+            throw new ValidationException("La contraseña debe tener al menos 8 caracteres.");
+        }
+        User user = new User(email, passwordEncoder.encode(rawPassword), displayName);
+        user.addRole(new Role("REGISTERED"));
+        return userRepository.save(user);
+    }
+
+    /**
+     * Lista todos los usuarios guardados en {@code users.json}.
+     *
+     * @return lista de usuarios
+     */
+    public List<User> listUsers() {
+        return userRepository.findAll();
     }
 
     /**
@@ -118,11 +165,11 @@ public class ConsoleCatalogService {
      *
      * @param id   identificador de la tienda
      * @param kind nuevo origen de datos
-     * @return tienda actualizada en {@code stores.json}
+     * @return tienda actualizada
      */
     public Store updateStoreDataKind(Long id, DataKind kind) {
         Store existing = storeRepository.findById(id)
-                .orElseThrow(() -> new ValidationException("No existe una tienda con ID " + id + "."));
+                .orElseThrow(() -> new EntityNotFoundException("tienda", id));
         existing.setDataKind(kind);
         return storeRepository.update(id, existing);
     }
@@ -134,5 +181,68 @@ public class ConsoleCatalogService {
      */
     public void deleteStore(Long id) {
         storeRepository.deleteById(id);
+    }
+
+    /**
+     * Lista todos los productos canónicos almacenados en {@code products.json}.
+     *
+     * @return lista de productos
+     */
+    public List<Product> listProducts() {
+        return productRepository.findAll();
+    }
+
+    /**
+     * Crea un producto canónico en {@code products.json} con GTIN opcional.
+     *
+     * @param name         nombre comercial
+     * @param brandName    marca
+     * @param categoryName categoría
+     * @param model        modelo o referencia
+     * @param gtin         código GTIN/EAN opcional
+     * @return producto persistido
+     */
+    public Product createProduct(String name, String brandName, String categoryName, String model, String gtin) {
+        if (name == null || name.isBlank()) {
+            throw new ValidationException("El nombre del producto es obligatorio.");
+        }
+        if (categoryName == null || categoryName.isBlank()) {
+            throw new ValidationException("La categoría del producto es obligatoria.");
+        }
+        Brand brand = (brandName == null || brandName.isBlank()) ? null : new Brand(brandName);
+        Category category = new Category(categoryName, null);
+        Product product = new Product(brand, category, name, model);
+        if (gtin != null && !gtin.isBlank()) {
+            product.addIdentifier(IdentifierType.GTIN, gtin);
+        }
+        return productRepository.save(product);
+    }
+
+    /**
+     * Actualiza nombre y modelo de un producto existente en {@code products.json}.
+     *
+     * @param id       identificador del producto
+     * @param newName  nuevo nombre comercial
+     * @param newModel nuevo modelo
+     * @return producto actualizado
+     */
+    public Product updateProduct(Long id, String newName, String newModel) {
+        if (newName == null || newName.isBlank()) {
+            throw new ValidationException("El nuevo nombre del producto no puede estar vacío.");
+        }
+        Product existing = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("producto", id));
+        existing.setName(newName.trim());
+        existing.setModel(newModel == null ? null : newModel.trim());
+        return productRepository.update(id, existing);
+    }
+
+    /**
+     * Elimina un producto canónico de {@code products.json}.
+     *
+     * @param id identificador a eliminar
+     */
+    public void deleteProduct(Long id) {
+        productRepository.deleteById(id);
     }
 }

@@ -34,7 +34,7 @@ public class SecurityConfig {
      * @throws Exception si falla la construcción de seguridad
      */
     @Bean
-    @Profile("!consola & !scraper")
+    @Profile("!consola & !console & !scraper")
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))

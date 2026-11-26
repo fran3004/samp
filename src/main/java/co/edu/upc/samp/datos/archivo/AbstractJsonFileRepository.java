@@ -3,6 +3,8 @@ package co.edu.upc.samp.datos.archivo;
 import co.edu.upc.samp.datos.CrudRepositoryPort;
 import co.edu.upc.samp.entidades.excepciones.DataPersistenceException;
 import co.edu.upc.samp.entidades.excepciones.EntityNotFoundException;
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
@@ -55,6 +57,21 @@ public abstract class AbstractJsonFileRepository<T, ID> implements CrudRepositor
         this.entityLabel = entityLabel;
         this.gson = new GsonBuilder()
                 .setPrettyPrinting()
+                .setExclusionStrategies(new ExclusionStrategy() {
+                    @Override
+                    public boolean shouldSkipField(FieldAttributes f) {
+                        String owner = f.getDeclaringClass().getSimpleName();
+                        String field = f.getName();
+                        return ("ProductIdentifier".equals(owner) && "product".equals(field))
+                                || ("ProductImage".equals(owner) && "product".equals(field))
+                                || ("BuildItem".equals(owner) && "build".equals(field));
+                    }
+
+                    @Override
+                    public boolean shouldSkipClass(Class<?> clazz) {
+                        return false;
+                    }
+                })
                 .registerTypeAdapter(Instant.class,
                         (JsonSerializer<Instant>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
                 .registerTypeAdapter(Instant.class,
