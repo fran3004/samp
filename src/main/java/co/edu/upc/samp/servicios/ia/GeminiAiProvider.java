@@ -24,10 +24,11 @@ public class GeminiAiProvider implements AiProvider {
 
     private final String apiKey;
     private final String model;
-    private final HttpClient httpClient;
+    private volatile HttpClient httpClient;
 
     /**
-     * Inicializa el cliente HTTP hacia Gemini con configuración inyectada.
+     * Inicializa el proveedor Gemini con configuración inyectada.
+     * El cliente HTTP se crea bajo demanda únicamente cuando existe clave configurada.
      *
      * @param apiKey clave de API de Google AI Studio (opcional)
      * @param model  identificador del modelo Gemini
@@ -38,9 +39,19 @@ public class GeminiAiProvider implements AiProvider {
     ) {
         this.apiKey = apiKey == null ? "" : apiKey.trim();
         this.model = model;
-        this.httpClient = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofSeconds(8))
-                .build();
+    }
+
+    private HttpClient client() {
+        if (httpClient == null) {
+            synchronized (this) {
+                if (httpClient == null) {
+                    httpClient = HttpClient.newBuilder()
+                            .connectTimeout(Duration.ofSeconds(8))
+                            .build();
+                }
+            }
+        }
+        return httpClient;
     }
 
     @Override
@@ -105,7 +116,7 @@ public class GeminiAiProvider implements AiProvider {
                     .POST(HttpRequest.BodyPublishers.ofString(body.toString()))
                     .build();
 
-            HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = client().send(httpRequest, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() >= 400) {
                 throw new IllegalStateException("Gemini respondió con HTTP " + response.statusCode());
             }
