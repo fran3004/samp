@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Armador de PC · SAMP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@600;700;800&family=Red+Hat+Mono:wght@500&family=Red+Hat+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/samp.css">
+<style>
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin:14px 0 28px}
+.top input.ttl{font:800 clamp(30px,3.6vw,44px) var(--f-disp);letter-spacing:-.025em;border:0;outline:0;background:none;padding:0;width:100%;max-width:560px;border-bottom:2px dashed transparent;transition:border-color var(--t-fast)}
+.top input.ttl:hover,.top input.ttl:focus{border-color:var(--line-2)}
+.lay{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:40px;align-items:start}
+.slots{display:grid;gap:12px}
+.sl{display:grid;grid-template-columns:64px minmax(0,1fr) auto auto;gap:18px;align-items:center;padding:16px 18px;border-radius:var(--r-lg);background:#fff;box-shadow:inset 0 0 0 1.5px var(--line);transition:box-shadow var(--t) var(--ease),transform var(--t) var(--ease)}
+.sl:hover{box-shadow:inset 0 0 0 1.5px var(--line-2),var(--sh-2)}
+.sl .ico{width:64px;height:64px;border-radius:18px;background:var(--photo);display:grid;place-items:center;color:var(--act)}
+.sl .ico .ic{width:28px;height:28px}
+.sl .k{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.sl h3{font-size:17px;margin:2px 0}.sl .meta{font-size:13px;color:var(--mut);font-weight:600;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sl .pr{text-align:right}.sl .pr b{display:block;font:800 19px var(--f-disp)}.sl .pr small{font-size:12px;color:var(--mut);font-weight:600}
+.sl.warn{box-shadow:inset 0 0 0 2px #F0C674;background:#FFFCF4}
+.sl.empty{box-shadow:none;background:var(--surf);border:2px dashed var(--line-2)}
+.sl.empty h3{color:var(--mut)}
+.sl.new{animation:pop .5s var(--ease) both}
+.sum{position:sticky;top:calc(var(--nav-h) + 20px);display:grid;gap:16px}
+.card{padding:24px;border-radius:var(--r-xl);background:#fff;box-shadow:inset 0 0 0 1.5px var(--line)}
+.card.dk{background:var(--night);color:#fff;box-shadow:none}
+.tot{font:800 44px/1 var(--f-disp);letter-spacing:-.03em;margin:8px 0 6px}
+.ring{position:relative;width:132px;height:132px;flex:none}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .v{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font:800 30px/1 var(--f-disp)}.ring .v small{display:block;font:700 11px var(--f-text);color:var(--mut);letter-spacing:.06em;text-transform:uppercase;margin-top:4px}
+.chk{display:grid;gap:10px;margin-top:4px}
+.chk li{display:flex;gap:10px;align-items:flex-start;font-size:14px}
+.chk .d{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;flex:none}
+.chk .d.ok{background:var(--ok-50);color:var(--ok)}.chk .d.w{background:var(--warn-50);color:var(--warn)}
+.chk .d .ic{width:13px;height:13px;stroke-width:3}
+.watt{display:flex;height:14px;border-radius:7px;overflow:hidden;background:var(--surf-2);margin:12px 0 8px}
+.watt i{height:100%;transform-origin:left;animation:barin 1s var(--ease) both;animation-delay:calc(var(--i)*90ms)}
+.fps{display:grid;gap:12px}
+.fps div{display:grid;grid-template-columns:120px 1fr 54px;gap:12px;align-items:center;font-size:14px;font-weight:600}
+.fps b{text-align:right;font-variant-numeric:tabular-nums}
+.budget{display:flex;align-items:center;gap:14px;padding:16px 20px;border-radius:var(--r-lg);background:var(--surf);margin-bottom:20px}
+.budget .range{flex:1}
+@media(max-width:1100px){.lay{grid-template-columns:1fr}.sum{position:static;grid-template-columns:1fr 1fr}}
+@media(max-width:900px){.sum{grid-template-columns:1fr}.sl{grid-template-columns:52px 1fr;gap:12px}.sl .ico{width:52px;height:52px}.sl .pr{grid-column:2;text-align:left;display:flex;gap:10px;align-items:baseline}.sl .act{grid-column:1/-1}.sl .act .btn{width:100%}.budget{flex-wrap:wrap}}
+@media(max-width:1100px){.lay{grid-template-columns:minmax(0,1fr)}.lay>*{min-width:0}}
+@media(max-width:900px){.sl{grid-template-columns:52px minmax(0,1fr)}.sum{grid-template-columns:minmax(0,1fr)}.fps div{grid-template-columns:96px minmax(0,1fr) 54px}}
+</style></head>
+<body data-page="pc">
+<main class="page"><div class="wrap">
+ <nav class="crumb"><a href="index.html">Inicio</a><svg class="ic"><use href="#i-chevr"/></svg><span>Armador de PC</span></nav>
+ <div class="top">
+  <div class="grow"><input class="ttl" value="Gamer 1440p" aria-label="Nombre del armado"><p class="mut" style="margin-top:6px">7 de 8 piezas · precios al 17 nov, 10:42 · guardado automáticamente</p></div>
+  <div class="row wrapf" style="--g:10px"><a class="btn btn-s" href="asistente.html"><svg class="ic sm"><use href="#i-spark"/></svg>Optimizar con IA</a><button class="btn btn-s" data-toast="Enlace copiado" data-toast-icon="share"><svg class="ic sm"><use href="#i-share"/></svg>Compartir</button><button class="btn btn-p" data-toast="Armado guardado en tu cuenta"><svg class="ic sm"><use href="#i-check"/></svg>Guardar armado</button></div>
+ </div>
+
+ <div class="lay">
+  <section aria-label="Piezas">
+   <div class="budget"><b style="white-space:nowrap">Presupuesto</b><input type="range" class="range" min="3000000" max="12000000" step="100000" value="7500000" data-out="#bud" aria-label="Presupuesto"><b class="num" id="bud" style="min-width:120px;text-align:right">$ 7.500.000</b><span class="chip real">Dentro</span></div>
+   <div class="slots">
+    <div class="sl io"><span class="ico"><svg class="ic"><use href="#i-cpu"/></svg></span><div><div class="k">Procesador</div><h3>AMD Ryzen 7 7700X</h3><div class="meta">AM5 · 8 núcleos · 105 W <span class="store sm" style="--c:var(--s-meli)">ML</span>Mercado Libre</div></div><div class="pr"><b class="num">$ 1.329.000</b><small>total completo</small></div><div class="act"><button class="btn btn-q sm" data-drawer="pick">Cambiar</button></div></div>
+    <div class="sl io" style="--i:1"><span class="ico"><svg class="ic"><use href="#i-board"/></svg></span><div><div class="k">Placa base</div><h3>MSI B650 Tomahawk WiFi</h3><div class="meta">AM5 · DDR5 · ATX <span class="store sm" style="--c:var(--s-ebay)">e</span>eBay</div></div><div class="pr"><b class="num">$ 1.012.000</b><small style="color:var(--warn)">impuestos desconocidos</small></div><div class="act"><button class="btn btn-q sm" data-drawer="pick">Cambiar</button></div></div>
+    <div class="sl io" style="--i:2"><span class="ico"><svg class="ic"><use href="#i-ram"/></svg></span><div><div class="k">Memoria</div><h3>Corsair Vengeance 32 GB DDR5-6000</h3><div class="meta">2 × 16 GB · CL30 <span class="store sm" style="--c:var(--s-meli)">ML</span>Mercado Libre</div></div><div class="pr"><b class="num">$ 489.000</b><small>total completo</small></div><div class="act"><button class="btn btn-q sm" data-drawer="pick">Cambiar</button></div></div>
+    <div class="sl io" style="--i:3"><span class="ico"><svg class="ic"><use href="#i-gpu"/></svg></span><div><div class="k">Tarjeta gráfica</div><h3>NVIDIA GeForce RTX 4070 Super 12 GB</h3><div class="meta">220 W · PCIe 4.0 <span class="store sm" style="--c:var(--s-meli)">ML</span>Mercado Libre <span class="drop"><svg class="ic sm"><use href="#i-down"/></svg>−6 %</span></div></div><div class="pr"><b class="num">$ 2.849.000</b><small>total completo</small></div><div class="act"><button class="btn btn-q sm" data-drawer="pick">Cambiar</button></div></div>
+    <div class="sl io" style="--i:4"><span class="ico"><svg class="ic"><use href="#i-hdd"/></svg></span><div><div class="k">Almacenamiento</div><h3>Samsung 990 Pro 1 TB NVMe</h3><div class="meta">PCIe 4.0 · M.2 <span class="store sm" style="--c:var(--s-demo)">D</span>Tienda demo</div></div><div class="pr"><b class="num">$ 459.000</b><small>demostración</small></div><div class="act"><button class="btn btn-q sm" data-drawer="pick">Cambiar</button></div></div>
+    <div class="sl warn io" style="--i:5"><span class="ico" style="background:var(--warn-50);color:var(--warn)"><svg class="ic"><use href="#i-psu"/></svg></span><div><div class="k" style="color:var(--warn)">Fuente · revisar</div><h3>EVGA 650 W 80+ Bronze</h3><div class="meta">Margen de 15 % sobre el consumo estimado. Recomendamos 750 W.</div></div><div class="pr"><b class="num">$ 289.000</b><small>total completo</small></div><div class="act"><button class="btn btn-s sm" data-drawer="pick">Ver 750 W</button></div></div>
+    <div class="sl io" style="--i:6"><span class="ico"><svg class="ic"><use href="#i-case"/></svg></span><div><div class="k">Caja</div><h3>Lian Li Lancool 216</h3><div class="meta">ATX · GPU hasta 392 mm <span class="store sm" style="--c:var(--s-ebay)">e</span>eBay</div></div><div class="pr"><b class="num">$ 412.000</b><small>envío incluido</small></div><div class="act"><button class="btn btn-q sm" data-drawer="pick">Cambiar</button></div></div>
+    <div class="sl empty io" style="--i:7"><span class="ico" style="background:#fff"><svg class="ic"><use href="#i-fan"/></svg></span><div><div class="k">Refrigeración · opcional</div><h3>Sin elegir</h3><div class="meta">El 7700X no trae disipador. Te sugerimos uno de aire desde $ 129.000.</div></div><div></div><div class="act"><button class="btn btn-p sm" data-drawer="pick"><svg class="ic sm"><use href="#i-plus"/></svg>Elegir</button></div></div>
+   </div>
+  </section>
+
+  <aside class="sum" aria-label="Resumen">
+   <div class="card dk">
+    <div class="row between"><span style="color:#AFBDCD;font-weight:600;font-size:14px">Total del armado</span><span class="chip" style="background:#1B3049;color:#9FE9DF">7 tiendas</span></div>
+    <div class="tot num" data-count="6839000" data-pre="$ ">$ 6.839.000</div>
+    <p style="color:#AFBDCD;font-size:14px">Ahorras <b style="color:var(--teal)">$ 412.000</b> frente a comprar todo en una sola tienda.</p>
+    <a class="btn btn-t block" style="margin-top:18px" href="#">Ver dónde comprar cada pieza <svg class="ic sm"><use href="#i-right"/></svg></a>
+   </div>
+   <div class="card">
+    <div class="row" style="--g:20px">
+     <div class="ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="50" fill="none" stroke="#EDF1F6" stroke-width="12"/><circle cx="60" cy="60" r="50" fill="none" stroke="#17A673" stroke-width="12" stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="25" style="animation:ringin 1.4s var(--ease) .3s both"/></svg><div class="v"><span class="num">92 %<small>Compatible</small></span></div></div>
+     <ul class="chk">
+      <li><span class="d ok"><svg class="ic"><use href="#i-check"/></svg></span>Socket AM5 coincide</li>
+      <li><span class="d ok"><svg class="ic"><use href="#i-check"/></svg></span>DDR5 soportada</li>
+      <li><span class="d ok"><svg class="ic"><use href="#i-check"/></svg></span>La GPU cabe en la caja</li>
+      <li><span class="d w"><svg class="ic"><use href="#i-alert"/></svg></span>Fuente con poco margen</li>
+     </ul>
+    </div>
+    <style>@keyframes ringin{from{stroke-dashoffset:314}}</style>
+   </div>
+   <div class="card">
+    <div class="row between"><b class="disp" style="font-size:18px">Consumo estimado</b><b class="num">565 W</b></div>
+    <div class="watt" aria-label="Consumo por pieza"><i style="width:37%;background:var(--act);--i:0"></i><i style="width:18%;background:#5B9DF0;--i:1"></i><i style="width:10%;background:#9CC4F5;--i:2"></i><i style="width:22%;background:#E29A1B;--i:3"></i></div>
+    <div class="row wrapf hint" style="--g:14px"><span>■ GPU 220 W</span><span>■ CPU 105 W</span><span>■ Resto 60 W</span><span style="color:var(--warn)">■ Margen 85 W</span></div>
+   </div>
+   <div class="card">
+    <div class="row between" style="margin-bottom:14px"><b class="disp" style="font-size:18px">Rendimiento a 1440p</b><span class="chip line">Medio-alto</span></div>
+    <div class="fps">
+     <div>Fortnite<span class="bar ok"><i style="--v:88%;--i:0"></i></span><b>165 fps</b></div>
+     <div>Cyberpunk 2077<span class="bar"><i style="--v:52%;--i:1"></i></span><b>78 fps</b></div>
+     <div>Valorant<span class="bar ok"><i style="--v:100%;--i:2"></i></span><b>320 fps</b></div>
+    </div>
+    <p class="hint" style="margin-top:12px">Estimación con puntajes de referencia públicos. Puede variar según configuración.</p>
+   </div>
+  </aside>
+ </div>
+</div></main>
+
+<aside class="drawer r" id="pick" aria-label="Elegir fuente de poder">
+ <div class="dh"><div><b class="disp" style="font-size:20px">Elegir fuente de poder</b><div class="mut" style="font-size:13px">Compatibles con tu armado · 18 opciones</div></div><button class="ibtn" data-close aria-label="Cerrar"><svg class="ic"><use href="#i-x"/></svg></button></div>
+ <div style="padding:14px 20px;border-bottom:1px solid var(--line);display:grid;gap:10px"><div class="input-ic"><svg class="ic"><use href="#i-search"/></svg><input class="input" placeholder="Buscar modelo o marca"></div><div class="row wrapf" style="--g:6px"><span class="chip blue">750 W o más</span><span class="chip line">80+ Gold</span><span class="chip line">Modular</span></div></div>
+ <div class="db" style="padding:12px 16px;display:grid;gap:10px">
+  <button class="sl" style="grid-template-columns:52px 1fr auto;text-align:left;box-shadow:inset 0 0 0 2px var(--act)"><span class="ico" style="width:52px;height:52px"><svg class="ic"><use href="#i-psu"/></svg></span><div><div class="k" style="color:var(--act)">Recomendada</div><h3 style="font-size:16px">Corsair RM750e 80+ Gold</h3><div class="meta">Margen 33 % · modular</div></div><div class="pr"><b class="num">$ 459.000</b><small>+$ 170.000</small></div></button>
+  <button class="sl" style="grid-template-columns:52px 1fr auto;text-align:left"><span class="ico" style="width:52px;height:52px"><svg class="ic"><use href="#i-psu"/></svg></span><div><div class="k">Más barata</div><h3 style="font-size:16px">MSI MAG A750BN 80+ Bronze</h3><div class="meta">Margen 33 %</div></div><div class="pr"><b class="num">$ 349.000</b><small>+$ 60.000</small></div></button>
+  <button class="sl" style="grid-template-columns:52px 1fr auto;text-align:left"><span class="ico" style="width:52px;height:52px"><svg class="ic"><use href="#i-psu"/></svg></span><div><div class="k">Más potencia</div><h3 style="font-size:16px">Seasonic Focus GX-850</h3><div class="meta">Margen 50 % · 10 años de garantía</div></div><div class="pr"><b class="num">$ 612.000</b><small>+$ 323.000</small></div></button>
+ </div>
+ <div style="padding:16px 20px;border-top:1px solid var(--line)"><button class="btn btn-p block" data-close data-toast="Fuente actualizada. Compatibilidad: 100 %">Usar Corsair RM750e</button></div>
+</aside>
+
+<script src="assets/samp.js"></script>
+<script>if(/[?&]open=pick/.test(location.search))SAMP.openLayer(document.getElementById('pick'));</script>
+</body></html>

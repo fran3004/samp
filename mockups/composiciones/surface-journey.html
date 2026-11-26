@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>SAMP · Recorrido del precio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@700;800&family=Red+Hat+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0B1726;--mut:#566577;--surf:#F4F6F9;--ph:#EAF0F7;--blue:#0A62C4}
+*{box-sizing:border-box;margin:0}
+body{width:1440px;height:900px;overflow:hidden;position:relative;background:var(--surf);color:var(--ink);font:400 17px/1.5 'Red Hat Text',sans-serif}
+.nav{height:76px;display:flex;align-items:center;gap:28px;padding:0 48px;background:#fff}
+.logo{display:flex;align-items:center;gap:12px;font:800 24px 'Red Hat Display';letter-spacing:.04em}.logo svg{width:34px;height:34px}
+.sm{width:480px;height:46px;border-radius:999px;background:var(--surf);display:flex;align-items:center;padding:0 20px;color:var(--mut)}
+.nav .r{margin-left:auto;display:flex;gap:18px;align-items:center;font-weight:600;color:#35465A}.nav b{background:var(--blue);color:#fff;padding:12px 24px;border-radius:999px}
+.stage{position:absolute;left:50%;top:84px;width:760px;height:760px;margin-left:-380px;display:grid;place-items:center}
+.disc{width:560px;height:560px;border-radius:50%;background:var(--ph);display:grid;place-items:center}.disc img{width:76%;filter:drop-shadow(0 28px 28px rgba(11,23,38,.2))}
+.ring{position:absolute;width:700px;height:700px;border-radius:50%;border:2px dashed #BFCCDB}
+.fl{position:absolute;display:flex;align-items:center;gap:12px;background:#fff;border-radius:20px;padding:12px 18px 12px 12px;box-shadow:0 2px 4px rgba(11,23,38,.06),0 24px 48px rgba(11,23,38,.14)}
+.mono{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:#fff;font:800 13px 'Red Hat Display'}
+.fl b{display:block;font:800 19px/1.2 'Red Hat Display'}.fl small{color:var(--mut);font-size:13px;font-weight:600}
+.l{position:absolute;left:48px;top:170px;width:470px}.l h1{font:800 84px/1.02 'Red Hat Display';letter-spacing:-.035em}.l p{font-size:21px;color:#35465A;margin-top:22px;max-width:26ch}
+.steps{position:absolute;right:48px;top:200px;display:grid;gap:22px}
+.s{display:flex;align-items:center;gap:16px;font:700 19px 'Red Hat Display';color:#566577}.s i{width:18px;height:18px;border-radius:50%;border:3px solid #BFCCDB}
+.s.on{color:var(--ink)}.s.on i{background:var(--blue);border-color:var(--blue)}
+.peek{position:absolute;left:0;right:0;bottom:0;height:110px;background:#fff;border-radius:40px 40px 0 0;display:flex;align-items:center;gap:20px;padding:0 48px;box-shadow:0 -12px 32px rgba(11,23,38,.08)}
+.peek h2{font:800 28px 'Red Hat Display';letter-spacing:-.02em;margin-right:auto}
+.pk{display:flex;gap:10px;align-items:center;padding:10px 18px;background:var(--surf);border-radius:999px;font-weight:700}.pk u{text-decoration:none;color:#7A4300;background:#FFF2DA;border-radius:999px;padding:2px 10px;font-size:13px}
+.sc{position:absolute;left:48px;bottom:130px;color:var(--mut);font-weight:600;display:flex;gap:10px;align-items:center}.sc i{width:26px;height:42px;border:2px solid #8FA0B3;border-radius:14px;position:relative}.sc i:after{content:"";position:absolute;left:10px;top:8px;width:4px;height:10px;border-radius:2px;background:#8FA0B3}
+</style></head><body>
+<div class="nav"><div class="logo"><svg viewBox="0 0 64 64"><path d="M6 31 34 9c5-4 12-5 22-5l-5 24-31 6z" fill="#0B7BF2"/><path d="M30 22 44 12" stroke="#fff" stroke-width="4" stroke-linecap="round"/><rect x="5" y="33" width="46" height="25" rx="12.5" fill="#22E3D2"/><rect x="16" y="42" width="24" height="7" rx="3.5" fill="#fff"/></svg>SAMP</div><div class="sm">Busca un producto o un código de barras</div><div class="r"><span>Favoritos</span><span>Alertas</span><span>COP</span><b>Entrar</b></div></div>
+<div class="l"><h1>El mismo producto.</h1><p>Mira cómo se ve en cada tienda antes de decidir.</p></div>
+<div class="stage"><div class="ring"></div><div class="disc"><img src="https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods-max-silver/thumbnail.webp" alt="Apple AirPods Max"></div>
+<div class="fl" style="top:40px;left:300px"><span class="mono" style="background:#C2691A">P</span><div><b>$ 2.116.000</b><small>Platzi · falta envío e impuestos</small></div></div>
+<div class="fl" style="top:230px;right:-40px"><span class="mono" style="background:#6E4A9E">M</span><div><b>$ 2.156.000</b><small>Tienda de muestra · completo</small></div></div>
+<div class="fl" style="bottom:130px;left:-50px"><span class="mono" style="background:#1F7A8C">D</span><div><b>$ 2.199.960</b><small>DummyJSON · completo</small></div></div>
+<div class="fl" style="bottom:70px;right:30px"><span class="mono" style="background:#8A5A3C">F</span><div><b>$ 2.680.800</b><small>FakeStore · completo</small></div></div></div>
+<div class="steps"><div class="s on"><i></i>Mismo producto</div><div class="s"><i></i>Cada costo</div><div class="s"><i></i>Total honesto</div></div>
+<div class="sc"><i></i>Desplázate</div>
+<div class="peek"><h2>Cada precio, con todo lo que cuesta.</h2><span class="pk">Precio</span><span class="pk">+ Envío <u>¿?</u></span><span class="pk">+ Impuestos <u>¿?</u></span><span class="pk">= Total</span></div>
+</body></html>

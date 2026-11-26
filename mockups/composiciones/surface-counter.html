@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>SAMP · Mostrador vivo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@700;800&family=Red+Hat+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0B1726;--mut:#566577;--surf:#F4F6F9;--ph:#EAF0F7;--blue:#0A62C4}
+*{box-sizing:border-box;margin:0}
+body{width:1440px;height:900px;overflow:hidden;position:relative;background:var(--surf);color:var(--ink);font:400 17px/1.5 'Red Hat Text',sans-serif}
+.nav{height:76px;display:flex;align-items:center;gap:28px;padding:0 48px}
+.logo{display:flex;align-items:center;gap:12px;font:800 24px 'Red Hat Display';letter-spacing:.04em}.logo svg{width:34px;height:34px}
+.nav .r{margin-left:auto;display:flex;gap:18px;align-items:center;font-weight:600;color:#35465A}.nav b{background:var(--blue);color:#fff;padding:12px 24px;border-radius:999px}
+.hero{padding:30px 48px 0;max-width:1100px}
+h1{font:800 104px/1 'Red Hat Display';letter-spacing:-.04em}
+.sl{margin-top:30px;height:96px;background:#fff;border-radius:999px;display:flex;align-items:center;padding:0 12px 0 40px;box-shadow:0 2px 4px rgba(11,23,38,.06),0 24px 48px rgba(11,23,38,.12);font:500 34px 'Red Hat Text';outline:3px solid var(--blue);outline-offset:4px}
+.sl i{display:inline-block;width:3px;height:42px;background:var(--blue);margin-left:2px}.sl em{margin-left:auto;font-style:normal;background:var(--blue);color:#fff;border-radius:999px;padding:0 40px;height:72px;line-height:72px;font:700 22px/72px 'Red Hat Text'}
+.prog{display:flex;gap:10px;margin-top:22px}.pc{height:38px;display:flex;align-items:center;gap:10px;padding:0 18px 0 14px;background:#fff;border-radius:999px;font-weight:600;font-size:15px}
+.pc i{width:10px;height:10px;border-radius:50%;background:#0F6B4B}.pc.p i{background:var(--blue)}.pc.x i{background:#C27A00}
+.fan{position:absolute;left:0;right:0;bottom:-70px;height:430px}
+.c{position:absolute;bottom:0;width:272px;background:#fff;border-radius:32px;padding:14px 14px 20px;box-shadow:0 2px 4px rgba(11,23,38,.06),0 24px 48px rgba(11,23,38,.14)}
+.c .p{height:222px;background:var(--ph);border-radius:22px;display:grid;place-items:center;position:relative}.c img{height:78%}
+.c .tg{position:absolute;top:12px;left:12px;height:28px;line-height:28px;padding:0 12px;border-radius:999px;font-size:12px;font-weight:700}
+.ok{background:#E1F5EC;color:#0F6B4B}.wn{background:#FFF2DA;color:#7A4300}
+.c b{display:block;font:800 19px 'Red Hat Display';margin:12px 6px 0}.c span{display:block;margin:0 6px;font:800 24px 'Red Hat Display'}.c small{margin:0 6px;color:var(--mut);font-size:14px}
+.hint{position:absolute;right:48px;top:150px;width:300px;color:var(--mut);font-size:16px}
+</style></head><body>
+<div class="nav"><div class="logo"><svg viewBox="0 0 64 64"><path d="M6 31 34 9c5-4 12-5 22-5l-5 24-31 6z" fill="#0B7BF2"/><path d="M30 22 44 12" stroke="#fff" stroke-width="4" stroke-linecap="round"/><rect x="5" y="33" width="46" height="25" rx="12.5" fill="#22E3D2"/><rect x="16" y="42" width="24" height="7" rx="3.5" fill="#fff"/></svg>SAMP</div><div class="r"><span>Favoritos</span><span>Alertas</span><span>COP</span><b>Entrar</b></div></div>
+<div class="hero"><h1>¿Qué quieres comprar?</h1>
+<div class="sl">airpods<i></i><em>Comparar</em></div>
+<div class="prog"><span class="pc"><i></i>Tienda de muestra · 4</span><span class="pc"><i></i>DummyJSON · 5</span><span class="pc p"><i></i>FakeStore…</span><span class="pc x"><i></i>Platzi sin respuesta · datos del 16 nov</span></div></div>
+<div class="hint">Escribe y las tiendas responden mientras tecleas. Cada resultado trae su tienda, su total y su fecha.</div>
+<div class="fan">
+<div class="c" style="left:60px;transform:rotate(-9deg);bottom:30px"><div class="p"><span class="tg ok">Total completo</span><img src="https://cdn.dummyjson.com/product-images/mobile-accessories/amazon-echo-plus/thumbnail.webp" alt=""></div><b>Amazon Echo Plus</b><span>$ 389.000</span><small>2 tiendas</small></div>
+<div class="c" style="left:360px;transform:rotate(-4deg);bottom:10px"><div class="p"><span class="tg wn">Total incompleto</span><img src="https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods-max-silver/thumbnail.webp" alt=""></div><b>Apple AirPods Max</b><span>$ 2.116.000</span><small>3 tiendas</small></div>
+<div class="c" style="left:660px;transform:rotate(0deg);bottom:0;z-index:2;outline:4px solid var(--blue);outline-offset:3px"><div class="p"><span class="tg wn">Menor precio publicado</span><img src="https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods/thumbnail.webp" alt=""></div><b>Apple AirPods</b><span>$ 498.000</span><small>4 tiendas · total completo desde $ 508.000</small></div>
+<div class="c" style="left:960px;transform:rotate(5deg);bottom:12px"><div class="p"><span class="tg wn">Pocas unidades</span><img src="https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpower-wireless-charger/thumbnail.webp" alt=""></div><b>Cargador Airpower</b><span>$ 309.000</span><small>2 tiendas</small></div>
+</div></body></html>

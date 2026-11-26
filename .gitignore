@@ -1,0 +1,51 @@
+# Herramientas locales de IA / agentes
+.claude/
+.impeccable/
+.playwright-mcp/
+.gemini/
+.antigravity/
+.cursor/
+.agents/
+
+# Secretos y configuración local
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+application-local.properties
+application-local.yml
+secrets/
+
+# Java / Maven
+target/
+*.class
+*.jar
+*.war
+!.mvn/wrapper/maven-wrapper.jar
+hs_err_pid*
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+nbproject/
+
+# Node (si se usa para herramientas)
+node_modules/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Archivos temporales, logs y comprimidos
+*.log
+*.tmp
+*.bak
+*.zip
+logs/
+tmp/

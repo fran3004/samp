@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Tu cuenta · SAMP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@600;700;800&family=Red+Hat+Mono:wght@500&family=Red+Hat+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/samp.css">
+<style>
+.acc{display:grid;grid-template-columns:260px minmax(0,1fr);gap:48px;align-items:start;margin-top:24px}
+.anav{position:sticky;top:calc(var(--nav-h) + 20px);display:grid;gap:4px}
+.anav .who{display:flex;gap:12px;align-items:center;padding:4px 4px 18px;margin-bottom:8px;border-bottom:1px solid var(--line)}
+.anav .who .avatar{width:48px;height:48px;font-size:17px}
+.anav a{display:flex;align-items:center;gap:12px;height:46px;padding:0 14px;border-radius:12px;font-weight:600;color:var(--ink-2);transition:background-color 120ms,color 120ms}
+.anav a:hover{background:var(--surf)}.anav a[aria-current=page]{background:var(--act-50);color:var(--act-d)}
+.anav a .n{margin-left:auto;font-size:13px;color:var(--mut)}
+.vh{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:28px}
+.vh h1{font-size:40px}
+.grid{--c:3}
+.fchg{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--surf);font-size:13px;font-weight:700}
+.alr{display:grid;grid-template-columns:72px minmax(0,1fr) 260px auto;gap:20px;align-items:center;padding:18px 20px;border-radius:var(--r-lg);background:#fff;box-shadow:inset 0 0 0 1.5px var(--line);margin-bottom:12px;transition:box-shadow var(--t) var(--ease)}
+.alr:hover{box-shadow:inset 0 0 0 1.5px var(--line-2),var(--sh-2)}
+.alr .im{width:72px;height:72px;border-radius:18px;background:var(--photo);display:grid;place-items:center}.alr img{width:72%;height:72%;object-fit:contain}
+.alr h3{font-size:17px}.alr .meta{font-size:13px;color:var(--mut);font-weight:600;margin-top:4px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.alr .pg small{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-top:6px}
+.alr.hit{box-shadow:inset 0 0 0 2px #17A673;background:linear-gradient(90deg,var(--ok-50),#fff 40%)}
+.alr.off{opacity:.6}
+.nl2 .it{display:flex;gap:16px;padding:18px 20px;border-radius:var(--r);transition:background-color 120ms;align-items:flex-start}
+.nl2 .it:hover{background:var(--surf)}.nl2 .it.unread{background:var(--act-50)}
+.nl2 .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;flex:none}
+.nl2 p{color:var(--ink-2)}.nl2 p b{color:var(--ink)}.nl2 time{font-size:13px;color:var(--mut);font-weight:600}
+.nl2 .day{font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin:24px 0 8px}
+.bld{padding:24px;border-radius:var(--r-xl);background:#fff;box-shadow:inset 0 0 0 1.5px var(--line);display:grid;gap:16px;transition:box-shadow var(--t) var(--ease),transform var(--t) var(--ease)}
+.bld:hover{box-shadow:var(--sh-2);transform:translateY(-3px)}
+.bld .parts{display:flex;gap:8px}.bld .parts span{width:44px;height:44px;border-radius:12px;background:var(--photo);display:grid;place-items:center;color:var(--act)}
+.pref{display:grid;gap:0}
+.pref .pr{display:grid;grid-template-columns:1fr minmax(0,320px);gap:24px;align-items:center;padding:22px 0;border-bottom:1px solid var(--line)}
+.pref .pr b{display:block}.pref .pr span.hint{display:block;margin-top:2px}
+.pref h2{font-size:22px;margin:32px 0 4px}
+.dz{margin-top:40px;padding:22px;border-radius:var(--r-lg);box-shadow:inset 0 0 0 1.5px #F4C7C2;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+@media(max-width:1100px){.grid{--c:2}.alr{grid-template-columns:64px 1fr auto}.alr .pg{grid-column:1/-1}}
+@media(max-width:900px){.acc{grid-template-columns:1fr;gap:20px}.anav{position:static;display:flex;overflow-x:auto;scrollbar-width:none;gap:6px}.anav .who{display:none}.anav a{flex:none;height:40px;background:var(--surf)}.vh h1{font-size:30px}.pref .pr{grid-template-columns:1fr}}
+@media(max-width:900px){.bld .parts{flex-wrap:wrap}[data-view=armados] .grid{--c:1!important}.bld .row{flex-wrap:wrap;gap:8px}}
+</style></head>
+<body data-page="cuenta">
+<main class="page"><div class="wrap">
+ <div class="acc">
+  <nav class="anav" aria-label="Tu cuenta">
+   <div class="who"><span class="avatar">LM</span><div><b>Laura Méndez</b><div class="mut" style="font-size:13px">Miembro desde oct 2026</div></div></div>
+   <a href="#favoritos" data-nav="favoritos"><svg class="ic"><use href="#i-heart"/></svg>Favoritos<span class="n">12</span></a>
+   <a href="#alertas" data-nav="alertas"><svg class="ic"><use href="#i-bell"/></svg>Alertas de precio<span class="n">4</span></a>
+   <a href="#notificaciones" data-nav="notificaciones"><svg class="ic"><use href="#i-mail"/></svg>Notificaciones<span class="n chip blue" style="height:22px">3</span></a>
+   <a href="#armados" data-nav="armados"><svg class="ic"><use href="#i-cpu"/></svg>Mis armados<span class="n">2</span></a>
+   <a href="#preferencias" data-nav="preferencias"><svg class="ic"><use href="#i-gear"/></svg>Preferencias</a>
+  </nav>
+
+  <section data-view="favoritos">
+   <div class="vh"><div><h1>Favoritos</h1><h2 class="sr">Contenido: Favoritos</h2><p class="mut" style="margin-top:4px">12 productos · 4 bajaron desde que los guardaste</p></div><div class="row" style="--g:10px"><div class="seg"><button aria-selected="true">Todos</button><button>Bajaron</button><button>Con alerta</button></div></div></div>
+   <div class="grid">
+    <div class="io"><a class="pcard" href="producto.html"><div class="ph"><div class="tg"><span class="chip real">Total completo</span></div><button class="fav on" aria-label="Quitar"><span class="b"></span><svg class="ic"><use href="#i-heart"/></svg></button><img src="https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods-max-silver/thumbnail.webp" alt=""></div><h3>Apple AirPods Max</h3><div class="pr"><b>$ 2.116.000</b></div></a><div class="fchg"><span class="mut">Al guardarlo: $ 2.299.000</span><span class="drop"><svg class="ic sm"><use href="#i-down"/></svg>$ 183.000</span></div></div>
+    <div class="io" style="--i:1"><a class="pcard" href="producto.html"><div class="ph"><div class="tg"><span class="chip warn">Envío desconocido</span></div><button class="fav on" aria-label="Quitar"><span class="b"></span><svg class="ic"><use href="#i-heart"/></svg></button><img src="https://cdn.dummyjson.com/product-images/laptops/apple-macbook-pro-14-inch-space-grey/thumbnail.webp" alt=""></div><h3>MacBook Pro 14"</h3><div class="pr"><b>$ 7.760.000</b></div></a><div class="fchg"><span class="mut">Al guardarlo: $ 7.910.000</span><span class="drop"><svg class="ic sm"><use href="#i-down"/></svg>$ 150.000</span></div></div>
+    <div class="io" style="--i:2"><a class="pcard" href="producto.html"><div class="ph"><div class="tg"><span class="chip real">Total completo</span></div><button class="fav on" aria-label="Quitar"><span class="b"></span><svg class="ic"><use href="#i-heart"/></svg></button><img src="https://cdn.dummyjson.com/product-images/tablets/samsung-galaxy-tab-s8-plus-grey/thumbnail.webp" alt=""></div><h3>Galaxy Tab S8+</h3><div class="pr"><b>$ 3.390.000</b></div></a><div class="fchg"><span class="mut">Al guardarlo: $ 3.290.000</span><span class="drop up"><svg class="ic sm"><use href="#i-up"/></svg>$ 100.000</span></div></div>
+    <div class="io" style="--i:3"><a class="pcard" href="producto.html"><div class="ph"><div class="tg"><span class="chip demo">Demostración</span></div><button class="fav on" aria-label="Quitar"><span class="b"></span><svg class="ic"><use href="#i-heart"/></svg></button><img src="https://cdn.dummyjson.com/product-images/mens-watches/longines-master-collection/thumbnail.webp" alt=""></div><h3>Longines Master</h3><div class="pr"><b>$ 9.850.000</b></div></a><div class="fchg"><span class="mut">Sin cambios en 14 días</span><span class="mut">—</span></div></div>
+    <div class="io" style="--i:4"><a class="pcard" href="producto.html"><div class="ph"><div class="tg"><span class="chip real">Total completo</span></div><button class="fav on" aria-label="Quitar"><span class="b"></span><svg class="ic"><use href="#i-heart"/></svg></button><img src="https://cdn.dummyjson.com/product-images/laptops/huawei-matebook-x-pro/thumbnail.webp" alt=""></div><h3>Huawei MateBook X Pro</h3><div class="pr"><b>$ 5.690.000</b></div></a><div class="fchg"><span class="mut">Al guardarlo: $ 5.990.000</span><span class="drop"><svg class="ic sm"><use href="#i-down"/></svg>$ 300.000</span></div></div>
+    <div class="io" style="--i:5"><a class="pcard" href="producto.html"><div class="ph"><div class="tg"><span class="chip real">Total completo</span></div><button class="fav on" aria-label="Quitar"><span class="b"></span><svg class="ic"><use href="#i-heart"/></svg></button><img src="https://cdn.dummyjson.com/product-images/smartphones/oppo-f19-pro-plus/thumbnail.webp" alt=""></div><h3>Oppo F19 Pro+</h3><div class="pr"><b>$ 1.249.000</b></div></a><div class="fchg"><span class="mut">Al guardarlo: $ 1.299.000</span><span class="drop"><svg class="ic sm"><use href="#i-down"/></svg>$ 50.000</span></div></div>
+   </div>
+  </section>
+
+  <section data-view="alertas" hidden>
+   <div class="vh"><div><h1>Alertas de precio</h1><h2 class="sr">Contenido: Alertas de precio</h2><p class="mut" style="margin-top:4px">Revisamos tus alertas en cada consulta programada (cada 6 h)</p></div><button class="btn btn-p" data-palette><svg class="ic sm"><use href="#i-plus"/></svg>Nueva alerta</button></div>
+   <div class="alr hit io"><span class="im"><img src="https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods-max-silver/thumbnail.webp" alt=""></span><div><div class="row" style="--g:8px"><h3>Apple AirPods Max</h3><span class="chip real"><svg class="ic"><use href="#i-check"/></svg>Cumplida</span></div><div class="meta">Objetivo $ 2.200.000 · hoy $ 2.116.000 en Mercado Libre</div></div><div class="pg"><span class="bar ok"><i style="--v:100%"></i></span><small><span class="num">Ahorro $ 84.000</span><span class="mut">hace 12 min</span></small></div><div class="row" style="--g:4px"><a class="btn btn-p sm" href="producto.html">Ver oferta</a><button class="ibtn sm" data-pop="p-am" aria-label="Más"><svg class="ic sm"><use href="#i-more"/></svg></button></div></div>
+   <div class="alr io" style="--i:1"><span class="im"><img src="https://cdn.dummyjson.com/product-images/laptops/apple-macbook-pro-14-inch-space-grey/thumbnail.webp" alt=""></span><div><div class="row" style="--g:8px"><h3>MacBook Pro 14"</h3><span class="chip blue">Activa</span></div><div class="meta"><svg class="ic sm"><use href="#i-mail"/></svg>Web y correo · solo total completo</div></div><div class="pg"><span class="bar"><i style="--v:94%"></i></span><small><span class="num">$ 7.760.000 → $ 7.300.000</span><span class="mut">faltan 6 %</span></small></div><div class="row" style="--g:8px"><input type="checkbox" class="switch" checked aria-label="Activa"><button class="ibtn sm" aria-label="Más"><svg class="ic sm"><use href="#i-more"/></svg></button></div></div>
+   <div class="alr io" style="--i:2"><span class="im"><img src="https://cdn.dummyjson.com/product-images/tablets/ipad-mini-2021-starlight/thumbnail.webp" alt=""></span><div><div class="row" style="--g:8px"><h3>iPad mini 2021</h3><span class="chip blue">Activa</span></div><div class="meta"><svg class="ic sm"><use href="#i-bell"/></svg>Solo web</div></div><div class="pg"><span class="bar"><i style="--v:81%"></i></span><small><span class="num">$ 2.489.000 → $ 2.000.000</span><span class="mut">faltan 20 %</span></small></div><div class="row" style="--g:8px"><input type="checkbox" class="switch" checked aria-label="Activa"><button class="ibtn sm" aria-label="Más"><svg class="ic sm"><use href="#i-more"/></svg></button></div></div>
+   <div class="alr off io" style="--i:3"><span class="im"><img src="https://cdn.dummyjson.com/product-images/smartphones/iphone-13-pro/thumbnail.webp" alt=""></span><div><div class="row" style="--g:8px"><h3>iPhone 13 Pro</h3><span class="chip">Pausada</span></div><div class="meta">Pausada por ti el 10 nov</div></div><div class="pg"><span class="bar"><i style="--v:70%;background:var(--mut-2)"></i></span><small><span class="num">$ 4.280.000 → $ 3.000.000</span><span class="mut">faltan 30 %</span></small></div><div class="row" style="--g:8px"><input type="checkbox" class="switch" aria-label="Activa"><button class="ibtn sm" aria-label="Más"><svg class="ic sm"><use href="#i-more"/></svg></button></div></div>
+   <div class="pop" id="p-am"><button class="mi"><svg class="ic"><use href="#i-tag"/></svg>Cambiar precio objetivo</button><button class="mi"><svg class="ic"><use href="#i-mail"/></svg>Canales de aviso</button><button class="mi"><svg class="ic"><use href="#i-pause"/></svg>Pausar</button><div class="msep"></div><button class="mi dg" data-toast="Alerta eliminada" data-toast-icon="trash"><svg class="ic"><use href="#i-trash"/></svg>Eliminar</button></div>
+  </section>
+
+  <section data-view="notificaciones" hidden class="nl2">
+   <div class="vh"><div><h1>Notificaciones</h1><h2 class="sr">Contenido: Notificaciones</h2><p class="mut" style="margin-top:4px">3 sin leer</p></div><button class="btn btn-s sm">Marcar todo como leído</button></div>
+   <div class="day">Hoy</div>
+   <a class="it unread" href="producto.html"><span class="ico" style="background:var(--ok-50);color:var(--ok)"><svg class="ic"><use href="#i-down"/></svg></span><div class="grow"><p><b>AirPods Max bajó a $ 2.116.000</b> en Mercado Libre. Tu alerta era de $ 2.200.000.</p><time>10:30 · enviada también por correo</time></div><span class="sdot run"></span></a>
+   <a class="it unread" href="cuenta.html#alertas"><span class="ico" style="background:var(--act-50);color:var(--act)"><svg class="ic"><use href="#i-bell"/></svg></span><div class="grow"><p><b>MacBook Pro 14"</b> está a 6 % de tu precio objetivo.</p><time>08:12</time></div><span class="sdot run"></span></a>
+   <div class="day">Ayer</div>
+   <a class="it unread" href="armador-pc.html"><span class="ico" style="background:var(--teal-50);color:var(--teal-ink)"><svg class="ic"><use href="#i-cpu"/></svg></span><div class="grow"><p>Tu armado <b>«Gamer 1440p»</b> bajó $ 184.000 en total gracias a la RTX 4070 Super.</p><time>16:40</time></div><span class="sdot run"></span></a>
+   <a class="it" href="#"><span class="ico" style="background:var(--warn-50);color:var(--warn)"><svg class="ic"><use href="#i-alert"/></svg></span><div class="grow"><p><b>FakeStore</b> no respondió. Sus precios se muestran como desactualizados.</p><time>22:10</time></div></a>
+   <a class="it" href="#"><span class="ico" style="background:var(--surf);color:var(--ink-2)"><svg class="ic"><use href="#i-globe"/></svg></span><div class="grow"><p>Actualizamos la tasa de cambio: <b>1 USD = $ 3.912 COP</b>.</p><time>06:00</time></div></a>
+  </section>
+
+  <section data-view="armados" hidden>
+   <div class="vh"><div><h1>Mis armados</h1><h2 class="sr">Contenido: Mis armados</h2><p class="mut" style="margin-top:4px">Precios actualizados en cada consulta</p></div><a class="btn btn-p" href="armador-pc.html"><svg class="ic sm"><use href="#i-plus"/></svg>Nuevo armado</a></div>
+   <div class="grid" style="--c:2">
+    <a class="bld io" href="armador-pc.html"><div class="row between"><b class="disp" style="font-size:22px">Gamer 1440p</b><span class="chip real">92 % compatible</span></div><div class="parts"><span><svg class="ic"><use href="#i-cpu"/></svg></span><span><svg class="ic"><use href="#i-board"/></svg></span><span><svg class="ic"><use href="#i-ram"/></svg></span><span><svg class="ic"><use href="#i-gpu"/></svg></span><span><svg class="ic"><use href="#i-hdd"/></svg></span><span><svg class="ic"><use href="#i-psu"/></svg></span><span><svg class="ic"><use href="#i-case"/></svg></span></div><div class="row between"><b class="num disp" style="font-size:28px">$ 6.839.000</b><span class="drop"><svg class="ic sm"><use href="#i-down"/></svg>$ 184.000 esta semana</span></div></a>
+    <a class="bld io" style="--i:1" href="armador-pc.html"><div class="row between"><b class="disp" style="font-size:22px">Oficina silenciosa</b><span class="chip warn">Falta 1 pieza</span></div><div class="parts"><span><svg class="ic"><use href="#i-cpu"/></svg></span><span><svg class="ic"><use href="#i-board"/></svg></span><span><svg class="ic"><use href="#i-ram"/></svg></span><span><svg class="ic"><use href="#i-hdd"/></svg></span><span style="background:none;box-shadow:inset 0 0 0 2px var(--line-2);color:var(--mut)"><svg class="ic"><use href="#i-plus"/></svg></span></div><div class="row between"><b class="num disp" style="font-size:28px">$ 2.410.000</b><span class="mut" style="font-size:13px;font-weight:600">Sin cambios</span></div></a>
+   </div>
+  </section>
+
+  <section data-view="preferencias" hidden>
+   <div class="vh"><div><h1>Preferencias</h1><h2 class="sr">Contenido: Preferencias</h2><p class="mut" style="margin-top:4px">Se aplican a la búsqueda, la comparación y los avisos</p></div></div>
+   <div class="pref">
+    <h2>Región y moneda</h2>
+    <div class="pr"><div><b>Moneda de visualización</b><span class="hint">Los precios se guardan en USD y se convierten con la tasa del día.</span></div><select class="input"><option>COP · Peso colombiano</option><option>USD · Dólar</option><option>MXN · Peso mexicano</option></select></div>
+    <div class="pr"><div><b>Ciudad de entrega</b><span class="hint">Para estimar el envío cuando la tienda lo informa.</span></div><select class="input"><option>Bogotá D. C.</option><option>Medellín</option><option>Cali</option><option>Barranquilla</option></select></div>
+    <div class="pr"><div><b>Idioma</b></div><div class="seg"><button aria-selected="true">Español</button><button>English</button></div></div>
+    <h2>Comparación</h2>
+    <div class="pr"><div><b>Mostrar datos de demostración</b><span class="hint">Siempre llevan la etiqueta «Demostración».</span></div><input type="checkbox" class="switch" checked aria-label="Mostrar datos de demostración"></div>
+    <div class="pr"><div><b>Incluir productos usados</b></div><input type="checkbox" class="switch" aria-label="Incluir usados"></div>
+    <h2>Avisos</h2>
+    <div class="pr"><div><b>Correo de alertas</b><span class="hint">laura@correo.co</span></div><input type="checkbox" class="switch" checked aria-label="Correo de alertas"></div>
+    <div class="pr"><div><b>Resumen semanal de favoritos</b><span class="hint">Los lunes a las 8:00</span></div><input type="checkbox" class="switch" aria-label="Resumen semanal"></div>
+    <h2>Seguridad</h2>
+    <div class="pr"><div><b>Contraseña</b><span class="hint">Cambiada hace 32 días</span></div><button class="btn btn-s" style="justify-self:start">Cambiar contraseña</button></div>
+   </div>
+   <div class="dz"><div><b>Eliminar cuenta</b><p class="hint">Borra favoritos, alertas, armados y conversaciones. No se puede deshacer.</p></div><button class="btn btn-s" style="color:var(--bad);box-shadow:inset 0 0 0 1.5px #F4C7C2">Eliminar mi cuenta</button></div>
+   <div class="row" style="justify-content:flex-end;margin-top:28px;--g:10px"><button class="btn btn-q">Descartar</button><button class="btn btn-p" data-toast="Preferencias guardadas">Guardar cambios</button></div>
+  </section>
+ </div>
+</div></main>
+<script src="assets/samp.js"></script>
+</body></html>

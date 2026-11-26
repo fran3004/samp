@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SAMP · Compara el precio real</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@700;800&family=Red+Hat+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head><body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="logo" viewBox="0 0 64 64"><path d="M6 31 34 9c5-4 12-5 22-5l-5 24-31 6z" fill="#0B7BF2"/><path d="M30 22 44 12" stroke="#fff" stroke-width="4" stroke-linecap="round"/><rect x="5" y="33" width="46" height="25" rx="12.5" fill="#22E3D2"/><rect x="16" y="42" width="24" height="7" rx="3.5" fill="#fff"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.6-9 9-9 9z"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 17v-6a6 6 0 0 1 12 0v6l2 2H4zM10 21h4"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+</defs></svg>
+
+<div class="live"><i></i>Precios consultados hoy a las 10:42 · 5 fuentes conectadas · Los valores en COP son informativos</div>
+<header class="nav" id="nav"><div class="wrap">
+<a class="logo" href="index.html" aria-label="SAMP, inicio"><svg><use href="#logo"/></svg>SAMP</a>
+<div class="r"><a class="nl" href="#"><svg class="ic"><use href="#i-heart"/></svg><span>Favoritos</span></a><a class="nl" href="#"><svg class="ic"><use href="#i-bell"/></svg><span>Alertas</span></a><span class="chip">COP</span><a class="btn btn-p" style="height:44px;padding:0 22px" href="#"><svg class="ic"><use href="#i-user"/></svg>Entrar</a></div>
+</div></header>
+
+<section class="h2"><div class="wrap">
+<h1 class="rv">¿Qué quieres comprar?</h1>
+<form class="sl xl rv" style="--i:1" action="resultados.html"><svg class="ic"><use href="#i-search"/></svg><input id="q" value="airpods max" autocomplete="off" aria-label="Buscar productos o códigos de barras"><button class="btn btn-p" type="submit">Comparar</button></form>
+<div class="prog" aria-live="polite">
+<span class="chip" style="--i:0"><span class="w"><i></i>Tienda de muestra…</span><span class="d"><i></i>Tienda de muestra · 3</span></span>
+<span class="chip" style="--i:1"><span class="w"><i></i>DummyJSON…</span><span class="d"><i></i>DummyJSON · 4</span></span>
+<span class="chip" style="--i:2"><span class="w"><i></i>FakeStore…</span><span class="d"><i></i>FakeStore · 2</span></span>
+<span class="chip" style="--i:3"><span class="w"><i></i>Platzi…</span><span class="d bad"><i></i>Platzi sin respuesta · datos del 16 nov</span></span>
+</div>
+<p class="hint rv" style="--i:3">Escribe un producto o un código de barras. Consultamos las tiendas mientras tecleas y cada resultado trae su total y su fecha.</p>
+</div>
+<div class="fan" aria-label="Resultados de ejemplo para airpods max">
+<a class="fc" href="resultados.html" style="--r:-9deg;--i:0;left:3%;bottom:34px"><div class="p"><span class="chip warn">Pocas unidades</span><img src="https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpower-wireless-charger/thumbnail.webp" alt=""></div><b>Cargador Airpower</b><span class="v">$ <span class="cnt" data-n="309000" data-fan>309.000</span></span><small>2 tiendas</small></a>
+<a class="fc" href="resultados.html" style="--r:-4deg;--i:1;left:25%;bottom:12px"><div class="p"><span class="chip real">Total completo</span><img src="https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods/thumbnail.webp" alt=""></div><b>Apple AirPods</b><span class="v">$ <span class="cnt" data-n="498000" data-fan>498.000</span></span><small>4 tiendas</small></a>
+<a class="fc on" href="producto.html" style="--r:0deg;--i:2;left:47.5%;bottom:0"><div class="p"><span class="chip warn">Menor precio publicado</span><img src="https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods-max-silver/thumbnail.webp" alt=""></div><b>Apple AirPods Max</b><span class="v">$ <span class="cnt" data-n="2116000" data-fan>2.116.000</span></span><small>Total completo desde $ 2.156.000</small></a>
+<a class="fc" href="resultados.html" style="--r:5deg;--i:3;left:70%;bottom:14px"><div class="p"><span class="chip real">Total completo</span><img src="https://cdn.dummyjson.com/product-images/mobile-accessories/amazon-echo-plus/thumbnail.webp" alt=""></div><b>Amazon Echo Plus</b><span class="v">$ <span class="cnt" data-n="389000" data-fan>389.000</span></span><small>2 tiendas</small></a>
+</div></section>
+
+<section class="sec"><div class="wrap">
+<div class="sh sv"><h2>Lo más buscado hoy</h2><a href="resultados.html">Ver todos los resultados <svg class="ic"><use href="#i-arrow"/></svg></a></div>
+<div class="grid">
+<a class="card sv" href="producto.html"><div class="ph"><span class="chip tg warn">Total incompleto</span><button class="heart" aria-label="Guardar en favoritos"><svg class="ic"><use href="#i-heart"/></svg></button><img src="https://cdn.dummyjson.com/product-images/smartphones/iphone-13-pro/thumbnail.webp" alt=""></div><h3>iPhone 13 Pro</h3><div class="br">Apple</div><div class="pr"><b>$ 4.280.000</b><span>desde</span></div><div class="stack"><span class="mono m1">M</span><span class="mono m2">D</span><span class="mono m4">P</span><em>3 tiendas</em></div></a>
+<a class="card sv" href="producto.html"><div class="ph"><span class="chip tg warn">Total incompleto</span><button class="heart" aria-label="Guardar en favoritos"><svg class="ic"><use href="#i-heart"/></svg></button><img src="https://cdn.dummyjson.com/product-images/laptops/apple-macbook-pro-14-inch-space-grey/thumbnail.webp" alt=""></div><h3>MacBook Pro 14"</h3><div class="br">Apple · gris espacial</div><div class="pr"><b>$ 7.760.000</b><span>desde</span></div><div class="stack"><span class="mono m2">D</span><span class="mono m1">M</span><span class="mono m4">P</span><em>3 tiendas</em></div></a>
+<a class="card sv" href="producto.html"><div class="ph"><span class="chip tg warn">Total incompleto</span><button class="heart" aria-label="Guardar en favoritos"><svg class="ic"><use href="#i-heart"/></svg></button><img src="https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods/thumbnail.webp" alt=""></div><h3>Apple AirPods</h3><div class="br">Apple</div><div class="pr"><b>$ 498.000</b><span>desde</span></div><div class="stack"><span class="mono m4">P</span><span class="mono m1">M</span><span class="mono m2">D</span><span class="mono m3">F</span><em>4 tiendas</em></div></a>
+<a class="card sv" href="producto.html"><div class="ph"><span class="chip tg real">Total completo</span><button class="heart" aria-label="Guardar en favoritos"><svg class="ic"><use href="#i-heart"/></svg></button><img src="https://cdn.dummyjson.com/product-images/mobile-accessories/amazon-echo-plus/thumbnail.webp" alt=""></div><h3>Amazon Echo Plus</h3><div class="br">Amazon</div><div class="pr"><b>$ 389.000</b><span>total completo</span></div><div class="stack"><span class="mono m1">M</span><span class="mono m2">D</span><em>2 tiendas</em></div></a>
+</div></div></section>
+
+<section class="sec" style="background:var(--surf)"><div class="wrap">
+<h2 class="sv">Compras en la tienda. Aquí solo decides con los datos completos.</h2>
+<div class="trust">
+<div class="sv"><h3>Cada precio dice de dónde viene.</h3><p>Tienda, moneda original, fecha y hora de consulta, y si el dato es real o de demostración. Todo visible antes de que pulses nada.</p><span class="chip real">Dato real</span> <span class="chip demo">Demostración</span></div>
+<div class="sv"><h3>Lo que no sabemos, lo decimos.</h3><p>Si falta el envío o los impuestos, lo vemos como «desconocido» y nunca como cero. Esa oferta no se corona como la más barata.</p><span class="chip warn">Total incompleto</span></div>
+<div class="sv"><h3>Pagas en la tienda, no en SAMP.</h3><p>Te llevamos al sitio oficial de cada comercio. SAMP no guarda tu tarjeta ni procesa pagos.</p><span class="chip blue">Enlace verificado</span></div>
+</div></div></section>
+
+<section class="sec"><div class="wrap">
+<div class="sh sv"><h2>Las fuentes de hoy</h2></div>
+<div class="grid src">
+<div class="sv"><span class="mono m5" style="width:48px;height:48px;font-size:18px">O</span><h3 style="font-size:18px;margin:14px 0 8px">Open Food Facts</h3><span class="chip real">Dato real</span></div>
+<div class="sv"><span class="mono m2" style="width:48px;height:48px;font-size:18px">D</span><h3 style="font-size:18px;margin:14px 0 8px">DummyJSON</h3><span class="chip demo">Demostración</span></div>
+<div class="sv"><span class="mono m3" style="width:48px;height:48px;font-size:18px">F</span><h3 style="font-size:18px;margin:14px 0 8px">FakeStore</h3><span class="chip demo">Demostración</span></div>
+<div class="sv"><span class="mono m4" style="width:48px;height:48px;font-size:18px">P</span><h3 style="font-size:18px;margin:14px 0 8px">Platzi</h3><span class="chip demo">Demostración</span></div>
+<div class="sv"><span class="mono m1" style="width:48px;height:48px;font-size:18px">M</span><h3 style="font-size:18px;margin:14px 0 8px">Tienda de muestra</h3><span class="chip demo">Demostración</span></div>
+</div></div></section>
+
+<footer class="foot"><div class="wrap"><div class="cols">
+<div><a class="logo" href="index.html"><svg><use href="#logo"/></svg>SAMP</a><p>Sistema automático de mejores precios. Proyecto universitario: los datos marcados como demostración no son precios reales de mercado.</p></div>
+<div><h4>Explorar</h4><ul><li>Buscar y comparar</li><li>Favoritos y alertas</li><li>Cómo calculamos el total</li></ul></div>
+<div><h4>Confianza</h4><ul><li>Fuentes y fechas de consulta</li><li>Privacidad de tu cuenta</li><li>Aviso sobre monedas y tasas</li></ul></div>
+</div><small>Las tasas de cambio provienen de open.er-api.com y se actualizan a diario. Conversiones informativas.</small></div></footer>
+
+<script>
+(()=>{
+const $=s=>document.querySelector(s),reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+/* buscador que se escribe solo (se detiene si la persona teclea) */
+const q=$('#q'),text='airpods max';let user=false,i=0;
+q.addEventListener('keydown',()=>user=true);q.addEventListener('pointerdown',()=>user=true);
+if(!reduce){q.value='';q.focus({preventScroll:true});(function t(){if(user){return}if(i<=text.length){q.value=text.slice(0,i++);setTimeout(t,70+Math.random()*60)}})();setTimeout(()=>{if(!user)q.value=text},1700)}
+/* cifras que suben */
+const fmt=n=>n.toLocaleString('es-CO');
+function count(el){const n=+el.dataset.n,t0=performance.now(),d=1100;(function f(t){const k=Math.min(1,(t-t0)/d),e=1-Math.pow(1-k,4);el.textContent=fmt(Math.round(n*e));if(k<1)requestAnimationFrame(f)})(t0)}
+if(!reduce)document.querySelectorAll('[data-fan]').forEach((el,k)=>{el.textContent='0';setTimeout(()=>count(el),2200+k*140)});
+/* barra superior con sombra al desplazarse */
+const nav=$('#nav');
+addEventListener('scroll',()=>nav.classList.toggle('s',scrollY>8),{passive:true});
+})();
+</script>
+</body></html>

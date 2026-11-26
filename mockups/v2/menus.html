@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Menús y superposiciones · SAMP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@600;700;800&family=Red+Hat+Mono:wght@500&family=Red+Hat+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/samp.css">
+<style>
+body{background:var(--surf)}
+.board{max-width:1440px;margin:0 auto;padding:56px 40px 96px}
+.board>h1{font-size:48px}.board>p{color:var(--ink-2);margin:8px 0 40px;max-width:70ch}
+.tile{background:#fff;border-radius:var(--r-xl);padding:28px;box-shadow:var(--sh-1);display:flex;flex-direction:column;gap:18px}
+.tile.dim{background:var(--ink-2)}
+.tile header{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.tile header b{font:800 20px var(--f-disp)}.tile header span{font:500 12px var(--f-mono);color:var(--mut)}
+.tile.dim header b{color:#fff}.tile.dim header span{color:#C9D6E4}
+.spec{font:500 12px/1.6 var(--f-mono);color:var(--ink-2);background:var(--surf);border-radius:12px;padding:10px 12px}
+.tile.dim .spec{background:rgba(255,255,255,.12);color:#E7EEF6}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:24px}
+.trig{display:flex;justify-content:flex-end;gap:6px;padding:6px;border-radius:var(--pill);background:var(--surf);align-self:flex-end}
+.phone{width:360px;height:700px;border-radius:44px;background:#fff;box-shadow:0 0 0 10px #0B1726,var(--sh-3);overflow:hidden;position:relative;align-self:center}
+.phone .scrim{position:absolute;inset:0;background:rgba(11,23,38,.42)}
+.phone .drawer.static{position:absolute;top:0;left:0;height:100%;width:300px}
+.phone .sheet.static{position:absolute;left:0;right:0;bottom:0}
+.phone .ghost{padding:70px 16px}.phone .ghost i{display:block;height:14px;border-radius:7px;background:var(--surf-2);margin-bottom:12px}
+@media(max-width:1100px){.g2,.g3{grid-template-columns:minmax(0,1fr)}.tile .pop.static,.tile .notif{width:100%!important;max-width:420px}}
+@media(max-width:900px){.board{padding:32px 16px 72px}.board>h1{font-size:34px}.tile{padding:18px;border-radius:24px;min-width:0}.tile header{flex-wrap:wrap}.phone{width:100%;max-width:360px;height:640px}.palette.static .pf{flex-wrap:wrap}}
+</style></head>
+<body data-page="menus" data-layout="bare">
+<div class="board">
+ <h1>Menús y superposiciones</h1><h2 class="sr">Contenido: Menús y superposiciones</h2>
+ <p>Estados abiertos de cada menú. Todos entran con <span class="mono">opacity</span> + <span class="mono">transform</span> y curva <span class="mono">cubic-bezier(.23,1,.32,1)</span>; los popovers crecen desde su disparador y la paleta de búsqueda abre sin animación porque se invoca con teclado.</p>
+
+ <div class="tile" style="margin-bottom:24px"><header><b>Mega menú · Categorías</b><span>hover con intención 120 ms · 240 ms ease-out · translateY(-8px) → 0</span></header><div data-frag="megaMenu"></div></div>
+
+ <div class="g3">
+  <div class="tile"><header><b>Notificaciones</b><span>origen arriba-derecha</span></header><div class="trig"><span class="ibtn" style="background:#fff"><svg class="ic"><use href="#i-bell"/></svg><span class="dot">3</span></span></div><div class="pop static" style="padding:0;align-self:flex-end" data-frag="notifPanel"></div><div class="spec">scale(.96) translateY(-4px) → none · 180 ms</div></div>
+  <div class="tile"><header><b>Menú de cuenta</b><span>origen arriba-derecha</span></header><div class="trig"><span class="avatar">LM</span></div><div class="pop static" style="width:300px;align-self:flex-end" data-frag="userMenu"></div><div class="spec">Esc cierra · foco vuelve al disparador</div></div>
+  <div class="tile"><header><b>Moneda</b><span>selector simple</span></header><div class="trig"><span class="cur" style="background:#fff"><svg class="ic sm"><use href="#i-globe"/></svg>COP <svg class="ic sm"><use href="#i-chev"/></svg></span></div><div class="pop static" style="width:300px;align-self:flex-end" data-frag="curMenu"></div><div class="spec">Cambio de moneda: cifras con tick vertical 200 ms</div></div>
+ </div>
+
+ <div class="g2">
+  <div class="tile dim"><header><b>Paleta de búsqueda</b><span>Ctrl + K · sin animación</span></header><div class="palette static" style="width:100%" data-frag="palette"></div><div class="spec">Acción de teclado repetida: aparece al instante (regla Emil Kowalski)</div></div>
+  <div class="tile dim"><header><b>Modal · Crear alerta</b><span>centrado · 240 ms</span></header>
+   <div class="modal static" style="width:100%">
+    <div class="mh"><div><h3>Crear alerta de precio</h3><p class="mut" style="font-size:14px;margin-top:4px">Apple AirPods Max · plata</p></div><button class="ibtn" aria-label="Cerrar"><svg class="ic"><use href="#i-x"/></svg></button></div>
+    <div class="mb stack-v" style="--g:16px"><div class="field"><label>Avísame cuando el total baje de</label><div class="input-ic"><svg class="ic"><use href="#i-tag"/></svg><input class="input num" value="$ 2.000.000" style="font-size:20px;font-weight:700;height:58px"></div><input type="range" class="range" min="1500000" max="2300000" value="2000000"><div class="row between hint"><span>Hoy: $ 2.116.000</span><span>−5,5 %</span></div></div><label class="check"><input type="checkbox" checked>Notificación en SAMP</label><label class="check"><input type="checkbox" checked>Correo a laura@correo.co</label></div>
+    <div class="mf"><button class="btn btn-q">Cancelar</button><button class="btn btn-p">Crear alerta</button></div>
+   </div><div class="spec">fondo blur(3px) + 42 % · scale(.96) → 1 · Esc y clic fuera cierran</div></div>
+ </div>
+
+ <div class="g3">
+  <div class="tile"><header><b>Menú móvil</b><span>drawer 420 ms</span></header><div class="phone"><div class="ghost"><i></i><i style="width:70%"></i><i></i></div><div class="scrim"></div><aside class="drawer static" data-frag="mobileNav"></aside></div><div class="spec">translateX(-100%) → 0 · cubic-bezier(.32,.72,0,1)</div></div>
+  <div class="tile"><header><b>Filtros móvil</b><span>bottom sheet 450 ms</span></header><div class="phone"><div class="ghost"><i></i><i style="width:70%"></i><i></i></div><div class="scrim"></div>
+   <div class="sheet static"><div class="grab"></div><div class="row between" style="margin-bottom:8px"><b class="disp" style="font-size:22px">Filtros</b><span class="ibtn"><svg class="ic"><use href="#i-x"/></svg></span></div>
+    <label class="row between" style="padding:14px 0;border-top:1px solid var(--line);font-weight:700">Solo total completo<input type="checkbox" class="switch"></label>
+    <label class="row between" style="padding:14px 0;border-top:1px solid var(--line);font-weight:700">Envío a Colombia<input type="checkbox" class="switch" checked></label>
+    <div style="padding:14px 0;border-top:1px solid var(--line)"><b>Tienda</b><label class="check"><input type="checkbox" checked>Mercado Libre<span class="n">9</span></label><label class="check"><input type="checkbox" checked>eBay<span class="n">6</span></label></div>
+    <div class="row" style="--g:10px;padding-top:8px"><span class="btn btn-s grow">Limpiar</span><span class="btn btn-p grow">Ver 23</span></div></div></div><div class="spec">arrastrar para cerrar: velocidad &gt; 0,11 descarta</div></div>
+  <div class="tile"><header><b>Toasts y tooltip</b><span>transiciones interrumpibles</span></header>
+   <div style="display:grid;gap:18px;align-content:start;flex:1">
+    <div class="row" style="gap:16px;justify-content:center;padding:44px 0 8px"><span class="ibtn tip show" data-tip="Escanear código" style="box-shadow:inset 0 0 0 1.5px var(--line)"><svg class="ic"><use href="#i-barcode"/></svg></span></div>
+    <div class="toasts static" style="width:100%">
+     <div class="toast"><svg class="ic"><use href="#i-heart"/></svg><span>Guardado en favoritos. Te avisaremos si baja.</span><button>Deshacer</button></div>
+     <div class="toast"><svg class="ic"><use href="#i-bell"/></svg><span>Alerta creada bajo $ 2.000.000.</span></div>
+     <div class="toast light"><svg class="ic"><use href="#i-check"/></svg><span>Preferencias guardadas</span></div>
+    </div>
+   </div>
+   <div class="spec">toast: translateY(16px) scale(.98) → 0 · 400 ms · pausa al pasar el cursor<br>tooltip: 350 ms de espera, 125 ms ease-out</div></div>
+ </div>
+</div>
+<script src="assets/samp.js"></script>
+</body></html>

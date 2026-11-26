@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Comparar productos · SAMP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@600;700;800&family=Red+Hat+Mono:wght@500&family=Red+Hat+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/samp.css">
+<style>
+.cmp{display:grid;grid-template-columns:240px repeat(3,minmax(0,1fr));gap:0 20px;margin-top:32px}
+.cmp .hd{position:sticky;top:var(--nav-h);z-index:5;background:#fff;padding:16px 0 20px}
+.pc{position:relative;text-align:left}
+.pc .im{aspect-ratio:4/3;background:var(--photo);border-radius:var(--r-lg);display:grid;place-items:center;margin-bottom:14px}
+.pc .im img{width:60%;height:70%;object-fit:contain;filter:drop-shadow(0 16px 16px rgba(11,23,38,.14))}
+.pc h3{font-size:19px}.pc .x{position:absolute;top:10px;right:10px;background:#fff;box-shadow:var(--sh-1)}
+.pc .pr{font:800 26px var(--f-disp);margin-top:6px}
+.add{border:2px dashed var(--line-2);border-radius:var(--r-lg);aspect-ratio:4/3;display:grid;place-items:center;align-content:center;gap:10px;color:var(--mut);font-weight:700;transition:border-color var(--t-fast),color var(--t-fast),background-color var(--t-fast)}
+.add:hover{border-color:var(--act);color:var(--act);background:var(--act-50)}
+.add .ic{width:32px;height:32px}
+.rowc{display:contents}
+.rowc>*{padding:16px 0;border-top:1px solid var(--line);font-size:15px}
+.rowc>:first-child{color:var(--mut);font-weight:700;font-size:14px}
+.rowc .win{font-weight:800;color:var(--ok);display:flex;align-items:center;gap:6px}
+.rowc.diff>*:not(:first-child){background:linear-gradient(transparent,transparent)}
+.rowc.same{opacity:1;transition:opacity var(--t)}
+.only .rowc.same{display:none}
+.grp{grid-column:1/-1;padding:32px 0 8px;font:800 20px var(--f-disp)}
+.meter2{display:flex;align-items:center;gap:10px}.meter2 .bar{flex:1;max-width:160px}
+@media(max-width:900px){.cmp{grid-template-columns:110px repeat(3,minmax(150px,1fr));overflow-x:auto;gap:0 12px}.pc h3{font-size:15px}.pc .pr{font-size:18px}.cmp .hd{position:static}}
+</style></head>
+<body data-page="comparar">
+<main class="page"><div class="wrap">
+ <nav class="crumb"><a href="index.html">Inicio</a><svg class="ic"><use href="#i-chevr"/></svg><a href="resultados.html">Audio</a><svg class="ic"><use href="#i-chevr"/></svg><span>Comparar</span></nav>
+ <div class="row between wrapf" style="margin-top:14px;--g:20px">
+  <div><h1 class="ph-title">Comparar audífonos</h1><h2 class="sr">Contenido: Comparar audífonos</h2><p class="mut" style="margin-top:6px">Mejor total de cada producto entre todas las tiendas · 17 nov, 10:42</p></div>
+  <label class="row" style="--g:12px;font-weight:700"><input type="checkbox" class="switch" id="only" onchange="document.getElementById('cmp').classList.toggle('only',this.checked)">Mostrar solo diferencias</label>
+ </div>
+ <div class="cmp" id="cmp">
+  <div class="hd"></div>
+  <div class="hd pc rv"><div class="im"><img src="https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods-max-silver/thumbnail.webp" alt=""></div><button class="ibtn sm x" aria-label="Quitar"><svg class="ic sm"><use href="#i-x"/></svg></button><span class="chip blue">Mejor total</span><h3 style="margin-top:8px">Apple AirPods Max</h3><div class="pr num">$ 2.116.000</div><a class="btn btn-p sm" style="margin-top:12px" href="producto.html">Ver ofertas</a></div>
+  <div class="hd pc rv" style="--i:1"><div class="im"><img src="https://cdn.dummyjson.com/product-images/mobile-accessories/beats-flex-wireless-earphones/thumbnail.webp" alt=""></div><button class="ibtn sm x" aria-label="Quitar"><svg class="ic sm"><use href="#i-x"/></svg></button><span class="chip real">Total completo</span><h3 style="margin-top:8px">Beats Flex</h3><div class="pr num">$ 219.000</div><a class="btn btn-s sm" style="margin-top:12px" href="producto.html">Ver ofertas</a></div>
+  <div class="hd rv" style="--i:2"><button class="add" style="width:100%" data-palette><svg class="ic"><use href="#i-plus"/></svg>Añadir producto<span class="hint">Hasta 3</span></button></div>
+
+  <div class="grp">Precio</div>
+  <div class="rowc diff"><span>Mejor total</span><span class="num"><b>$ 2.116.000</b></span><span class="num win"><svg class="ic sm"><use href="#i-check"/></svg>$ 219.000</span><span></span></div>
+  <div class="rowc diff"><span>Tienda</span><span class="row" style="--g:8px"><span class="store sm" style="--c:var(--s-meli)">ML</span>Mercado Libre</span><span class="row" style="--g:8px"><span class="store sm" style="--c:var(--s-meli)">ML</span>Mercado Libre</span><span></span></div>
+  <div class="rowc diff"><span>Frente a 30 días</span><span class="drop"><svg class="ic sm"><use href="#i-down"/></svg>−8 %</span><span class="mut">Estable</span><span></span></div>
+  <div class="rowc same"><span>Envío</span><span>Gratis</span><span>Gratis</span><span></span></div>
+  <div class="rowc diff"><span>Recomendación</span><span class="chip real">Comprar ya</span><span class="chip line">Esperar o comprar</span><span></span></div>
+  <div class="grp">Características</div>
+  <div class="rowc diff"><span>Tipo</span><span>Diadema</span><span>Intraurales con cuello</span><span></span></div>
+  <div class="rowc diff"><span>Cancelación de ruido</span><span class="win"><svg class="ic sm"><use href="#i-check"/></svg>Activa</span><span class="mut">No</span><span></span></div>
+  <div class="rowc diff"><span>Batería</span><span><div class="meter2"><span class="bar"><i style="--v:55%"></i></span>20 h</div></span><span><div class="meter2"><span class="bar ok"><i style="--v:100%"></i></span><b class="win" style="display:inline">36 h</b></div></span><span></span></div>
+  <div class="rowc same"><span>Conexión</span><span>Bluetooth 5.0</span><span>Bluetooth 5.0</span><span></span></div>
+  <div class="rowc diff"><span>Peso</span><span>384,8 g</span><span class="win">18,6 g</span><span></span></div>
+  <div class="rowc same"><span>Marca</span><span>Apple</span><span>Apple (Beats)</span><span></span></div>
+ </div>
+</div></main>
+<script src="assets/samp.js"></script>
+</body></html>

@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sistema de diseño · SAMP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@600;700;800&family=Red+Hat+Mono:wght@500&family=Red+Hat+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/samp.css">
+<style>
+body{background:var(--surf)}
+.board{max-width:1440px;margin:0 auto;padding:56px 40px 96px}
+.hero2{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:40px;flex-wrap:wrap}
+.hero2 h1{font-size:56px}.hero2 p{color:var(--ink-2);max-width:60ch;margin-top:8px}
+.tile{background:#fff;border-radius:var(--r-xl);padding:32px;box-shadow:var(--sh-1);margin-bottom:24px}
+.tile>h2{font-size:28px;margin-bottom:6px}.tile>p.sub{color:var(--mut);margin-bottom:24px}
+.sw{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+.sw div{border-radius:18px;overflow:hidden;box-shadow:inset 0 0 0 1px var(--line)}
+.sw i{display:block;height:88px}
+.sw span{display:block;padding:10px 12px;font-size:13px}.sw b{display:block;font-size:14px}.sw code{font:500 12px var(--f-mono);color:var(--mut)}
+.typ{display:grid;gap:18px}
+.typ div{display:grid;grid-template-columns:200px 1fr;gap:24px;align-items:baseline;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.typ code{font:500 12px/1.6 var(--f-mono);color:var(--mut)}
+.cmp{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.cmp>div{display:grid;gap:14px;align-content:start}
+.cmp h3{font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);font-family:var(--f-text)}
+.mot{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.mc{padding:20px;border-radius:20px;background:var(--surf);display:grid;gap:12px}
+.mc b{font-size:15px}.mc code{font:500 12px/1.6 var(--f-mono);color:var(--ink-2)}
+.track{height:56px;border-radius:14px;background:#fff;position:relative;overflow:hidden;box-shadow:inset 0 0 0 1px var(--line)}
+.track i{position:absolute;left:8px;top:8px;width:40px;height:40px;border-radius:12px;background:var(--act);animation:mv 2.4s infinite;animation-timing-function:var(--e)}
+@keyframes mv{0%,15%{transform:translateX(0)}55%,100%{transform:translateX(calc(var(--w,200px)))}}
+html.cap .track i{transform:translateX(120px)}
+.curve{width:100%;height:64px}
+.sp{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.sp div{display:grid;justify-items:center;gap:8px;font:500 12px var(--f-mono);color:var(--mut)}
+.sp i{display:block;background:var(--act-100);border-radius:4px;width:var(--s);height:var(--s)}
+.rad{display:flex;gap:16px;flex-wrap:wrap}.rad div{width:96px;height:96px;background:var(--surf-2);display:grid;place-items:end start;padding:10px;font:500 12px var(--f-mono);color:var(--mut)}
+.shd{display:flex;gap:24px;flex-wrap:wrap}.shd div{width:200px;height:120px;border-radius:20px;background:#fff;display:grid;place-items:center;font:500 12px var(--f-mono);color:var(--mut)}
+.icons{display:grid;grid-template-columns:repeat(12,1fr);gap:10px}
+.icons span{aspect-ratio:1;border-radius:14px;background:var(--surf);display:grid;place-items:center;color:var(--ink-2)}
+.do{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.do>div{padding:18px;border-radius:16px}.do .y{background:var(--ok-50)}.do .n{background:var(--bad-50)}
+.do b{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.do li{padding:4px 0;font-size:14px;color:var(--ink-2)}
+.tblw{overflow-x:auto}
+@media(max-width:1100px){.sw{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}.mot{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}.cmp{grid-template-columns:minmax(0,1fr)}.icons{grid-template-columns:repeat(auto-fill,minmax(52px,1fr))}}
+@media(max-width:900px){.board{padding:32px 16px 72px}.hero2 h1{font-size:38px}.tile{padding:20px;border-radius:24px;min-width:0}.typ div{grid-template-columns:1fr;gap:6px}.typ .disp{font-size:clamp(32px,11vw,88px)!important}.do{grid-template-columns:1fr}.shd div{width:calc(50% - 12px)}.rad div{width:76px;height:76px}.track{--w:120px}}
+@media(max-width:900px){.board .grid{--c:1!important}.cmp>div{min-width:0}.cmp .row{flex-wrap:wrap}}
+</style></head>
+<body data-page="sistema" data-layout="bare">
+<div class="board">
+ <div class="hero2"><div><a class="logo" href="index.html" style="margin-bottom:20px"><svg><use href="#logo"/></svg><span>SAMP<small>SISTEMA DE DISEÑO v2</small></span></a><h1>Sistema de diseño</h1><p>Tienda moderna y confiable, con acabado de Apple y Nike: mucho aire, fotos grandes, precios honestos y movimiento rápido con propósito. Tokens listos para CSS + Thymeleaf.</p></div><span class="chip line">Red Hat Display · Red Hat Text · Red Hat Mono</span></div>
+
+ <section class="tile"><h2>Color</h2><p class="sub">Derivado del logo. El azul de acción se reserva para lo que se puede pulsar; el turquesa para lo confirmado.</p>
+  <div class="sw">
+   <div><i style="background:#0B1726"></i><span><b>Tinta</b><code>--ink #0B1726</code></span></div>
+   <div><i style="background:#35465A"></i><span><b>Tinta 2</b><code>--ink-2 #35465A</code></span></div>
+   <div><i style="background:#5B6B7D"></i><span><b>Apagado</b><code>--mut #5B6B7D</code></span></div>
+   <div><i style="background:#E3E9F0"></i><span><b>Línea</b><code>--line #E3E9F0</code></span></div>
+   <div><i style="background:#F4F6F9"></i><span><b>Superficie</b><code>--surf #F4F6F9</code></span></div>
+   <div><i style="background:#EAF0F7"></i><span><b>Panel foto</b><code>--photo #EAF0F7</code></span></div>
+   <div><i style="background:#0B7BF2"></i><span><b>Marca</b><code>--brand #0B7BF2</code></span></div>
+   <div><i style="background:#0A62C4"></i><span><b>Acción</b><code>--act #0A62C4</code></span></div>
+   <div><i style="background:#074C99"></i><span><b>Acción hover</b><code>--act-d #074C99</code></span></div>
+   <div><i style="background:#1447C0"></i><span><b>Marca profunda</b><code>--brand-deep</code></span></div>
+   <div><i style="background:#22E3D2"></i><span><b>Turquesa</b><code>--teal #22E3D2</code></span></div>
+   <div><i style="background:#E8F1FE"></i><span><b>Acción 50</b><code>--act-50</code></span></div>
+   <div><i style="background:#0F6B4B"></i><span><b>Correcto</b><code>--ok #0F6B4B</code></span></div>
+   <div><i style="background:#8A4B00"></i><span><b>Aviso</b><code>--warn #8A4B00</code></span></div>
+   <div><i style="background:#B42318"></i><span><b>Error</b><code>--bad #B42318</code></span></div>
+   <div><i style="background:#3B3F86"></i><span><b>Demostración</b><code>--demo #3B3F86</code></span></div>
+   <div><i style="background:linear-gradient(90deg,#A85512 25%,#2A6FDB 25% 50%,#6E4A9E 50% 75%,#2A7D55 75%)"></i><span><b>Tiendas</b><code>--s-ebay · meli · demo · off</code></span></div>
+   <div><i style="background:#13243A"></i><span><b>Noche 2</b><code>--night-2 #13243A</code></span></div>
+  </div></section>
+
+ <section class="tile"><h2>Tipografía</h2><p class="sub">Display para titulares y cifras; Text para lectura; Mono para códigos (GTIN, logs, tokens). Cifras siempre tabulares.</p>
+  <div class="typ">
+   <div><code>Display 800 · 104/1.0<br>tracking −4,5 %</code><span class="disp" style="font-size:88px;line-height:1;letter-spacing:-.045em">¿Qué quieres comprar?</span></div>
+   <div><code>H1 800 · 48/1.1</code><span class="disp" style="font-size:48px">Resultados para «airpods»</span></div>
+   <div><code>H2 800 · 32/1.1</code><span class="disp" style="font-size:32px">Bajaron de precio hoy</span></div>
+   <div><code>H3 800 · 20/1.25</code><span class="disp" style="font-size:20px">Apple AirPods Max · plata</span></div>
+   <div><code>Precio 800 · 26 tabular</code><span class="disp num" style="font-size:26px">$ 2.116.000</span></div>
+   <div><code>Cuerpo 400 · 16/1.55</code><span>Sumamos precio, envío e impuestos conocidos y convertimos con la tasa del día.</span></div>
+   <div><code>Etiqueta 700 · 13</code><span style="font-size:13px;font-weight:700">Total completo · hace 12 min</span></div>
+   <div><code>Mono 500 · 13</code><span class="mono" style="font-size:13px">GTIN 0194252246457</span></div>
+  </div></section>
+
+ <section class="tile"><h2>Componentes</h2><p class="sub">Píldoras para acciones, chips para el tipo de dato, monogramas para tiendas. Todo pulsable responde con scale(.97).</p>
+  <div class="cmp">
+   <div><h3>Botones</h3><div class="row wrapf" style="--g:10px"><button class="btn btn-p">Primario</button><button class="btn btn-s">Secundario</button><button class="btn btn-q">Silencioso</button></div><div class="row wrapf" style="--g:10px"><button class="btn btn-n">Oscuro</button><button class="btn btn-t">Turquesa</button><button class="btn btn-d">Peligro</button></div><div class="row wrapf" style="--g:10px"><button class="btn btn-p sm">Pequeño</button><button class="btn btn-p lg">Grande</button><button class="btn btn-p loading">Cargando</button></div><div class="row" style="--g:6px"><button class="ibtn" style="box-shadow:inset 0 0 0 1.5px var(--line)"><svg class="ic"><use href="#i-heart"/></svg></button><button class="ibtn" style="box-shadow:inset 0 0 0 1.5px var(--line)"><svg class="ic"><use href="#i-bell"/></svg><span class="dot">3</span></button><button class="fav on" style="position:static"><span class="b"></span><svg class="ic"><use href="#i-heart"/></svg></button></div></div>
+   <div><h3>Chips y estado</h3><div class="row wrapf" style="--g:8px"><span class="chip real">Dato real</span><span class="chip demo">Demostración</span><span class="chip warn">Total incompleto</span><span class="chip bad">Desactualizado</span><span class="chip blue">Mejor total</span><span class="chip teal">IA</span><span class="chip line">Similares</span><span class="chip dark">Admin</span></div>
+    <div class="row wrapf" style="--g:8px"><span class="store" style="--c:var(--s-meli)">ML</span><span class="store" style="--c:var(--s-ebay)">e</span><span class="store" style="--c:var(--s-demo)">D</span><span class="store" style="--c:var(--s-off)">O</span><span class="stores"><span class="store sm" style="--c:var(--s-meli)">ML</span><span class="store sm" style="--c:var(--s-ebay)">e</span><span class="store sm" style="--c:var(--s-demo)">D</span></span></div>
+    <div class="prog"><span class="pstore done"><span class="store" style="--c:var(--s-meli)">ML</span>Mercado Libre · 9<span class="st ok"><svg class="ic"><use href="#i-check"/></svg></span></span><span class="pstore"><span class="store" style="--c:var(--s-ebay)">e</span>eBay<span class="st w"></span></span><span class="pstore fail"><span class="store" style="--c:var(--s-fake)">F</span>Sin respuesta<span class="st bad"><svg class="ic"><use href="#i-alert"/></svg></span></span></div>
+    <div class="row" style="--g:14px"><span class="drop"><svg class="ic sm"><use href="#i-down"/></svg>−8 %</span><span class="drop up"><svg class="ic sm"><use href="#i-up"/></svg>+3 %</span><span class="row" style="--g:6px;font-size:13px;font-weight:600"><span class="sdot ok"></span>OK</span><span class="row" style="--g:6px;font-size:13px;font-weight:600"><span class="sdot warn"></span>Parcial</span><span class="row" style="--g:6px;font-size:13px;font-weight:600"><span class="sdot bad"></span>Fallo</span></div></div>
+   <div><h3>Formularios</h3><div class="input-ic"><svg class="ic"><use href="#i-search"/></svg><input class="input" placeholder="Buscar producto"></div><select class="input"><option>Menor total estimado</option></select><div class="row between"><label class="check"><input type="checkbox" checked>Mercado Libre</label><input type="checkbox" class="switch" checked aria-label="Interruptor"></div><input type="range" class="range" value="60" aria-label="Rango"><div class="seg"><button aria-selected="true">7 d</button><button>30 d</button><button>90 d</button></div></div>
+  </div>
+  <div class="grid" style="--c:4;margin-top:32px">
+   <a class="pcard" href="producto.html"><div class="ph"><div class="tg"><span class="chip blue">Mejor total</span></div><button class="fav" aria-label="Guardar"><span class="b"></span><svg class="ic"><use href="#i-heart"/></svg></button><img src="https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods-max-silver/thumbnail.webp" alt=""></div><h3>Tarjeta de producto</h3><div class="br">Mercado Libre</div><div class="pr"><b>$ 2.116.000</b><s>$ 2.299.000</s></div></a>
+   <div><div class="sk ph"></div><div class="sk t h w6"></div><div class="sk t w4"></div></div>
+   <div class="panel pad" style="display:grid;gap:12px;align-content:start"><b class="disp">Banner</b><div class="banner"><svg class="ic"><use href="#i-alert"/></svg><span>Envío desconocido</span></div><div class="banner info"><svg class="ic"><use href="#i-info"/></svg><span>Dato de demostración</span></div></div>
+   <div class="panel pad" style="display:grid;gap:12px;align-content:start"><b class="disp">Toast</b><div class="toast"><svg class="ic"><use href="#i-check"/></svg><span>Guardado</span><button>Deshacer</button></div><div class="tabs" style="margin-top:8px"><button aria-selected="true">Ofertas</button><button>Historial</button></div></div>
+  </div></section>
+
+ <section class="tile"><h2>Movimiento</h2><p class="sub">Rápido, con propósito, interrumpible. Solo <span class="mono">transform</span> y <span class="mono">opacity</span>. Con <span class="mono">prefers-reduced-motion</span> todo queda en su estado final.</p>
+  <div class="mot">
+   <div class="mc"><b>Salida fuerte</b><code>--ease cubic-bezier(.23,1,.32,1)</code><div class="track"><i style="--e:cubic-bezier(.23,1,.32,1)"></i></div><code>Entradas, popovers, hover</code></div>
+   <div class="mc"><b>Entrada y salida</b><code>--ease-io cubic-bezier(.77,0,.175,1)</code><div class="track"><i style="--e:cubic-bezier(.77,0,.175,1)"></i></div><code>Indicadores, trazo de gráficos</code></div>
+   <div class="mc"><b>Cajón</b><code>--ease-drawer cubic-bezier(.32,.72,0,1)</code><div class="track"><i style="--e:cubic-bezier(.32,.72,0,1)"></i></div><code>Drawer, bottom sheet</code></div>
+   <div class="mc"><b>Lineal</b><code>linear</code><div class="track"><i style="--e:linear"></i></div><code>Shimmer, spinner, láser</code></div>
+  </div>
+  <div class="tblw" style="margin-top:28px"><table class="tbl"><thead><tr><th>Elemento</th><th>Disparador</th><th>Propiedades</th><th>Duración</th><th>Curva</th><th>Propósito</th></tr></thead><tbody>
+   <tr><td><b>Botón</b></td><td>:active</td><td>scale(.97)</td><td class="num">140 ms</td><td>--ease</td><td>Confirma la pulsación</td></tr>
+   <tr><td><b>Popover / menú</b></td><td>clic</td><td>opacity, scale(.96) desde el disparador</td><td class="num">180 ms</td><td>--ease</td><td>Origen espacial</td></tr>
+   <tr><td><b>Mega menú</b></td><td>hover 120 ms / clic</td><td>opacity, translateY(-8px)</td><td class="num">240 ms</td><td>--ease</td><td>Evita aperturas accidentales</td></tr>
+   <tr><td><b>Modal</b></td><td>clic</td><td>opacity, scale(.96) centrado + fondo blur</td><td class="num">240 ms</td><td>--ease</td><td>Foco en la tarea</td></tr>
+   <tr><td><b>Drawer / sheet</b></td><td>clic, arrastre</td><td>translateX/Y(100%)</td><td class="num">420–450 ms</td><td>--ease-drawer</td><td>Físico, descarta con velocidad &gt; 0,11</td></tr>
+   <tr><td><b>Paleta Ctrl+K</b></td><td>teclado</td><td>—</td><td class="num">0 ms</td><td>—</td><td>Acción repetida: sin animación</td></tr>
+   <tr><td><b>Tiendas consultadas</b></td><td>búsqueda</td><td>spinner → check con pop</td><td class="num">300 ms c/u</td><td>--ease</td><td>Muestra progreso real y fallos</td></tr>
+   <tr><td><b>Cifras de precio</b></td><td>entrar en pantalla</td><td>conteo ascendente</td><td class="num">1100 ms</td><td>easeOutQuart</td><td>Atrae al dato clave</td></tr>
+   <tr><td><b>Revelado al hacer scroll</b></td><td>IntersectionObserver</td><td>opacity, translateY(24px), stagger 60 ms</td><td class="num">800 ms</td><td>--ease</td><td>Ritmo de lectura</td></tr>
+   <tr><td><b>Favorito</b></td><td>clic</td><td>latido scale + anillo que se expande</td><td class="num">450 ms</td><td>--ease</td><td>Deleite en acción poco frecuente</td></tr>
+   <tr><td><b>Toast</b></td><td>evento</td><td>translateY(16px) scale(.98) → 0</td><td class="num">400 ms</td><td>--ease</td><td>Pausa al pasar el cursor; Deshacer</td></tr>
+   <tr><td><b>Gráfico de historial</b></td><td>abrir pestaña</td><td>stroke-dashoffset, área con fade</td><td class="num">1600 ms</td><td>--ease-io</td><td>Explica la tendencia</td></tr>
+   <tr><td><b>Indicador de pestañas</b></td><td>clic</td><td>translateX + width</td><td class="num">240 ms</td><td>--ease-io</td><td>Continuidad espacial</td></tr>
+   <tr><td><b>Respuesta de IA</b></td><td>enviar</td><td>herramientas resuelven, texto en streaming</td><td class="num">≈ 28 ms/token</td><td>lineal</td><td>Transparencia del proceso</td></tr>
+  </tbody></table></div></section>
+
+ <section class="tile"><h2>Espacio, radios y sombras</h2><p class="sub">Escala de 4 px. Radios generosos en fotos y tarjetas; píldora para acciones.</p>
+  <div class="sp"><div><i style="--s:4px"></i>4</div><div><i style="--s:8px"></i>8</div><div><i style="--s:12px"></i>12</div><div><i style="--s:16px"></i>16</div><div><i style="--s:24px"></i>24</div><div><i style="--s:32px"></i>32</div><div><i style="--s:48px"></i>48</div><div><i style="--s:72px"></i>72</div><div><i style="--s:112px"></i>112</div></div>
+  <div class="rad" style="margin-top:28px"><div style="border-radius:8px">xs 8</div><div style="border-radius:12px">sm 12</div><div style="border-radius:16px">16</div><div style="border-radius:24px">lg 24</div><div style="border-radius:32px">xl 32</div><div style="border-radius:40px">2xl 40</div><div style="border-radius:999px;width:160px">píldora</div></div>
+  <div class="shd" style="margin-top:28px"><div style="box-shadow:var(--sh-1)">sh-1 · reposo</div><div style="box-shadow:var(--sh-2)">sh-2 · hover</div><div style="box-shadow:var(--sh-3)">sh-3 · flotante</div><div style="box-shadow:inset 0 0 0 2px var(--act),var(--ring)">foco · anillo</div></div></section>
+
+ <section class="tile"><h2>Iconos</h2><p class="sub">Trazo 1,75 px, extremos redondeados, cuadrícula de 24. <span class="mono">currentColor</span>.</p>
+  <div class="icons" id="ics"></div></section>
+
+ <section class="tile"><h2>Reglas de contenido</h2><p class="sub">Del principio de producto «transparencia antes que atractivo».</p>
+  <div class="do"><div class="y"><b><svg class="ic"><use href="#i-check"/></svg>Sí</b><ul><li>«Envío desconocido» cuando la tienda no lo informa.</li><li>«Menor precio publicado» si el total está incompleto.</li><li>Tienda, moneda original, hora y tipo de dato junto al precio.</li><li>«Similares» cuando no hay regla verificable de equivalencia.</li></ul></div>
+   <div class="n"><b><svg class="ic"><use href="#i-x"/></svg>No</b><ul><li>Mostrar un costo faltante como $ 0.</li><li>Llamar «el más barato» a una oferta con costos faltantes.</li><li>Mezclar datos de demostración sin su etiqueta.</li><li>Inventar reseñas, clientes o métricas.</li></ul></div></div></section>
+</div>
+<script src="assets/samp.js"></script>
+<script>document.getElementById('ics').innerHTML=['search','heart','bell','user','barcode','camera','spark','cpu','gpu','ram','psu','board','truck','receipt','tag','clock','info','alert','down','up','ext','share','cols','sliders','filter','grid','list','home','gear','shield','db','layers','refresh','send','mic','image'].map(n=>'<span title="'+n+'">'+SAMP.I(n,'lg')+'</span>').join('')</script>
+</body></html>

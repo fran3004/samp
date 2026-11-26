@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>SAMP · Pasillo de tiendas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@700;800&family=Red+Hat+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0B1726;--mut:#566577;--surf:#F4F6F9;--ph:#EAF0F7;--blue:#0A62C4}
+*{box-sizing:border-box;margin:0}
+body{width:1440px;height:900px;overflow:hidden;position:relative;background:#fff;color:var(--ink);font:400 17px/1.5 'Red Hat Text',sans-serif}
+.nav{height:76px;display:flex;align-items:center;gap:28px;padding:0 48px;border-bottom:1px solid #E2E8EF}
+.logo{display:flex;align-items:center;gap:12px;font:800 24px 'Red Hat Display';letter-spacing:.04em}.logo svg{width:34px;height:34px}
+.sm{width:520px;height:46px;border-radius:999px;background:var(--surf);display:flex;align-items:center;padding:0 20px;color:var(--mut)}
+.nav .r{margin-left:auto;display:flex;gap:16px;align-items:center;font-weight:600;color:#35465A}.nav b{background:var(--blue);color:#fff;padding:12px 24px;border-radius:999px}
+.top{padding:26px 48px 8px;display:flex;align-items:flex-end;justify-content:space-between}
+.top h1{font:800 50px/1.1 'Red Hat Display';letter-spacing:-.03em;max-width:15ch}.top p{color:var(--mut);max-width:34ch;text-align:right;font-size:16px}
+.rows{padding:0 48px;display:grid;gap:14px;margin-top:18px}
+.row{display:grid;grid-template-columns:260px 1fr;gap:32px;height:196px;align-items:center}
+.who{display:flex;gap:14px;align-items:center}.mono{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:#fff;font:800 18px 'Red Hat Display'}
+.who b{font:800 20px 'Red Hat Display';display:block;line-height:1.25}.who small{color:var(--mut);font-size:14px;display:block}
+.chip{display:inline-block;height:26px;line-height:26px;padding:0 12px;border-radius:999px;font-size:12px;font-weight:700;background:#E9ECF8;color:#3B3F86;margin-top:6px}
+.shelf{position:relative;display:flex;gap:20px;height:100%;align-items:flex-end;padding-bottom:16px}
+.shelf:after{content:"";position:absolute;left:-12px;right:-48px;bottom:0;height:16px;border-radius:8px 0 0 8px;background:#D9E2EC}
+.t{width:180px;flex:none}.t .p{height:112px;background:var(--ph);border-radius:20px;display:grid;place-items:center;overflow:hidden}.t img{max-height:92px;max-width:78%;width:auto;height:auto;object-fit:contain}
+.t b{display:block;font:700 15px 'Red Hat Display';margin-top:8px;line-height:1.2}.t span{font:800 18px 'Red Hat Display'}
+.t.hl .p{outline:3px solid var(--blue);outline-offset:2px}.t.hl{transform:translateY(-6px)}
+svg.ln{position:absolute;inset:0;pointer-events:none}
+.tag{position:absolute;background:var(--ink);color:#fff;border-radius:999px;padding:6px 14px;font:800 15px 'Red Hat Display';white-space:nowrap}.tag.w{background:#FFF2DA;color:#7A4300}
+</style></head><body>
+<div class="nav"><div class="logo"><svg viewBox="0 0 64 64"><path d="M6 31 34 9c5-4 12-5 22-5l-5 24-31 6z" fill="#0B7BF2"/><path d="M30 22 44 12" stroke="#fff" stroke-width="4" stroke-linecap="round"/><rect x="5" y="33" width="46" height="25" rx="12.5" fill="#22E3D2"/><rect x="16" y="42" width="24" height="7" rx="3.5" fill="#fff"/></svg>SAMP</div><div class="sm">Busca un producto o un código de barras</div><div class="r"><span>Favoritos</span><span>Alertas</span><span>COP</span><b>Entrar</b></div></div>
+<div class="top"><h1>Un mismo producto, en todos los estantes.</h1><p>Señala un producto y mira en qué otras tiendas está, con su precio y su total.</p></div>
+<div class="rows">
+<div class="row"><div class="who"><span class="mono" style="background:#6E4A9E">M</span><div><b>Tienda de muestra</b><small>consultado hoy 10:42</small><span class="chip">Demostración</span></div></div><div class="shelf">
+<div class="t hl"><div class="p"><img src="https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods/thumbnail.webp" alt=""></div><b>Apple AirPods</b><span>$ 508.000</span></div>
+<div class="t"><div class="p"><img src="https://cdn.dummyjson.com/product-images/mobile-accessories/amazon-echo-plus/thumbnail.webp" alt=""></div><b>Amazon Echo Plus</b><span>$ 389.000</span></div>
+<div class="t"><div class="p"><img src="https://cdn.dummyjson.com/product-images/smartphones/iphone-13-pro/thumbnail.webp" alt=""></div><b>iPhone 13 Pro</b><span>$ 4.280.000</span></div>
+<div class="t"><div class="p"><img src="https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpower-wireless-charger/thumbnail.webp" alt=""></div><b>Cargador Airpower</b><span>$ 309.000</span></div>
+<div class="t"><div class="p"><img src="https://cdn.dummyjson.com/product-images/laptops/apple-macbook-pro-14-inch-space-grey/thumbnail.webp" alt=""></div><b>MacBook Pro 14"</b><span>$ 7.760.000</span></div></div></div>
+<div class="row"><div class="who"><span class="mono" style="background:#1F7A8C">D</span><div><b>DummyJSON</b><small>consultado hoy 10:42</small><span class="chip">Demostración</span></div></div><div class="shelf">
+<div class="t"><div class="p"><img src="https://cdn.dummyjson.com/product-images/smartphones/iphone-13-pro/thumbnail.webp" alt=""></div><b>iPhone 13 Pro</b><span>$ 4.399.960</span></div>
+<div class="t"><div class="p"><img src="https://cdn.dummyjson.com/product-images/laptops/apple-macbook-pro-14-inch-space-grey/thumbnail.webp" alt=""></div><b>MacBook Pro 14"</b><span>$ 7.999.960</span></div>
+<div class="t hl"><div class="p"><img src="https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods/thumbnail.webp" alt=""></div><b>Apple AirPods</b><span>$ 519.960</span></div>
+<div class="t"><div class="p"><img src="https://cdn.dummyjson.com/product-images/mobile-accessories/amazon-echo-plus/thumbnail.webp" alt=""></div><b>Amazon Echo Plus</b><span>$ 399.960</span></div>
+<div class="t"><div class="p"><img src="https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpower-wireless-charger/thumbnail.webp" alt=""></div><b>Cargador Airpower</b><span>$ 319.960</span></div></div></div>
+<div class="row"><div class="who"><span class="mono" style="background:#C2691A">P</span><div><b>Platzi</b><small>consultado el 16 nov</small><span class="chip">Demostración</span></div></div><div class="shelf">
+<div class="t"><div class="p"><img src="https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods-max-silver/thumbnail.webp" alt=""></div><b>AirPods Max</b><span>$ 2.116.000</span></div>
+<div class="t hl"><div class="p"><img src="https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods/thumbnail.webp" alt=""></div><b>Apple AirPods</b><span>$ 498.000</span></div>
+<div class="t"><div class="p"><img src="https://cdn.dummyjson.com/product-images/smartphones/iphone-13-pro/thumbnail.webp" alt=""></div><b>iPhone 13 Pro</b><span>$ 4.280.000</span></div>
+<div class="t"><div class="p"><img src="https://cdn.dummyjson.com/product-images/mobile-accessories/amazon-echo-plus/thumbnail.webp" alt=""></div><b>Amazon Echo Plus</b><span>$ 389.000</span></div>
+<div class="t"><div class="p"><img src="https://cdn.dummyjson.com/product-images/laptops/apple-macbook-pro-14-inch-space-grey/thumbnail.webp" alt=""></div><b>MacBook Pro 14"</b><span>$ 7.760.000</span></div></div></div>
+</div>
+<svg class="ln" viewBox="0 0 1440 900"><path d="M430 372 L830 558 L630 744" fill="none" stroke="#0A62C4" stroke-width="3" stroke-dasharray="3 10" stroke-linecap="round"/></svg>
+<div class="tag" style="left:340px;top:413px">Total $ 508.000 · completo</div>
+<div class="tag" style="left:740px;top:611px">Total $ 519.960 · completo</div>
+<div class="tag w" style="left:540px;top:827px">$ 498.000 · falta envío e impuestos</div>
+</body></html>

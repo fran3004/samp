@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Administración · SAMP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@600;700;800&family=Red+Hat+Mono:wght@500&family=Red+Hat+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/samp.css">
+<style>
+body{background:var(--surf)}
+.adm{display:grid;grid-template-columns:256px minmax(0,1fr);min-height:100dvh}
+.sb{position:sticky;top:0;height:100dvh;background:var(--night);color:#C9D6E4;display:flex;flex-direction:column;padding:20px 14px}
+.sb .logo{color:#fff;padding:4px 8px 20px}.sb .logo small{color:#7F92A8}
+.sb .grp{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#6F839A;padding:16px 12px 8px}
+.sb a{display:flex;align-items:center;gap:12px;height:42px;padding:0 12px;border-radius:10px;font-weight:600;font-size:14px;color:#AFBDCD;transition:background-color 120ms,color 120ms;position:relative}
+.sb a:hover{background:#13243A;color:#fff}
+.sb a[aria-current=page]{background:#1A3150;color:#fff}
+.sb a[aria-current=page]::before{content:"";position:absolute;left:-14px;top:10px;bottom:10px;width:3px;border-radius:0 3px 3px 0;background:var(--teal)}
+.sb a .n{margin-left:auto;font-size:12px;font-weight:800;padding:2px 7px;border-radius:6px;background:#3A2410;color:#FFC979}
+.sb .env{margin-top:auto;padding:14px;border-radius:14px;background:#13243A;font-size:13px;display:grid;gap:8px}
+.sb .env b{color:#fff}
+.main{min-width:0}
+.tb{position:sticky;top:0;z-index:20;height:68px;display:flex;align-items:center;gap:16px;padding:0 32px;background:rgba(244,246,249,.86);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.tb .nsearch{background:#fff;box-shadow:inset 0 0 0 1px var(--line)}
+.cnt{padding:28px 32px 64px}
+.vh{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+.vh h1{font-size:32px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:16px}
+.kpi{padding:20px;border-radius:var(--r-lg);background:#fff;box-shadow:var(--sh-1);display:grid;gap:4px}
+.kpi small{color:var(--mut);font-weight:700;font-size:13px;display:flex;align-items:center;gap:8px}
+.kpi b{font:800 32px/1.1 var(--f-disp);letter-spacing:-.02em}
+.kpi{min-width:0}.kpi .spark{height:36px;margin-top:6px;width:100%}.kpi .spark path{fill:none;stroke:var(--act);stroke-width:2;stroke-dasharray:300;stroke-dashoffset:300;animation:draw 1.4s var(--ease-io) .3s forwards}
+.cards{display:grid;grid-template-columns:1.6fr 1fr;gap:16px;margin-bottom:16px}
+.card{padding:22px;border-radius:var(--r-lg);background:#fff;box-shadow:var(--sh-1);min-width:0}
+.card h3{font-size:18px}
+.ch{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.bars{display:flex;align-items:flex-end;gap:10px;height:200px;padding-top:10px;border-bottom:1px solid var(--line)}
+.bars .c{flex:1;display:flex;flex-direction:column-reverse;gap:2px;height:100%;justify-content:flex-start;position:relative}
+.bars .c i{display:block;border-radius:4px;transform-origin:bottom;animation:grow .9s var(--ease) both;animation-delay:calc(var(--i)*40ms)}
+@keyframes grow{from{transform:scaleY(0)}}
+.bars .c:hover::after{content:attr(data-l);position:absolute;bottom:calc(100% + 6px);left:50%;translate:-50% 0;background:var(--ink);color:#fff;font-size:12px;font-weight:700;padding:5px 8px;border-radius:7px;white-space:nowrap}
+.xl{display:flex;gap:10px;margin-top:8px}.xl span{flex:1;text-align:center;font-size:12px;color:var(--mut);font-weight:600}
+.leg{display:flex;gap:16px;font-size:13px;font-weight:600;color:var(--ink-2)}.leg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.cb{display:grid;gap:12px}
+.cbr{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:12px;border-radius:14px;background:var(--surf)}
+.cbr b{font-size:14px;display:block}.cbr small{font-size:12px;color:var(--mut);font-weight:600}
+.br-st{font:700 11px var(--f-mono);padding:4px 8px;border-radius:6px;letter-spacing:.04em}
+.br-st.c{background:var(--ok-50);color:var(--ok)}.br-st.o{background:var(--bad-50);color:var(--bad)}.br-st.h{background:var(--warn-50);color:var(--warn)}
+.next{display:flex;align-items:center;gap:16px;padding:18px 20px;border-radius:var(--r-lg);background:var(--night);color:#fff}
+.next .ring{width:54px;height:54px}
+.tw{background:#fff;border-radius:var(--r-lg);box-shadow:var(--sh-1);overflow:auto}
+.tw .tbl th{background:#FBFCFD}
+.tw .tbar{display:flex;gap:10px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.cn{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.cnc{padding:20px;border-radius:var(--r-lg);background:#fff;box-shadow:var(--sh-1);display:grid;gap:14px;position:relative}
+.cnc .hd{display:flex;align-items:center;gap:12px}
+.cnc .prio{display:grid;gap:8px}
+.cnc .prio>div{display:grid;grid-template-columns:20px 1fr auto auto;gap:10px;align-items:center;padding:10px 12px;border-radius:12px;background:var(--surf);font-size:13px;font-weight:600;cursor:grab;transition:box-shadow var(--t-fast),transform var(--t) var(--ease)}
+.cnc .prio>div:hover{box-shadow:inset 0 0 0 1.5px var(--line-2)}
+.cnc .prio>div.drag{box-shadow:var(--sh-3);transform:scale(1.02) rotate(-1deg);background:#fff}
+.cnc .prio .ic{color:var(--mut)}
+.log{font:500 12.5px/1.7 var(--f-mono);background:var(--night);color:#C9D6E4;border-radius:14px;padding:16px;overflow:auto;max-height:340px}
+.log .w{color:#FFC979}.log .e{color:#FF9C92}.log .o{color:#7EE2B8}.log .t{color:#6F839A}
+.sev{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:13px}
+.iac{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.prov{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.prov label{display:flex;gap:12px;align-items:center;padding:16px;border-radius:14px;box-shadow:inset 0 0 0 1.5px var(--line);cursor:pointer;transition:box-shadow var(--t-fast)}
+.prov label:has(input:checked){box-shadow:inset 0 0 0 2px var(--act);background:var(--act-50)}
+.mburger{display:none}
+@media(max-width:1200px){.kpis{grid-template-columns:repeat(2,1fr)}.cards,.iac{grid-template-columns:1fr}.cn{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){.adm{grid-template-columns:1fr}.sb{display:none}.mburger{display:grid}.tb{padding:0 16px}.tb .nsearch{display:none}.cnt{padding:20px 16px 64px}.cn{grid-template-columns:1fr}}
+.vh .row{flex-wrap:wrap}.prov{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:900px){.prov{grid-template-columns:minmax(0,1fr)}.vh .row select{flex:1 1 140px}}
+</style></head>
+<body data-page="admin" data-layout="admin">
+<div class="adm">
+ <aside class="sb" aria-label="Administración">
+  <a class="logo" href="index.html" style="height:auto;padding:4px 8px 20px"><svg><use href="#logo"/></svg><span>SAMP<small>ADMINISTRACIÓN</small></span></a>
+  <a href="#resumen" data-nav="resumen"><svg class="ic"><use href="#i-act"/></svg>Resumen</a>
+  <div class="grp">Datos</div>
+  <a href="#tiendas" data-nav="tiendas"><svg class="ic"><use href="#i-cart"/></svg>Tiendas</a>
+  <a href="#conectores" data-nav="conectores"><svg class="ic"><use href="#i-layers"/></svg>Conectores</a>
+  <a href="#ejecuciones" data-nav="ejecuciones"><svg class="ic"><use href="#i-refresh"/></svg>Ejecuciones</a>
+  <a href="#calidad" data-nav="calidad"><svg class="ic"><use href="#i-shield"/></svg>Calidad de datos<span class="n">7</span></a>
+  <div class="grp">Plataforma</div>
+  <a href="#usuarios" data-nav="usuarios"><svg class="ic"><use href="#i-users"/></svg>Usuarios</a>
+  <a href="#ia" data-nav="ia"><svg class="ic"><use href="#i-spark"/></svg>Asistente IA</a>
+  <div class="env"><div class="row" style="--g:8px"><span class="sdot ok pulse"></span><b>Producción</b></div><span>Render · Supabase · Java 21</span><span class="mono" style="font-size:12px;color:#7F92A8">v0.9.3 · a1c4e7f</span></div>
+ </aside>
+
+ <div class="main">
+  <header class="tb">
+   <button class="ibtn mburger" aria-label="Menú"><svg class="ic"><use href="#i-menu"/></svg></button>
+   <button class="nsearch" data-palette style="max-width:380px"><svg class="ic"><use href="#i-search"/></svg><span>Buscar tienda, conector o usuario</span><span class="kbd">Ctrl</span><span class="kbd">K</span></button>
+   <div class="row" style="margin-left:auto;--g:8px">
+    <button class="btn btn-s sm" data-toast="Consulta manual en cola para 6 tiendas" data-toast-icon="refresh"><svg class="ic sm"><use href="#i-play"/></svg>Ejecutar consulta</button>
+    <button class="ibtn" aria-label="Alertas del sistema"><svg class="ic"><use href="#i-bell"/></svg><span class="dot">2</span></button>
+    <span class="avatar">AR</span>
+   </div>
+  </header>
+
+  <div class="cnt">
+  <!-- RESUMEN -->
+  <section data-view="resumen">
+   <div class="vh"><div><h1>Resumen</h1><h2 class="sr">Contenido: Resumen</h2><p class="mut">Últimas 24 horas · actualizado 10:42</p></div><div class="seg"><button>Hoy</button><button aria-selected="true">7 días</button><button>30 días</button></div></div>
+   <div class="kpis">
+    <div class="kpi io"><small><svg class="ic sm"><use href="#i-tag"/></svg>Ofertas vigentes</small><b class="num" data-count="12480">12.480</b><span class="drop"><svg class="ic sm"><use href="#i-up"/></svg>+4,2 % vs. ayer</span><svg class="spark" viewBox="0 0 200 36" preserveAspectRatio="none"><path d="M0 28 L20 26 L40 27 L60 22 L80 24 L100 18 L120 19 L140 14 L160 15 L180 10 L200 8"/></svg></div>
+    <div class="kpi io" style="--i:1"><small><svg class="ic sm"><use href="#i-refresh"/></svg>Ejecuciones hoy</small><b class="num" data-count="24">24</b><span class="mut" style="font-size:13px;font-weight:600">21 OK · 2 parciales · 1 fallo</span><svg class="spark" viewBox="0 0 200 36" preserveAspectRatio="none"><path d="M0 20 L20 18 L40 22 L60 16 L80 20 L100 14 L120 18 L140 12 L160 16 L180 12 L200 14"/></svg></div>
+    <div class="kpi io" style="--i:2"><small><svg class="ic sm"><use href="#i-check"/></svg>Tasa de éxito</small><b class="num" data-count="92" data-suf=" %">92 %</b><span class="drop up"><svg class="ic sm"><use href="#i-down"/></svg>−3 pts por FakeStore</span><svg class="spark" viewBox="0 0 200 36" preserveAspectRatio="none"><path d="M0 8 L20 9 L40 8 L60 10 L80 8 L100 9 L120 12 L140 14 L160 18 L180 16 L200 14"/></svg></div>
+    <div class="kpi io" style="--i:3"><small><svg class="ic sm"><use href="#i-shield"/></svg>Completitud media</small><b class="num" data-count="87" data-suf=" %">87 %</b><span class="mut" style="font-size:13px;font-weight:600">Umbral 80 %</span><svg class="spark" viewBox="0 0 200 36" preserveAspectRatio="none"><path d="M0 18 L20 16 L40 17 L60 15 L80 14 L100 15 L120 13 L140 12 L160 13 L180 11 L200 12"/></svg></div>
+   </div>
+   <div class="cards">
+    <div class="card io"><div class="ch"><h3>Ejecuciones por día</h3><div class="leg"><span><i style="background:#17A673"></i>Correctas</span><span><i style="background:#E29A1B"></i>Parciales</span><span><i style="background:#D93A2B"></i>Fallidas</span></div></div>
+     <div class="bars">
+      <div class="c" data-l="11 nov · 24" style="--i:0"><i style="height:78%;background:#17A673;--i:0"></i><i style="height:6%;background:#E29A1B;--i:0"></i></div>
+      <div class="c" data-l="12 nov · 24" style="--i:1"><i style="height:82%;background:#17A673;--i:1"></i><i style="height:3%;background:#E29A1B;--i:1"></i></div>
+      <div class="c" data-l="13 nov · 24"><i style="height:80%;background:#17A673;--i:2"></i><i style="height:3%;background:#E29A1B;--i:2"></i><i style="height:3%;background:#D93A2B;--i:2"></i></div>
+      <div class="c" data-l="14 nov · 24"><i style="height:85%;background:#17A673;--i:3"></i></div>
+      <div class="c" data-l="15 nov · 24"><i style="height:76%;background:#17A673;--i:4"></i><i style="height:9%;background:#E29A1B;--i:4"></i></div>
+      <div class="c" data-l="16 nov · 24"><i style="height:70%;background:#17A673;--i:5"></i><i style="height:6%;background:#E29A1B;--i:5"></i><i style="height:9%;background:#D93A2B;--i:5"></i></div>
+      <div class="c" data-l="17 nov · 24"><i style="height:74%;background:#17A673;--i:6"></i><i style="height:7%;background:#E29A1B;--i:6"></i><i style="height:4%;background:#D93A2B;--i:6"></i></div>
+     </div>
+     <div class="xl"><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span><span>16</span><span>17 nov</span></div>
+    </div>
+    <div class="card io" style="--i:1"><div class="ch"><h3>Circuit breakers</h3><a class="link" href="#conectores" style="font-size:14px">Conectores</a></div>
+     <div class="cb">
+      <div class="cbr"><span class="store sq" style="--c:var(--s-meli)">ML</span><div><b>Mercado Libre · API</b><small>98 % éxito · 312 ms</small></div><span class="br-st c">CERRADO</span></div>
+      <div class="cbr"><span class="store sq" style="--c:var(--s-ebay)">e</span><div><b>eBay · API Browse</b><small>95 % éxito · 488 ms</small></div><span class="br-st c">CERRADO</span></div>
+      <div class="cbr"><span class="store sq" style="--c:var(--s-fake)">F</span><div><b>FakeStore · API</b><small>3 fallos seguidos · reintento 11:12</small></div><span class="br-st o">ABIERTO</span></div>
+      <div class="cbr"><span class="store sq" style="--c:#1F7A8C">P</span><div><b>Platzi · HTML (Jsoup)</b><small>Probando tras 30 min</small></div><span class="br-st h">SEMIABIERTO</span></div>
+     </div>
+     <div class="next" style="margin-top:14px"><svg class="ring" viewBox="0 0 54 54"><circle cx="27" cy="27" r="22" fill="none" stroke="#1B3049" stroke-width="6"/><circle cx="27" cy="27" r="22" fill="none" stroke="var(--teal)" stroke-width="6" stroke-linecap="round" stroke-dasharray="138" stroke-dashoffset="35" transform="rotate(-90 27 27)"/></svg><div><b style="display:block">Próxima consulta programada</b><span style="color:#AFBDCD;font-size:13px">GitHub Actions · cron <span class="mono">0 */6 * * *</span> · en <b class="num" style="color:#fff">1 h 32 min</b></span></div></div>
+    </div>
+   </div>
+   <div class="tw io"><div class="tbar"><h3 style="font-size:18px" class="grow">Problemas de calidad recientes</h3><a class="link" href="#calidad" style="font-size:14px">Ver los 7</a></div>
+    <table class="tbl"><thead><tr><th>Severidad</th><th>Tienda</th><th>Problema</th><th>Ofertas</th><th>Detectado</th></tr></thead><tbody>
+     <tr><td><span class="sev" style="color:var(--bad)"><span class="sdot bad"></span>Alta</span></td><td><b>FakeStore</b></td><td>Sin respuesta (timeout 10 s)</td><td class="num">48</td><td>10:31</td></tr>
+     <tr><td><span class="sev" style="color:var(--warn)"><span class="sdot warn"></span>Media</span></td><td><b>eBay</b></td><td>Impuestos ausentes en ofertas internacionales</td><td class="num">112</td><td>10:01</td></tr>
+     <tr><td><span class="sev" style="color:var(--warn)"><span class="sdot warn"></span>Media</span></td><td><b>Platzi</b></td><td>Precio fuera de rango (&gt; 5 σ)</td><td class="num">3</td><td>09:47</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <!-- TIENDAS -->
+  <section data-view="tiendas" hidden>
+   <div class="vh"><div><h1>Tiendas</h1><h2 class="sr">Contenido: Tiendas</h2><p class="mut">6 tiendas · 3 con datos reales</p></div><button class="btn btn-p" data-drawer="d-store"><svg class="ic sm"><use href="#i-plus"/></svg>Añadir tienda</button></div>
+   <div class="tw"><div class="tbar"><div class="input-ic" style="width:280px"><svg class="ic"><use href="#i-search"/></svg><input class="input" style="height:40px" placeholder="Buscar tienda"></div><div class="seg"><button aria-selected="true">Todas</button><button>Reales</button><button>Demostración</button></div></div>
+    <table class="tbl"><thead><tr><th>Tienda</th><th>Tipo de dato</th><th>País · moneda</th><th>Conectores</th><th>Permiso</th><th>robots.txt</th><th>Última consulta</th><th>Activa</th><th></th></tr></thead><tbody>
+     <tr><td><div class="row" style="--g:10px"><span class="store sq" style="--c:var(--s-meli)">ML</span><b>Mercado Libre</b></div></td><td><span class="chip real">Real</span></td><td>CO · COP</td><td>API · HTML</td><td><a class="link" href="#" style="font-size:13px">evidence_url <svg class="ic sm"><use href="#i-ext"/></svg></a></td><td><span class="chip real"><svg class="ic"><use href="#i-check"/></svg>15 nov</span></td><td>10:30</td><td><input type="checkbox" class="switch" checked aria-label="Activa"></td><td><button class="ibtn sm" aria-label="Más"><svg class="ic sm"><use href="#i-more"/></svg></button></td></tr>
+     <tr><td><div class="row" style="--g:10px"><span class="store sq" style="--c:var(--s-ebay)">e</span><b>eBay</b></div></td><td><span class="chip real">Real</span></td><td>US · USD</td><td>API</td><td><a class="link" href="#" style="font-size:13px">evidence_url <svg class="ic sm"><use href="#i-ext"/></svg></a></td><td><span class="chip real"><svg class="ic"><use href="#i-check"/></svg>15 nov</span></td><td>10:01</td><td><input type="checkbox" class="switch" checked aria-label="Activa"></td><td><button class="ibtn sm" aria-label="Más"><svg class="ic sm"><use href="#i-more"/></svg></button></td></tr>
+     <tr><td><div class="row" style="--g:10px"><span class="store sq" style="--c:var(--s-off)">O</span><b>Open Food Facts</b></div></td><td><span class="chip real">Real</span></td><td>Global · varias</td><td>API</td><td><a class="link" href="#" style="font-size:13px">ODbL <svg class="ic sm"><use href="#i-ext"/></svg></a></td><td><span class="chip real"><svg class="ic"><use href="#i-check"/></svg>14 nov</span></td><td>09:40</td><td><input type="checkbox" class="switch" checked aria-label="Activa"></td><td><button class="ibtn sm" aria-label="Más"><svg class="ic sm"><use href="#i-more"/></svg></button></td></tr>
+     <tr><td><div class="row" style="--g:10px"><span class="store sq" style="--c:var(--s-demo)">D</span><b>Tienda demo</b></div></td><td><span class="chip demo">Demostración</span></td><td>CO · COP</td><td>Local</td><td><span class="mut">Propia</span></td><td><span class="mut">—</span></td><td>08:42</td><td><input type="checkbox" class="switch" checked aria-label="Activa"></td><td><button class="ibtn sm" aria-label="Más"><svg class="ic sm"><use href="#i-more"/></svg></button></td></tr>
+     <tr><td><div class="row" style="--g:10px"><span class="store sq" style="--c:#1F7A8C">P</span><b>Platzi Store</b></div></td><td><span class="chip demo">Demostración</span></td><td>US · USD</td><td>API · HTML</td><td><a class="link" href="#" style="font-size:13px">Docs <svg class="ic sm"><use href="#i-ext"/></svg></a></td><td><span class="chip warn">Revisar</span></td><td>08:40</td><td><input type="checkbox" class="switch" checked aria-label="Activa"></td><td><button class="ibtn sm" aria-label="Más"><svg class="ic sm"><use href="#i-more"/></svg></button></td></tr>
+     <tr><td><div class="row" style="--g:10px"><span class="store sq" style="--c:var(--s-fake)">F</span><b>FakeStore</b></div></td><td><span class="chip demo">Demostración</span></td><td>US · USD</td><td>API</td><td><a class="link" href="#" style="font-size:13px">Docs <svg class="ic sm"><use href="#i-ext"/></svg></a></td><td><span class="mut">No aplica</span></td><td style="color:var(--bad);font-weight:700">Fallo 10:31</td><td><input type="checkbox" class="switch" checked aria-label="Activa"></td><td><button class="ibtn sm" aria-label="Más"><svg class="ic sm"><use href="#i-more"/></svg></button></td></tr>
+    </tbody></table></div>
+  </section>
+
+  <!-- CONECTORES -->
+  <section data-view="conectores" hidden>
+   <div class="vh"><div><h1>Conectores</h1><h2 class="sr">Contenido: Conectores</h2><p class="mut">Selección automática por prioridad y tasa de éxito, con respaldo y circuit breaker</p></div><span class="chip line">Arrastra para cambiar la prioridad</span></div>
+   <div class="cn">
+    <div class="cnc io"><div class="hd"><span class="store lg sq" style="--c:var(--s-meli)">ML</span><div class="grow"><b class="disp" style="font-size:18px">Mercado Libre</b><div class="mut" style="font-size:13px">2 conectores</div></div><span class="br-st c">CERRADO</span></div>
+     <div class="prio"><div><svg class="ic sm"><use href="#i-grip"/></svg><span>1 · API oficial</span><span class="num">98 %</span><span class="sdot ok"></span></div><div class="drag"><svg class="ic sm"><use href="#i-grip"/></svg><span>2 · HTML (Jsoup)</span><span class="num">91 %</span><span class="sdot ok"></span></div></div>
+     <div class="row between hint"><span>Pausa 1–3 s · 60 req/min</span><span>TTL 24 h</span></div></div>
+    <div class="cnc io" style="--i:1"><div class="hd"><span class="store lg sq" style="--c:var(--s-ebay)">e</span><div class="grow"><b class="disp" style="font-size:18px">eBay</b><div class="mut" style="font-size:13px">1 conector</div></div><span class="br-st c">CERRADO</span></div>
+     <div class="prio"><div><svg class="ic sm"><use href="#i-grip"/></svg><span>1 · API Browse</span><span class="num">95 %</span><span class="sdot ok"></span></div></div>
+     <div class="row between hint"><span>OAuth · 5.000 req/día</span><span>TTL 24 h</span></div></div>
+    <div class="cnc io" style="--i:2;box-shadow:inset 0 0 0 2px #F4C7C2"><div class="hd"><span class="store lg sq" style="--c:var(--s-fake)">F</span><div class="grow"><b class="disp" style="font-size:18px">FakeStore</b><div class="mut" style="font-size:13px">1 conector</div></div><span class="br-st o">ABIERTO</span></div>
+     <div class="prio"><div><svg class="ic sm"><use href="#i-grip"/></svg><span>1 · API</span><span class="num" style="color:var(--bad)">71 %</span><span class="sdot bad"></span></div></div>
+     <div class="banner bad" style="padding:10px 12px;font-size:13px"><svg class="ic sm"><use href="#i-alert"/></svg>3 fallos seguidos. Reintento automático a las 11:12.</div></div>
+   </div>
+  </section>
+
+  <!-- EJECUCIONES -->
+  <section data-view="ejecuciones" hidden>
+   <div class="vh"><div><h1>Ejecuciones</h1><h2 class="sr">Contenido: Ejecuciones</h2><p class="mut">Del workflow programado y de búsquedas en vivo</p></div><div class="row" style="--g:8px"><select class="input" style="height:40px;width:auto;font-size:14px"><option>Todas las tiendas</option></select><select class="input" style="height:40px;width:auto;font-size:14px"><option>Todos los estados</option></select></div></div>
+   <div class="cards" style="grid-template-columns:1fr">
+    <div class="tw"><table class="tbl"><thead><tr><th>#</th><th>Tienda</th><th>Estado</th><th>Ofertas</th><th>Completitud</th><th>Duración</th><th>Inicio</th></tr></thead><tbody>
+     <tr style="background:var(--act-50)"><td class="mono">1842</td><td><b>Platzi</b></td><td><span class="chip blue"><span class="sdot run pulse"></span>En curso</span></td><td class="num">—</td><td style="min-width:120px"><span class="bar"><i style="--v:45%"></i></span></td><td class="num">0:41</td><td>10:42</td></tr>
+     <tr><td class="mono">1841</td><td><b>FakeStore</b></td><td><span class="chip bad">Fallida</span></td><td class="num">0</td><td><span class="bar bad"><i style="--v:0%"></i></span></td><td class="num">0:10</td><td>10:31</td></tr>
+     <tr><td class="mono">1840</td><td><b>Mercado Libre</b></td><td><span class="chip real">Correcta</span></td><td class="num">3.204</td><td><span class="bar ok"><i style="--v:96%"></i></span></td><td class="num">2:18</td><td>10:28</td></tr>
+     <tr><td class="mono">1839</td><td><b>eBay</b></td><td><span class="chip warn">Parcial</span></td><td class="num">1.880</td><td><span class="bar warn"><i style="--v:78%"></i></span></td><td class="num">3:02</td><td>10:00</td></tr>
+     <tr><td class="mono">1838</td><td><b>Open Food Facts</b></td><td><span class="chip real">Correcta</span></td><td class="num">412</td><td><span class="bar ok"><i style="--v:100%"></i></span></td><td class="num">0:48</td><td>09:40</td></tr>
+     <tr><td class="mono">1837</td><td><b>Tienda demo</b></td><td><span class="chip real">Correcta</span></td><td class="num">220</td><td><span class="bar ok"><i style="--v:100%"></i></span></td><td class="num">0:05</td><td>08:42</td></tr>
+    </tbody></table></div>
+    <div class="card"><div class="ch"><div><h3>Ejecución #1841</h3><span class="mut" style="font-size:13px">FakeStore · API · runner ubuntu-latest</span></div><button class="btn btn-s sm"><svg class="ic sm"><use href="#i-refresh"/></svg>Reintentar</button></div>
+     <pre class="log"><span class="t">10:31:02</span> INFO  ConnectorSelector → fakestore-api (priority=1, success=0.71)
+<span class="t">10:31:02</span> INFO  GET https://fakestoreapi.com/products
+<span class="t">10:31:07</span> <span class="w">WARN  retry 1/3 after 1.8 s (SocketTimeout)</span>
+<span class="t">10:31:09</span> <span class="w">WARN  retry 2/3 after 3.6 s (SocketTimeout)</span>
+<span class="t">10:31:12</span> <span class="e">ERROR timeout 10 000 ms · intento 3/3</span>
+<span class="t">10:31:12</span> <span class="e">CB    fakestore-api → OPEN (3 fallos seguidos)</span>
+<span class="t">10:31:12</span> INFO  sin conector de respaldo · se conservan ofertas del 16 nov
+<span class="t">10:31:12</span> INFO  data_quality_issues += 1 (HIGH)
+<span class="t">10:31:12</span> <span class="o">DONE  status=FAILED completeness=0 %</span></pre></div>
+   </div>
+  </section>
+
+  <!-- CALIDAD -->
+  <section data-view="calidad" hidden>
+   <div class="vh"><div><h1>Calidad de datos</h1><h2 class="sr">Contenido: Calidad de datos</h2><p class="mut">Validación por oferta antes de normalizar</p></div></div>
+   <div class="cards" style="grid-template-columns:1fr 1.4fr">
+    <div class="card"><h3 style="margin-bottom:16px">Completitud por tienda</h3><div class="stack-v" style="--g:14px">
+     <div><div class="row between" style="font-size:14px;font-weight:700"><span>Open Food Facts</span><span class="num">100 %</span></div><span class="bar ok"><i style="--v:100%"></i></span></div>
+     <div><div class="row between" style="font-size:14px;font-weight:700"><span>Mercado Libre</span><span class="num">96 %</span></div><span class="bar ok"><i style="--v:96%;--i:1"></i></span></div>
+     <div><div class="row between" style="font-size:14px;font-weight:700"><span>Tienda demo</span><span class="num">100 %</span></div><span class="bar ok"><i style="--v:100%;--i:2"></i></span></div>
+     <div><div class="row between" style="font-size:14px;font-weight:700"><span>Platzi</span><span class="num">88 %</span></div><span class="bar"><i style="--v:88%;--i:3"></i></span></div>
+     <div><div class="row between" style="font-size:14px;font-weight:700"><span>eBay</span><span class="num">78 %</span></div><span class="bar warn"><i style="--v:78%;--i:4"></i></span><span class="hint">Bajo el umbral de 80 % · marcado PARTIAL</span></div>
+    </div></div>
+    <div class="tw"><div class="tbar"><h3 style="font-size:18px" class="grow">Problemas abiertos</h3><div class="seg"><button aria-selected="true">Abiertos · 7</button><button>Resueltos</button></div></div>
+     <table class="tbl"><thead><tr><th>Severidad</th><th>Regla</th><th>Tienda</th><th>Ofertas</th><th></th></tr></thead><tbody>
+      <tr><td><span class="sev" style="color:var(--bad)"><span class="sdot bad"></span>Alta</span></td><td>Tienda sin respuesta</td><td>FakeStore</td><td class="num">48</td><td><button class="btn btn-q sm">Revisar</button></td></tr>
+      <tr><td><span class="sev" style="color:var(--warn)"><span class="sdot warn"></span>Media</span></td><td><span class="mono">tax_amount</span> ausente</td><td>eBay</td><td class="num">112</td><td><button class="btn btn-q sm">Revisar</button></td></tr>
+      <tr><td><span class="sev" style="color:var(--warn)"><span class="sdot warn"></span>Media</span></td><td>Precio fuera de rango</td><td>Platzi</td><td class="num">3</td><td><button class="btn btn-q sm">Revisar</button></td></tr>
+      <tr><td><span class="sev" style="color:var(--warn)"><span class="sdot warn"></span>Media</span></td><td>GTIN con dígito de control inválido</td><td>Mercado Libre</td><td class="num">9</td><td><button class="btn btn-q sm">Revisar</button></td></tr>
+      <tr><td><span class="sev"><span class="sdot"></span>Baja</span></td><td>Imagen sin <span class="mono">https</span></td><td>Platzi</td><td class="num">21</td><td><button class="btn btn-q sm">Revisar</button></td></tr>
+     </tbody></table></div>
+   </div>
+  </section>
+
+  <!-- USUARIOS -->
+  <section data-view="usuarios" hidden>
+   <div class="vh"><div><h1>Usuarios</h1><h2 class="sr">Contenido: Usuarios</h2><p class="mut">148 cuentas · roles muchos a muchos</p></div><button class="btn btn-s"><svg class="ic sm"><use href="#i-upload"/></svg>Exportar CSV</button></div>
+   <div class="tw"><div class="tbar"><div class="input-ic" style="width:300px"><svg class="ic"><use href="#i-search"/></svg><input class="input" style="height:40px" placeholder="Buscar por nombre o correo"></div><span class="chip lg x line">Rol: Administrador<button aria-label="Quitar"><svg class="ic"><use href="#i-x"/></svg></button></span></div>
+    <table class="tbl"><thead><tr><th>Usuario</th><th>Roles</th><th>Favoritos</th><th>Alertas</th><th>Último acceso</th><th>Estado</th><th></th></tr></thead><tbody>
+     <tr><td><div class="row" style="--g:10px"><span class="avatar">AR</span><div><b>Andrés Rojas</b><div class="mut" style="font-size:12px">andres@samp.dev</div></div></div></td><td><span class="chip dark">Administrador</span> <span class="chip">Registrado</span></td><td class="num">4</td><td class="num">1</td><td>Ahora</td><td><span class="chip real">Activa</span></td><td><button class="ibtn sm" data-pop="p-um" aria-label="Más"><svg class="ic sm"><use href="#i-more"/></svg></button></td></tr>
+     <tr><td><div class="row" style="--g:10px"><span class="avatar" style="background:linear-gradient(135deg,#6E4A9E,#0B7BF2)">LM</span><div><b>Laura Méndez</b><div class="mut" style="font-size:12px">laura@correo.co</div></div></div></td><td><span class="chip">Registrado</span></td><td class="num">12</td><td class="num">4</td><td>Hace 12 min</td><td><span class="chip real">Activa</span></td><td><button class="ibtn sm" aria-label="Más"><svg class="ic sm"><use href="#i-more"/></svg></button></td></tr>
+     <tr><td><div class="row" style="--g:10px"><span class="avatar" style="background:linear-gradient(135deg,#2A7D55,#22E3D2)">CP</span><div><b>Camilo Pérez</b><div class="mut" style="font-size:12px">camilo@samp.dev</div></div></div></td><td><span class="chip dark">Administrador</span> <span class="chip">Registrado</span></td><td class="num">0</td><td class="num">0</td><td>Ayer</td><td><span class="chip real">Activa</span></td><td><button class="ibtn sm" aria-label="Más"><svg class="ic sm"><use href="#i-more"/></svg></button></td></tr>
+     <tr><td><div class="row" style="--g:10px"><span class="avatar" style="background:linear-gradient(135deg,#A85512,#E29A1B)">JG</span><div><b>Julián Gómez</b><div class="mut" style="font-size:12px">julian.g@correo.co</div></div></div></td><td><span class="chip">Registrado</span></td><td class="num">3</td><td class="num">0</td><td>Hace 21 días</td><td><span class="chip bad">Bloqueada</span></td><td><button class="ibtn sm" aria-label="Más"><svg class="ic sm"><use href="#i-more"/></svg></button></td></tr>
+    </tbody></table></div>
+   <div class="pop" id="p-um"><button class="mi"><svg class="ic"><use href="#i-key"/></svg>Editar roles</button><button class="mi"><svg class="ic"><use href="#i-mail"/></svg>Enviar restablecimiento</button><div class="msep"></div><button class="mi dg"><svg class="ic"><use href="#i-lock"/></svg>Bloquear cuenta</button></div>
+  </section>
+
+  <!-- IA -->
+  <section data-view="ia" hidden>
+   <div class="vh"><div><h1>Asistente IA</h1><h2 class="sr">Contenido: Asistente IA</h2><p class="mut">Proveedor, validación de salida y conversaciones marcadas</p></div></div>
+   <div class="iac">
+    <div class="card"><h3 style="margin-bottom:14px">Proveedor activo</h3>
+     <div class="prov"><label><input type="radio" name="pv" class="sr" checked><span class="store sq" style="--c:#1447C0"><svg class="ic sm"><use href="#i-spark"/></svg></span><div><b>Gemini</b><div class="mut mono" style="font-size:12px">gemini-2.5-flash</div></div></label><label><input type="radio" name="pv" class="sr"><span class="store sq" style="--c:var(--mut)"><svg class="ic sm"><use href="#i-box"/></svg></span><div><b>MockProvider</b><div class="mut" style="font-size:12px">Pruebas y demo</div></div></label></div>
+     <div class="kv" style="margin-top:18px"><dt>Herramientas habilitadas</dt><dd>10 de 10 · solo lectura</dd><dt>Embeddings</dt><dd class="mono">vector(768)</dd><dt>Llamadas hoy</dt><dd>1.204 / 1.500</dd></div>
+     <span class="bar" style="margin-top:10px"><i style="--v:80%"></i></span>
+    </div>
+    <div class="card"><h3 style="margin-bottom:14px">Validador de salida (7 días)</h3>
+     <div class="row" style="--g:24px;align-items:center"><div><b class="disp num" style="font-size:44px">97,6 %</b><div class="mut" style="font-size:13px;font-weight:600">Respuestas aprobadas</div></div><div class="stack-v grow" style="--g:10px;font-size:14px"><div class="row between"><span>Precio no coincide con la base</span><b class="num">18</b></div><div class="row between"><span>Producto inexistente</span><b class="num">6</b></div><div class="row between"><span>Afirmación sin fuente</span><b class="num">5</b></div></div></div>
+    </div>
+   </div>
+  </section>
+  </div>
+ </div>
+</div>
+
+<aside class="drawer r" id="d-store" aria-label="Añadir tienda"><div class="dh"><b class="disp" style="font-size:20px">Añadir tienda</b><button class="ibtn" data-close aria-label="Cerrar"><svg class="ic"><use href="#i-x"/></svg></button></div>
+ <div class="db" style="padding:20px;display:grid;gap:18px;align-content:start">
+  <div class="field"><label>Nombre</label><input class="input" value="Alkosto"></div>
+  <div class="field"><label>Sitio web</label><input class="input" value="https://www.alkosto.com"></div>
+  <div class="field"><span class="lbl">Tipo de dato</span><div class="seg"><button aria-selected="true">Real</button><button>Demostración</button></div></div>
+  <div class="field"><label>Evidencia de permiso (evidence_url)</label><input class="input err" placeholder="https://"><span class="hint" style="color:var(--bad)">Obligatorio: una fuente sin permiso documentado no se integra.</span></div>
+  <label class="check"><input type="checkbox">Revisé robots.txt y los términos de uso</label>
+ </div>
+ <div style="padding:16px 20px;border-top:1px solid var(--line);display:flex;gap:10px;justify-content:flex-end"><button class="btn btn-q" data-close>Cancelar</button><button class="btn btn-p" disabled style="opacity:.5">Guardar tienda</button></div>
+</aside>
+
+<script src="assets/samp.js"></script>
+</body></html>

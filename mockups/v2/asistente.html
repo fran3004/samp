@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Asistente IA · SAMP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@600;700;800&family=Red+Hat+Mono:wght@500&family=Red+Hat+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/samp.css">
+<style>
+.app{display:grid;grid-template-columns:280px minmax(0,1fr) 320px;height:calc(100dvh - var(--nav-h) - 36px);min-height:760px;border-top:1px solid var(--line)}
+.side{border-right:1px solid var(--line);padding:16px;display:flex;flex-direction:column;gap:6px;overflow:auto;background:#FBFCFD}
+.conv{display:block;padding:12px 14px;border-radius:14px;transition:background-color 120ms}
+.conv:hover{background:var(--surf)}.conv[aria-current=page]{background:var(--act-50)}
+.conv b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.conv small{color:var(--mut);font-size:12px;font-weight:600}
+.chat{display:flex;flex-direction:column;min-width:0;background:#fff}
+.msgs{flex:1;overflow:auto;padding:36px max(24px,calc((100% - 760px)/2)) 24px;display:flex;flex-direction:column;gap:22px}
+.m{display:flex;gap:14px;max-width:100%;animation:up .5s var(--ease) both}
+.m.u{justify-content:flex-end}
+.m.u .bub{background:var(--act);color:#fff;border-radius:22px 22px 6px 22px;padding:14px 18px;max-width:70%;font-size:16px}
+.m.a .av{width:36px;height:36px;border-radius:12px;background:var(--night);display:grid;place-items:center;color:var(--teal);flex:none}
+.m.a .body{min-width:0;flex:1}
+.m.a .txt{font-size:16px;line-height:1.65;color:var(--ink)}
+.m.a .txt p+p{margin-top:10px}
+.tools{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.tc{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border-radius:var(--pill);background:var(--surf);font:500 12.5px var(--f-mono);color:var(--ink-2);box-shadow:inset 0 0 0 1px var(--line);transition:background-color var(--t),box-shadow var(--t)}
+.tc .s{width:14px;height:14px;border-radius:50%;border:2px solid var(--line-2);border-top-color:var(--act);animation:spin .7s linear infinite}
+.tc.ok{background:var(--ok-50);box-shadow:inset 0 0 0 1px #BFE6D3}.tc.ok .s{border:0;animation:none;background:#17A673;display:grid;place-items:center}
+.tc.ok .s::after{content:"";width:3px;height:6px;border:solid #fff;border-width:0 1.5px 1.5px 0;transform:rotate(45deg) translate(-.5px,-.5px)}
+.tc em{font-style:normal;color:var(--mut)}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}
+.oc{display:block;padding:12px;border-radius:18px;box-shadow:inset 0 0 0 1.5px var(--line);transition:box-shadow var(--t) var(--ease),transform var(--t) var(--ease);animation:pop .5s var(--ease) both;animation-delay:calc(var(--i)*80ms)}
+.oc:hover{box-shadow:inset 0 0 0 1.5px var(--line-2),var(--sh-2);transform:translateY(-3px)}
+.oc.best{box-shadow:inset 0 0 0 2px var(--act)}
+.oc .im{aspect-ratio:4/3;border-radius:12px;background:var(--photo);display:grid;place-items:center;margin-bottom:10px}.oc img{width:60%;height:70%;object-fit:contain}
+.oc b{display:block;font-size:14px}.oc .p{font:800 19px var(--f-disp);margin:2px 0}.oc small{color:var(--mut);font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px}
+.val{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:var(--ok-50);color:var(--ok);font-size:13px;font-weight:700;margin-top:12px}
+.srcs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.srcs a{font-size:12px;font-weight:700;color:var(--ink-2);padding:4px 10px;border-radius:8px;background:var(--surf)}
+.fb{display:flex;gap:4px;margin-top:8px}.fb .ibtn{width:34px;height:34px}
+.typing{display:inline-flex;gap:4px;padding:14px 16px;border-radius:18px;background:var(--surf)}.typing i{width:7px;height:7px;border-radius:50%;background:var(--mut);animation:dots 1.1s infinite}.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+.cursor::after{content:"▍";color:var(--act);animation:blink .9s steps(1) infinite;margin-left:1px}
+.composer{padding:12px max(24px,calc((100% - 760px)/2)) 20px}
+.sugs{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin-bottom:10px}
+.sugs button{flex:none;height:36px;padding:0 14px;border-radius:var(--pill);box-shadow:inset 0 0 0 1.5px var(--line);font-size:14px;font-weight:600;color:var(--ink-2);transition:box-shadow var(--t-fast),background-color var(--t-fast)}
+.sugs button:hover{box-shadow:inset 0 0 0 1.5px var(--act);background:var(--act-50);color:var(--act-d)}
+.box{display:flex;align-items:flex-end;gap:8px;padding:10px 10px 10px 18px;border-radius:24px;background:#fff;box-shadow:var(--sh-2),inset 0 0 0 1.5px var(--line);transition:box-shadow var(--t-fast)}
+.box:focus-within{box-shadow:var(--sh-2),inset 0 0 0 2px var(--act),var(--ring)}
+.box textarea{flex:1;border:0;outline:0;resize:none;font-size:16px;line-height:1.5;padding:10px 0;max-height:160px;background:none}
+.box .send{width:44px;height:44px;border-radius:50%;background:var(--act);color:#fff;display:grid;place-items:center;transition:transform var(--t-press) var(--ease),background-color var(--t-fast)}
+.box .send:active{transform:scale(.92)}
+.disc{text-align:center;font-size:12px;color:var(--mut);margin-top:10px}
+.ctx{border-left:1px solid var(--line);padding:24px;overflow:auto;background:#FBFCFD}
+.ctx h4{font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);font-family:var(--f-text);margin:24px 0 12px}
+.ctx h4:first-child{margin-top:0}
+.tl{display:grid;gap:0}
+.tl li{display:grid;grid-template-columns:20px 1fr auto;gap:10px;align-items:start;padding:8px 0;font-size:13px;position:relative}
+.tl li::before{content:"";position:absolute;left:9px;top:26px;bottom:-8px;width:2px;background:var(--line)}
+.tl li:last-child::before{display:none}
+.tl .d{width:20px;height:20px;border-radius:50%;background:var(--ok-50);color:var(--ok);display:grid;place-items:center}.tl .d .ic{width:12px;height:12px;stroke-width:3}
+.tl code{font:500 12.5px var(--f-mono);color:var(--ink)}.tl small{display:block;color:var(--mut)}
+.tl .ms{color:var(--mut);font:500 12px var(--f-mono)}
+@media(max-width:1200px){.app{grid-template-columns:240px minmax(0,1fr)}.ctx{display:none}}
+@media(max-width:900px){.app{grid-template-columns:1fr;height:auto;min-height:calc(100dvh - 96px)}.side{display:none}.msgs{padding:20px 16px}.composer{padding:8px 16px 96px;position:sticky;bottom:0;background:linear-gradient(transparent,#fff 24px)}.cards{grid-template-columns:1fr 1fr}.cards .oc:nth-child(3){display:none}.m.u .bub{max-width:88%}}
+</style></head>
+<body data-page="ia" data-nofoot>
+
+<div class="app">
+ <aside class="side" aria-label="Conversaciones">
+  <button class="btn btn-n block" style="margin-bottom:12px"><svg class="ic sm"><use href="#i-plus"/></svg>Nueva conversación</button>
+  <div class="mhead" style="padding-left:6px">Hoy</div>
+  <a class="conv" href="#" aria-current="page"><b>Audífonos con cancelación de ruido</b><small>Hace 2 min · 3 herramientas</small></a>
+  <a class="conv" href="#"><b>¿Compro el MacBook ahora o espero?</b><small>Hace 1 h</small></a>
+  <div class="mhead" style="padding-left:6px;margin-top:8px">Esta semana</div>
+  <a class="conv" href="#"><b>PC para Fortnite y edición de video</b><small>Lun · armado guardado</small></a>
+  <a class="conv" href="#"><b>Celular con buena cámara bajo 2 M</b><small>Dom</small></a>
+  <a class="conv" href="#"><b>Diferencia entre iPad mini y Tab S8</b><small>Sáb</small></a>
+  <div style="margin-top:auto" class="banner info"><svg class="ic"><use href="#i-shield"/></svg><span style="font-size:13px">Tus conversaciones se guardan 30 días y no se usan para entrenar modelos.</span></div>
+ </aside>
+
+ <section class="chat" aria-label="Conversación">
+  <div class="msgs" id="msgs">
+   <div class="m u"><div class="bub">Busco audífonos con cancelación de ruido por menos de 1,5 millones. Los uso en el bus y en la oficina.</div></div>
+   <div class="m a" id="ans">
+    <span class="av"><svg class="ic"><use href="#i-spark"/></svg></span>
+    <div class="body">
+     <div class="tools" id="tools">
+      <span class="tc" data-t="0"><span class="s"></span>buscar_ofertas<em>(«cancelación de ruido», max=1.500.000)</em></span>
+      <span class="tc" data-t="1"><span class="s"></span>historial_precio<em>(3 productos, 30 d)</em></span>
+      <span class="tc" data-t="2"><span class="s"></span>validar_salida<em>(4 precios)</em></span>
+     </div>
+     <div class="typing" id="typing"><i></i><i></i><i></i></div>
+     <div id="out" hidden>
+      <div class="txt" id="txt"></div>
+      <div class="cards" id="cards" hidden>
+       <a class="oc best" href="producto.html" style="--i:0"><div class="im"><img src="https://cdn.dummyjson.com/product-images/mobile-accessories/beats-flex-wireless-earphones/thumbnail.webp" alt=""></div><span class="chip blue" style="height:22px;font-size:11px">Mejor total</span><b style="margin-top:6px">Beats Flex</b><div class="p num">$ 219.000</div><small><span class="store sm" style="--c:var(--s-meli)">ML</span>Mercado Libre · total completo</small></a>
+       <a class="oc" href="producto.html" style="--i:1"><div class="im"><img src="https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods/thumbnail.webp" alt=""></div><span class="chip warn" style="height:22px;font-size:11px">Envío desconocido</span><b style="margin-top:6px">AirPods (3.ª gen.)</b><div class="p num">$ 498.000</div><small><span class="store sm" style="--c:var(--s-ebay)">e</span>eBay · hace 41 min</small></a>
+       <a class="oc" href="producto.html" style="--i:2"><div class="im"><img src="https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods-max-silver/thumbnail.webp" alt=""></div><span class="chip line" style="height:22px;font-size:11px">Fuera de presupuesto</span><b style="margin-top:6px">AirPods Max</b><div class="p num">$ 2.116.000</div><small><span class="store sm" style="--c:var(--s-meli)">ML</span>Por si quieres estirar</small></a>
+      </div>
+      <div id="tail" hidden>
+       <div class="val"><svg class="ic sm"><use href="#i-shield"/></svg>Respuesta verificada: los 4 precios coinciden con la base de SAMP (10:42).</div>
+       <div class="srcs"><a href="#">[1] Mercado Libre · 10:30</a><a href="#">[2] eBay · 10:01</a><a href="#">[3] Historial 30 días</a></div>
+       <div class="fb"><button class="ibtn tip" data-tip="Útil" aria-label="Útil"><svg class="ic sm"><use href="#i-check"/></svg></button><button class="ibtn tip" data-tip="Copiar" aria-label="Copiar"><svg class="ic sm"><use href="#i-copy"/></svg></button><button class="ibtn tip" data-tip="Regenerar" aria-label="Regenerar"><svg class="ic sm"><use href="#i-refresh"/></svg></button><button class="ibtn tip" data-tip="Reportar" aria-label="Reportar"><svg class="ic sm"><use href="#i-flag"/></svg></button></div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <div class="composer">
+   <div class="sugs"><button>¿Cuál tiene mejor batería?</button><button>Crea una alerta para los Beats bajo $ 200.000</button><button>Compáralos lado a lado</button><button>¿Conviene esperar al Black Friday?</button></div>
+   <form class="box" onsubmit="event.preventDefault()"><button type="button" class="ibtn tip" data-tip="Adjuntar foto" aria-label="Adjuntar foto"><svg class="ic"><use href="#i-image"/></svg></button><textarea rows="1" placeholder="Pregunta por un producto, un presupuesto o un armado" aria-label="Mensaje"></textarea><button type="button" class="ibtn tip" data-tip="Dictar" aria-label="Dictar"><svg class="ic"><use href="#i-mic"/></svg></button><button class="send" aria-label="Enviar"><svg class="ic"><use href="#i-send"/></svg></button></form>
+   <p class="disc">El asistente solo lee datos de SAMP. No compra, no inventa precios y puede equivocarse en las recomendaciones.</p>
+  </div>
+ </section>
+
+ <aside class="ctx" aria-label="Contexto">
+  <h4>Herramientas usadas</h4>
+  <ul class="tl">
+   <li><span class="d"><svg class="ic"><use href="#i-check"/></svg></span><div><code>buscar_ofertas</code><small>14 ofertas · 3 tiendas</small></div><span class="ms">412 ms</span></li>
+   <li><span class="d"><svg class="ic"><use href="#i-check"/></svg></span><div><code>historial_precio</code><small>3 productos · 30 días</small></div><span class="ms">96 ms</span></li>
+   <li><span class="d"><svg class="ic"><use href="#i-check"/></svg></span><div><code>validar_salida</code><small>4 de 4 precios correctos</small></div><span class="ms">31 ms</span></li>
+  </ul>
+  <h4>Lo que entendí</h4>
+  <div class="stack-v" style="--g:8px">
+   <div class="row between" style="font-size:14px"><span class="mut">Presupuesto</span><b class="num">≤ $ 1.500.000</b></div>
+   <div class="row between" style="font-size:14px"><span class="mut">Requisito</span><b>Cancelación de ruido</b></div>
+   <div class="row between" style="font-size:14px"><span class="mut">Uso</span><b>Transporte y oficina</b></div>
+  </div>
+  <h4>Modelo</h4>
+  <div class="panel" style="padding:14px;display:grid;gap:8px;font-size:13px"><div class="row between"><span class="mut">Proveedor</span><b>Gemini</b></div><div class="row between"><span class="mut">Modelo</span><b class="mono">gemini-2.5-flash</b></div><div class="row between"><span class="mut">Tokens</span><b class="num">2.184</b></div></div>
+  <h4>Límites</h4>
+  <p class="hint">Solo herramientas de lectura. Cada precio citado se compara con la base antes de mostrarse; si no coincide, la respuesta se bloquea.</p>
+ </aside>
+</div>
+
+<script src="assets/samp.js"></script>
+<script>
+(()=>{const STILL=document.documentElement.classList.contains('cap')||matchMedia('(prefers-reduced-motion: reduce)').matches;
+const text=['Encontré <b>3 opciones</b> que encajan. Ojo: ninguna de las opciones con cancelación activa baja de 1,5 millones con total completo hoy, así que te muestro la mejor alternativa y una fuera de rango.','<b>Beats Flex</b> en Mercado Libre tiene el mejor total, $ 219.000 con envío incluido, y está estable hace 30 días. No tiene cancelación activa, pero aísla bien en el bus. Si la cancelación es indispensable, los <b>AirPods Max</b> están 8 % por debajo de su promedio.'];
+const tools=[...document.querySelectorAll('.tc')],typing=document.getElementById('typing'),out=document.getElementById('out'),txt=document.getElementById('txt'),cards=document.getElementById('cards'),tail=document.getElementById('tail');
+const finish=()=>{tools.forEach(t=>t.classList.add('ok'));typing.remove();out.hidden=false;txt.innerHTML=text.map(p=>'<p>'+p+'</p>').join('');cards.hidden=false;tail.hidden=false};
+if(STILL)return finish();
+tools.forEach((t,k)=>setTimeout(()=>t.classList.add('ok'),700+k*650));
+setTimeout(()=>{typing.remove();out.hidden=false;let pi=0;
+ const html=text.map(p=>'<p>'+p+'</p>').join(''),tokens=html.split(/(<[^>]+>|\s+)/).filter(Boolean);let i=0;txt.classList.add('cursor');
+ (function step(){if(i>=tokens.length){txt.classList.remove('cursor');cards.hidden=false;setTimeout(()=>{tail.hidden=false;tail.style.animation='up .5s var(--ease) both'},500);return}
+  let n=0;while(i<tokens.length&&n<3){txt.innerHTML+=tokens[i];if(!tokens[i].startsWith('<'))n++;i++}
+  txt.innerHTML=tokens.slice(0,i).join('');setTimeout(step,28)})();
+},2700);})();
+</script>
+</body></html>

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Entrar · SAMP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@600;700;800&family=Red+Hat+Mono:wght@500&family=Red+Hat+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/samp.css">
+<style>
+.auth{display:grid;grid-template-columns:1fr 1fr;min-height:100dvh}
+.vis{position:relative;overflow:hidden;background:var(--night);color:#fff;padding:48px;display:flex;flex-direction:column}
+.vis .logo{color:#fff}.vis .logo small{color:#8FA1B5}
+.vis h2{font-size:clamp(36px,3.6vw,52px);max-width:12ch;margin-top:auto;position:relative;z-index:2}
+.vis p{color:#AFBDCD;max-width:40ch;margin-top:14px;position:relative;z-index:2}
+.flo{position:absolute;inset:0;pointer-events:none}
+.fc2{position:absolute;display:flex;align-items:center;gap:12px;background:#fff;color:var(--ink);border-radius:20px;padding:12px 18px 12px 12px;box-shadow:0 24px 48px -12px rgba(0,0,0,.4);animation:pop .8s var(--ease) both,float 7s ease-in-out infinite;animation-delay:calc(.3s + var(--i)*.2s),calc(var(--i)*-1.3s)}
+.fc2 img{width:48px;height:48px;object-fit:contain;background:var(--photo);border-radius:12px;padding:4px}
+.fc2 b{display:block;font:800 17px var(--f-disp)}.fc2 small{font-size:12px;color:var(--mut);font-weight:600}
+.form{display:grid;place-items:center;padding:48px 24px}
+.fbox{width:min(420px,100%)}
+.fbox h1{font-size:36px}
+.str{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}.str i{height:5px;border-radius:3px;background:var(--surf-2);transition:background-color var(--t)}.str i.on{background:#17A673}
+.or{display:flex;align-items:center;gap:12px;color:var(--mut);font-size:13px;font-weight:600;margin:6px 0}.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+@media(max-width:900px){.auth{grid-template-columns:1fr}.vis{min-height:300px;padding:24px}.vis h2{font-size:30px}.fc2:nth-child(n+3){display:none}.form{padding:32px 16px 48px}}
+</style></head>
+<body data-page="entrar" data-layout="bare">
+<div class="auth">
+ <section class="vis">
+  <a class="logo" href="index.html"><svg><use href="#logo"/></svg><span>SAMP<small>MEJORES PRECIOS</small></span></a>
+  <div class="flo" aria-hidden="true">
+   <div class="fc2" style="--i:0;right:12%;top:16%"><img src="https://cdn.dummyjson.com/product-images/mobile-accessories/apple-airpods-max-silver/thumbnail.webp" alt=""><div><b class="num">$ 2.116.000</b><small>Bajó 8 % · alerta cumplida</small></div></div>
+   <div class="fc2" style="--i:1;right:30%;top:34%"><img src="https://cdn.dummyjson.com/product-images/laptops/apple-macbook-pro-14-inch-space-grey/thumbnail.webp" alt=""><div><b class="num">$ 7.760.000</b><small>A 6 % de tu precio</small></div></div>
+   <div class="fc2" style="--i:2;right:8%;top:50%"><img src="https://cdn.dummyjson.com/product-images/tablets/ipad-mini-2021-starlight/thumbnail.webp" alt=""><div><b class="num">$ 2.489.000</b><small>Guardado en favoritos</small></div></div>
+  </div>
+  <h2>Tus favoritos y alertas, en un solo lugar.</h2>
+  <p>Buscar y comparar es libre. Con una cuenta guardas productos, recibes avisos cuando bajan y conservas tus armados de PC.</p>
+ </section>
+ <section class="form">
+  <div class="fbox" data-tabs-scope>
+   <div class="seg" style="margin-bottom:28px" role="tablist"><button aria-selected="true" data-show="in">Entrar</button><button data-show="up">Crear cuenta</button></div>
+   <div data-pane="in">
+    <h1>Hola de nuevo</h1><h2 class="sr">Contenido: Hola de nuevo</h2><p class="mut" style="margin:6px 0 26px">Entra con tu correo y contraseña.</p>
+    <form class="stack-v" style="--g:18px" onsubmit="event.preventDefault();this.querySelector('.btn-p').classList.add('loading')">
+     <div class="field"><label for="e">Correo</label><div class="input-ic"><svg class="ic"><use href="#i-mail"/></svg><input class="input" id="e" type="email" value="laura@correo.co" autocomplete="email"></div></div>
+     <div class="field"><div class="row between"><label for="p" class="lbl">Contraseña</label><a class="link" style="font-size:14px" href="#" data-modal="m-rec">¿La olvidaste?</a></div><div class="input-ic"><svg class="ic"><use href="#i-lock"/></svg><input class="input" id="p" type="password" value="contraseña" autocomplete="current-password"><button type="button" class="ibtn sm end" data-reveal="#p" aria-label="Mostrar contraseña"><svg class="ic sm"><use href="#i-eye"/></svg></button></div></div>
+     <label class="check"><input type="checkbox" checked>Mantener la sesión en este dispositivo</label>
+     <button class="btn btn-p lg block">Entrar</button>
+    </form>
+    <div class="or">o</div>
+    <a class="btn btn-q block" href="index.html">Seguir sin cuenta</a>
+   </div>
+   <div data-pane="up" hidden>
+    <h1>Crea tu cuenta</h1><h2 class="sr">Contenido: Crea tu cuenta</h2><p class="mut" style="margin:6px 0 26px">Gratis. Solo usamos tu correo para avisos que tú actives.</p>
+    <form class="stack-v" style="--g:18px" onsubmit="event.preventDefault()">
+     <div class="field"><label for="n">Nombre</label><input class="input" id="n" value="Laura Méndez" autocomplete="name"></div>
+     <div class="field"><label for="e2">Correo</label><input class="input err" id="e2" value="laura@correo" autocomplete="email"><span class="hint" style="color:var(--bad)">Falta el dominio del correo, por ejemplo «.co» o «.com».</span></div>
+     <div class="field"><label for="p2">Contraseña</label><input class="input" id="p2" type="password" value="Precios2026" autocomplete="new-password"><div class="str"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div><span class="hint">Buena. Añade un símbolo para hacerla fuerte.</span></div>
+     <label class="check"><input type="checkbox" checked>Acepto los términos y la política de privacidad</label>
+     <button class="btn btn-p lg block">Crear cuenta</button>
+    </form>
+   </div>
+  </div>
+ </section>
+</div>
+<div class="modal" id="m-rec" role="dialog" aria-modal="true"><div class="mh"><h3>Recuperar contraseña</h3><button class="ibtn" data-close aria-label="Cerrar"><svg class="ic"><use href="#i-x"/></svg></button></div><div class="mb"><p class="ink2" style="margin-bottom:16px">Te enviaremos un enlace válido por 30 minutos.</p><input class="input" value="laura@correo.co"></div><div class="mf"><button class="btn btn-p" data-close data-toast="Revisa tu correo" data-toast-icon="mail">Enviar enlace</button></div></div>
+<script src="assets/samp.js"></script>
+<script>if(SAMP.HV==='crear')document.querySelector('[data-show=up]').click();</script>
+</body></html>

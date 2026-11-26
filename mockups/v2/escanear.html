@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Escanear o buscar con foto · SAMP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@600;700;800&family=Red+Hat+Mono:wght@500&family=Red+Hat+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/samp.css">
+<style>
+body{background:var(--surf)}
+.sc{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:40px;align-items:start;margin-top:24px}
+.cam{position:relative;aspect-ratio:4/3;border-radius:var(--r-2xl);overflow:hidden;background:radial-gradient(120% 90% at 50% 40%,#2A3C52,#0B1726 70%);display:grid;place-items:center;box-shadow:var(--sh-3)}
+.cam .obj{width:46%;aspect-ratio:1;border-radius:24px;background:linear-gradient(160deg,#F4F1EA,#DCD5C6);transform:rotate(-6deg);box-shadow:0 30px 40px rgba(0,0,0,.4);display:grid;place-items:center;position:relative}
+.cam .obj::before{content:"Café tostado · 500 g";position:absolute;top:16%;font:800 15px var(--f-disp);color:#5A3B22}
+.cam .bc{width:62%;height:26%;margin-top:28%;background:#fff;border-radius:6px;display:grid;padding:8px 10px 4px;align-content:end}
+.cam .bc i{height:70%;background:repeating-linear-gradient(90deg,#111 0 2px,transparent 2px 4px,#111 4px 7px,transparent 7px 8px,#111 8px 9px,transparent 9px 12px,#111 12px 13px,transparent 13px 15px)}
+.cam .bc span{font:500 11px var(--f-mono);color:#111;text-align:center;letter-spacing:.12em;margin-top:2px}
+.frame{position:absolute;left:50%;top:50%;width:64%;height:36%;translate:-50% -36%;}
+.frame b{position:absolute;width:34px;height:34px;border:4px solid var(--teal);border-radius:6px}
+.frame b:nth-child(1){left:0;top:0;border-right:0;border-bottom:0}.frame b:nth-child(2){right:0;top:0;border-left:0;border-bottom:0}.frame b:nth-child(3){left:0;bottom:0;border-right:0;border-top:0}.frame b:nth-child(4){right:0;bottom:0;border-left:0;border-top:0}
+.frame{animation:fr 2.4s var(--ease-io) infinite}
+@keyframes fr{50%{transform:scale(1.03)}}
+.lz{position:absolute;left:4%;right:4%;top:8%;height:2px;background:var(--teal);border-radius:2px;--laser:150px;animation:laser 2.2s var(--ease-io) infinite;opacity:.9}
+.cam .hud{position:absolute;left:20px;right:20px;top:20px;display:flex;justify-content:space-between}
+.cam .hud .chip{background:rgba(11,23,38,.6);color:#fff;backdrop-filter:blur(8px)}
+.cam .ctl{position:absolute;bottom:22px;left:0;right:0;display:flex;justify-content:center;gap:16px}
+.cam .ctl .ibtn{background:rgba(255,255,255,.14);color:#fff;backdrop-filter:blur(8px);width:52px;height:52px}
+.cam .shoot{width:72px;height:72px;border-radius:50%;background:#fff;box-shadow:0 0 0 5px rgba(255,255,255,.3);transition:transform var(--t-press) var(--ease)}.cam .shoot:active{transform:scale(.92)}
+.res{padding:28px;border-radius:var(--r-xl);background:#fff;box-shadow:var(--sh-2)}
+.det{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:var(--r);background:var(--ok-50);color:var(--ok);font-weight:700;margin-bottom:22px;animation:pop .5s var(--ease) both}
+.det .mono{font-size:18px;color:var(--ink);letter-spacing:.06em}
+.mt{display:flex;gap:16px;align-items:center}
+.mt .im{width:96px;height:96px;border-radius:20px;background:var(--photo);display:grid;place-items:center;flex:none;font:800 13px var(--f-disp);color:#5A3B22;text-align:center;padding:10px}
+.cmp2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:22px 0}
+.cmp2>div{padding:16px;border-radius:var(--r);background:var(--surf)}.cmp2 small{display:block;color:var(--mut);font-size:13px;font-weight:700}.cmp2 b{font:800 24px var(--f-disp)}
+.cmp2 .on{background:var(--act-50);box-shadow:inset 0 0 0 2px var(--act)}
+.drop2{border:2px dashed var(--line-2);border-radius:var(--r-xl);padding:48px 24px;display:grid;justify-items:center;gap:12px;text-align:center;background:#fff;transition:border-color var(--t-fast),background-color var(--t-fast)}
+.drop2:hover,.drop2.over{border-color:var(--act);background:var(--act-50)}
+.drop2 .art{width:72px;height:72px;border-radius:22px;background:var(--act-50);color:var(--act);display:grid;place-items:center}
+.vm{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
+.vm a{border-radius:18px;background:#fff;padding:10px;box-shadow:inset 0 0 0 1.5px var(--line);transition:box-shadow var(--t) var(--ease),transform var(--t) var(--ease)}
+.vm a:hover{transform:translateY(-3px);box-shadow:var(--sh-2)}
+.vm .im{aspect-ratio:1;border-radius:12px;background:var(--photo);display:grid;place-items:center;margin-bottom:8px}.vm img{width:70%;height:70%;object-fit:contain}
+.vm b{font-size:13px;display:block}.vm small{font-size:12px;color:var(--mut);font-weight:700}
+.sim{height:6px;border-radius:3px;background:var(--surf-2);margin-top:6px;overflow:hidden}.sim i{display:block;height:100%;background:var(--teal);width:var(--v);transform-origin:left;animation:barin 1s var(--ease) both}
+@media(max-width:900px){.sc{grid-template-columns:1fr}.cam{border-radius:28px;aspect-ratio:3/4}.res{padding:20px}}
+@media(max-width:900px){.sc{grid-template-columns:minmax(0,1fr)}.sc>*{min-width:0}.cmp2{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+</style></head>
+<body data-page="escanear">
+<main class="page"><div class="wrap">
+ <nav class="crumb"><a href="index.html">Inicio</a><svg class="ic"><use href="#i-chevr"/></svg><span>Escanear</span></nav>
+ <div class="row between wrapf" style="margin-top:14px;--g:16px"><h1 class="ph-title">Encuentra un producto sin escribir</h1>
+  <div class="seg" role="tablist" data-tabs-scope-target><button aria-selected="true" data-show="bc"><svg class="ic sm" style="margin-right:6px;vertical-align:-3px"><use href="#i-barcode"/></svg>Código de barras</button><button data-show="ft"><svg class="ic sm" style="margin-right:6px;vertical-align:-3px"><use href="#i-camera"/></svg>Foto</button><button data-show="gt">Escribir GTIN</button></div></div>
+
+ <div data-pane="bc" class="sc">
+  <div class="cam rv" aria-label="Vista de la cámara">
+   <div class="obj"><div class="bc"><i></i><span>7 702004 003508</span></div></div>
+   <div class="frame"><b></b><b></b><b></b><b></b><span class="lz"></span></div>
+   <div class="hud"><span class="chip"><span class="sdot ok pulse"></span>Cámara trasera</span><span class="chip">ZXing · EAN-13</span></div>
+   <div class="ctl"><button class="ibtn" aria-label="Linterna"><svg class="ic"><use href="#i-zap"/></svg></button><button class="shoot" aria-label="Capturar"></button><button class="ibtn" aria-label="Galería"><svg class="ic"><use href="#i-image"/></svg></button></div>
+  </div>
+  <div class="res rv" style="--i:2">
+   <div class="det"><svg class="ic"><use href="#i-check"/></svg><div><div style="font-size:13px">Código detectado en 0,4 s</div><span class="mono">7702004003508</span></div></div>
+   <div class="mt"><span class="im">Café tostado 500 g</span><div><span class="chip real">Dato real · Open Food Facts</span><h2 style="font-size:24px;margin:8px 0 4px">Café Sello Rojo tostado y molido 500 g</h2><p class="mut" style="font-size:14px">Marca Sello Rojo · 3 precios observados</p></div></div>
+   <div class="cmp2"><div><small>En la tienda física</small><input class="input num" style="height:44px;margin-top:6px;font-weight:700" placeholder="$ 0" value="$ 21.900" aria-label="Precio en la tienda"></div><div class="on"><small>Mejor en línea</small><b class="num">$ 18.450</b><div class="drop">Ahorras $ 3.450 (16 %)</div></div></div>
+   <div class="row" style="--g:10px"><a class="btn btn-p grow" href="producto.html">Ver las 3 ofertas</a><button class="btn btn-s" data-toast="Alerta creada" data-toast-icon="bell"><svg class="ic sm"><use href="#i-bell"/></svg>Alerta</button></div>
+   <p class="hint" style="margin-top:14px">La cámara funciona en tu navegador. No guardamos imágenes de la cámara.</p>
+  </div>
+ </div>
+
+ <div data-pane="ft" class="sc" hidden>
+  <div><label class="drop2" for="up"><span class="art"><svg class="ic xl"><use href="#i-upload"/></svg></span><b class="disp" style="font-size:22px">Arrastra una foto del producto</b><span class="mut">o toca para tomarla o elegirla · JPG o PNG hasta 5 MB</span><span class="btn btn-s sm" style="margin-top:6px">Elegir foto</span><input id="up" type="file" accept="image/*" class="sr"></label></div>
+  <div class="res"><div class="row" style="--g:14px"><img src="https://cdn.dummyjson.com/product-images/smartphones/iphone-13-pro/thumbnail.webp" alt="" style="width:84px;height:84px;object-fit:contain;background:var(--photo);border-radius:18px;padding:8px"><div><span class="chip teal"><svg class="ic"><use href="#i-spark"/></svg>Búsqueda visual</span><h2 style="font-size:22px;margin-top:8px">Parece un iPhone 13 Pro</h2><p class="mut" style="font-size:14px">Coincidencias por similitud de imagen (pgvector)</p></div></div>
+   <div class="vm"><a href="producto.html"><div class="im"><img src="https://cdn.dummyjson.com/product-images/smartphones/iphone-13-pro/thumbnail.webp" alt=""></div><b>iPhone 13 Pro</b><small>94 % · $ 4.280.000</small><div class="sim"><i style="--v:94%"></i></div></a><a href="producto.html"><div class="im"><img src="https://cdn.dummyjson.com/product-images/smartphones/iphone-x/thumbnail.webp" alt=""></div><b>iPhone X</b><small>71 % · $ 1.590.000</small><div class="sim"><i style="--v:71%"></i></div></a><a href="producto.html"><div class="im"><img src="https://cdn.dummyjson.com/product-images/smartphones/iphone-6/thumbnail.webp" alt=""></div><b>iPhone 6</b><small>58 % · $ 690.000</small><div class="sim"><i style="--v:58%"></i></div></a></div>
+   <div class="banner info" style="margin-top:18px"><svg class="ic"><use href="#i-info"/></svg><span style="font-size:14px">Las coincidencias visuales son «similares», no «el mismo producto». Confirma el modelo antes de comparar.</span></div>
+  </div>
+ </div>
+
+ <div data-pane="gt" hidden style="max-width:560px;margin:48px auto">
+  <div class="res"><div class="field"><label for="g">Código GTIN, EAN o UPC</label><div class="input-ic"><svg class="ic"><use href="#i-barcode"/></svg><input class="input mono" id="g" inputmode="numeric" value="770200400350" style="font-size:20px;height:60px;letter-spacing:.08em"></div><span class="hint" style="color:var(--bad)">Faltan dígitos: un EAN-13 tiene 13. Revisa el número bajo el código.</span></div><button class="btn btn-p lg block" style="margin-top:18px">Buscar código</button></div>
+ </div>
+</div></main>
+<script src="assets/samp.js"></script>
+<script>(()=>{const seg=document.querySelector('.seg');const m={'foto':'ft','gtin':'gt'}[SAMP.HV];if(m){const b=seg.querySelector('[data-show='+m+']');b&&b.click()}})();</script>
+</body></html>
