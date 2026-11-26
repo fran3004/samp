@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Escanear código GTIN · SAMP', 'escanear')}"></head>
+<body data-page="escanear">
+
+<th:block th:replace="~{fragments/layout :: navbar('escanear')}"></th:block>
+
+<main class="page"><div class="wrap" data-tabs-scope>
+ <nav class="crumb"><a th:href="@{/}">Inicio</a><svg class="ic"><use href="#i-chevr"/></svg><span>Escanear</span></nav>
+ <div class="row between wrapf" style="margin-top:14px;--g:16px">
+  <h1 class="ph-title">Encuentra un producto sin escribir</h1>
+  <div class="seg" role="tablist">
+   <button type="button" aria-selected="true" data-show="bc">Código de barras / GTIN</button>
+   <button type="button" data-show="ft">Búsqueda visual</button>
+  </div>
+ </div>
+
+ <div data-pane="bc" class="sc">
+  <div class="cam rv" aria-label="Visor de código de barras">
+   <div class="obj">
+    <div class="bc"><i></i><span th:text="${scannedGtin}">3017620422003</span></div>
+   </div>
+   <div class="frame"><span class="lz"></span></div>
+  </div>
+
+  <div class="res rv" style="--i:1">
+   <form th:action="@{/escanear}" method="get" class="stack-v" style="--g:12px;margin-bottom:20px">
+    <div class="field">
+     <label for="gtin-in">Escribe o escanea un código GTIN / EAN-13</label>
+     <div class="input-ic">
+      <svg class="ic"><use href="#i-barcode"/></svg>
+      <input class="input mono" id="gtin-in" name="gtin" th:value="${scannedGtin}" required pattern="[0-9]{8,14}" title="Ingresa entre 8 y 14 dígitos numéricos">
+     </div>
+    </div>
+    <div class="row wrapf" style="--g:8px">
+     <button type="submit" class="btn btn-p">Buscar por GTIN</button>
+     <a class="btn btn-s sm" th:href="@{/escanear(gtin='0027242923232')}">Sony XM5</a>
+     <a class="btn btn-s sm" th:href="@{/escanear(gtin='0097855141224')}">Logitech G502</a>
+     <a class="btn btn-s sm" th:href="@{/escanear(gtin='3017620422003')}">Nutella</a>
+    </div>
+   </form>
+
+   <div th:if="${scannedGroup != null}">
+    <div class="det"><svg class="ic"><use href="#i-check"/></svg><div><div style="font-size:13px">Equivalencia exacta verificada</div><span class="mono" th:text="${scannedGtin}">000</span></div></div>
+    <h2 style="font-size:22px;margin-bottom:6px" th:text="${scannedGroup.canonicalTitle()}">Producto</h2>
+    <p class="mut" style="font-size:14px;margin-bottom:14px" th:text="${scannedGroup.offers().size() + ' oferta(s) encontradas · Mejor total: $ ' + #numbers.formatDecimal(scannedGroup.bestOffer().totalInTarget().amount, 0, 'POINT', 0, 'COMMA') + ' COP en ' + scannedGroup.bestOffer().storeName()}">Detalle</p>
+    <a class="btn btn-p block" th:href="@{'/producto/' + ${scannedGroup.groupKey()}}">Ver todas las ofertas y el historial</a>
+   </div>
+
+   <div class="banner" th:if="${scannedGroup == null}">
+    <svg class="ic"><use href="#i-info"/></svg>
+    <div><b>Sin coincidencias exactas para <span class="mono" th:text="${scannedGtin}">000</span>.</b> Prueba buscando por texto o consultando al asistente IA.</div>
+   </div>
+  </div>
+ </div>
+
+ <div data-pane="ft" hidden class="res" style="margin-top:24px">
+  <span class="chip teal"><svg class="ic"><use href="#i-spark"/></svg>Búsqueda visual (RF-21)</span>
+  <h2 style="font-size:24px;margin:10px 0">Coincidencias visuales («similares», no equivalencia exacta)</h2>
+  <p class="mut">Las búsquedas por foto siempre se rotulan como «similares» hasta confirmar GTIN o modelo exacto.</p>
+  <div class="vm">
+   <a th:each="g : ${visualMatches}" th:href="@{'/producto/' + ${g.groupKey()}}">
+    <div class="im"><img th:if="${!#strings.isEmpty(g.imageUrl())}" th:src="${g.imageUrl()}" th:alt="${g.canonicalTitle()}"></div>
+    <b th:text="${g.canonicalTitle()}">Producto</b>
+    <small th:text="'$ ' + ${#numbers.formatDecimal(g.bestOffer().totalInTarget().amount, 0, 'POINT', 0, 'COMMA')} + ' COP'">$ 0</small>
+   </a>
+  </div>
+ </div>
+</div></main>
+
+<th:block th:replace="~{fragments/layout :: footer(null)}"></th:block>
+</body></html>

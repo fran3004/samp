@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Comparar productos · SAMP', 'comparar')}"></head>
+<body data-page="comparar">
+
+<th:block th:replace="~{fragments/layout :: navbar('comparar')}"></th:block>
+
+<main class="page"><div class="wrap">
+ <nav class="crumb"><a th:href="@{/}">Inicio</a><svg class="ic"><use href="#i-chevr"/></svg><span>Comparar</span></nav>
+ <div class="row between wrapf" style="margin-top:14px;--g:20px">
+  <div><h1 class="ph-title">Comparar productos</h1><p class="mut" style="margin-top:6px">Mejor total de cada producto entre las 5 tiendas de Colombia</p></div>
+  <label class="row" style="--g:12px;font-weight:700"><input type="checkbox" class="switch" id="only-diff-toggle">Mostrar solo diferencias</label>
+ </div>
+
+ <div class="cmp" id="cmp">
+  <div class="hd"></div>
+  <div class="hd pc rv" th:each="g : ${comparedGroups}">
+   <div class="im"><img th:if="${!#strings.isEmpty(g.imageUrl())}" th:src="${g.imageUrl()}" th:alt="${g.canonicalTitle()}"></div>
+   <span class="chip" th:classappend="${g.bestOffer().completeTotal()} ? ' blue' : ' warn'" th:text="${g.bestOffer().comparisonLabel()}">Total</span>
+   <h3 style="margin-top:8px" th:text="${g.canonicalTitle()}">Producto</h3>
+   <div class="pr num" th:text="'$ ' + ${#numbers.formatDecimal(g.bestOffer().totalInTarget().amount, 0, 'POINT', 0, 'COMMA')} + ' ' + ${g.bestOffer().totalInTarget().currency}">$ 0</div>
+   <a class="btn btn-p sm" style="margin-top:12px" th:href="@{'/producto/' + ${g.groupKey()}}">Ver ofertas</a>
+  </div>
+
+  <div class="grp">Precio y transparencia</div>
+  <div class="rowc diff"><span>Mejor tienda</span><span th:each="g : ${comparedGroups}" th:text="${g.bestOffer().storeName()}">Tienda</span></div>
+  <div class="rowc diff"><span>Origen del dato</span><span th:each="g : ${comparedGroups}"><span class="chip" th:classappend="${g.bestOffer().dataKind().name() == 'REAL'} ? ' real' : ' demo'" th:text="${g.bestOffer().dataKind()}">DEMO</span></span></div>
+  <div class="rowc diff"><span>Envío</span><span th:each="g : ${comparedGroups}" th:text="${g.bestOffer().shippingKnown() ? (g.bestOffer().shippingCost().isZero() ? 'Gratis' : g.bestOffer().shippingCost()) : 'Desconocido'}">Envío</span></div>
+  <div class="rowc diff"><span>Consejo 30 días</span><span th:each="g : ${comparedGroups}"><span class="chip real" th:text="${g.buyAdvice().recommendation()}">Consejo</span></span></div>
+  <div class="rowc same"><span>Moneda mostrada</span><span th:each="g : ${comparedGroups}" th:text="${currency}">COP</span></div>
+  <div class="grp">Identificación</div>
+  <div class="rowc diff"><span>Marca</span><span th:each="g : ${comparedGroups}" th:text="${g.brand()}">Marca</span></div>
+  <div class="rowc diff"><span>Código GTIN</span><span class="mono" th:each="g : ${comparedGroups}" th:text="${g.gtin() != null ? g.gtin() : 'Sin GTIN'}">GTIN</span></div>
+  <div class="rowc diff"><span>Tiendas comparadas</span><span th:each="g : ${comparedGroups}" th:text="${g.offers().size() + ' oferta(s)'}">0</span></div>
+ </div>
+</div></main>
+
+<th:block th:replace="~{fragments/layout :: footer('comparar')}"></th:block>
+</body></html>

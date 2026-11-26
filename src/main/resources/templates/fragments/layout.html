@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<!-- Fragmento HEAD: carga ordenada de CSS base, componentes y hoja específica de la página -->
+<head th:fragment="head(title, pageCss)">
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+ <title th:text="${title}">SAMP · Sistema Automatizado de Mejores Precios</title>
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@600;700;800&family=Red+Hat+Mono:wght@500&family=Red+Hat+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" th:href="@{/css/base/tokens.css}">
+ <link rel="stylesheet" th:href="@{/css/base/reset.css}">
+ <link rel="stylesheet" th:href="@{/css/base/animations.css}">
+ <link rel="stylesheet" th:href="@{/css/components/buttons-chips.css}">
+ <link rel="stylesheet" th:href="@{/css/components/forms.css}">
+ <link rel="stylesheet" th:href="@{/css/components/cards.css}">
+ <link rel="stylesheet" th:href="@{/css/components/navigation.css}">
+ <link rel="stylesheet" th:if="${pageCss != null}" th:href="@{'/css/pages/' + ${pageCss} + '.css'}">
+</head>
+
+<body>
+
+<!-- Fragmento NAVBAR + overlays globales -->
+<th:block th:fragment="navbar(activePage)">
+ <div class="live" role="status">
+  <span class="sdot ok pulse"></span>
+  <span><b>5 tiendas Colombia</b> conectadas (Mercado Libre, Amazon, Temu, Falabella, AliExpress) · <b>Precios transparentes en COP</b></span>
+ </div>
+ <header class="nav" id="nav">
+  <div class="wrap">
+   <button class="ibtn burger" type="button" data-drawer="mnav" aria-label="Abrir menú"><svg class="ic"><use href="#i-menu"/></svg></button>
+   <a class="logo" th:href="@{/}" aria-label="SAMP, inicio">
+    <svg><use href="#logo"/></svg>
+    <span>SAMP<small>MEJORES PRECIOS</small></span>
+   </a>
+   <nav class="menu" aria-label="Principal">
+    <button class="nl" type="button" data-mega aria-expanded="false">Categorías <svg class="ic chev"><use href="#i-chev"/></svg></button>
+    <a class="nl opt" th:href="@{/comparar}" th:attr="aria-current=${activePage == 'comparar'} ? 'page' : null">Comparar</a>
+    <a class="nl" th:href="@{/asistente}" th:attr="aria-current=${activePage == 'ia'} ? 'page' : null"><svg class="ic sm"><use href="#i-spark"/></svg>Asistente <span class="new">IA</span></a>
+   </nav>
+   <button class="nsearch" type="button" data-palette aria-label="Buscar">
+    <svg class="ic"><use href="#i-search"/></svg>
+    <span>Busca un producto o código de barras</span>
+    <span class="kbd">Ctrl</span><span class="kbd">K</span>
+   </button>
+   <div class="r">
+    <a class="ibtn hide-m tip" data-tip="Escanear código" th:href="@{/escanear}" aria-label="Escanear código"><svg class="ic"><use href="#i-barcode"/></svg></a>
+    <a class="ibtn hide-m tip" data-tip="Favoritos" th:href="@{/cuenta#favoritos}" aria-label="Favoritos"><svg class="ic"><use href="#i-heart"/></svg></a>
+    <a class="cur hide-m" th:href="@{/resultados(currency='COP')}" aria-label="Moneda"><svg class="ic sm"><use href="#i-globe"/></svg>COP</a>
+    <a class="btn btn-p sm" th:if="${!isAuthenticated}" th:href="@{/entrar}"><svg class="ic sm"><use href="#i-user"/></svg>Entrar</a>
+    <button class="ibtn" type="button" th:if="${isAuthenticated}" data-pop="p-user" aria-label="Tu cuenta" style="margin-left:4px">
+     <span class="avatar" th:text="${currentUserInitials}">US</span>
+    </button>
+   </div>
+  </div>
+  <div class="mega" id="mega" role="dialog" aria-label="Categorías">
+   <div class="in wrap">
+    <div class="cats">
+     <a class="mi hl" th:href="@{/resultados(q='Sony')}"><svg class="ic"><use href="#i-head"/></svg>Audio</a>
+     <a class="mi" th:href="@{/resultados(q='Logitech')}"><svg class="ic"><use href="#i-pad"/></svg>Periféricos y gaming</a>
+     <a class="mi" th:href="@{/resultados(q='Freidora')}"><svg class="ic"><use href="#i-speaker"/></svg>Hogar y cocina</a>
+     <a class="mi" th:href="@{/resultados(q='Hub')}"><svg class="ic"><use href="#i-cpu"/></svg>Accesorios USB-C</a>
+     <a class="mi" th:href="@{/resultados(gtin='3017620422003')}"><svg class="ic"><use href="#i-cart"/></svg>Mercado (GTIN)</a>
+    </div>
+    <div class="lk">
+     <h4>Tiendas Colombia</h4>
+     <a th:href="@{/resultados(q='Mercado Libre')}">Mercado Libre Colombia</a>
+     <a th:href="@{/resultados(q='Amazon')}">Amazon (Envío a Colombia)</a>
+     <a th:href="@{/resultados(q='Temu')}">Temu Colombia</a>
+     <a th:href="@{/resultados(q='Falabella')}">Falabella Colombia</a>
+     <a th:href="@{/resultados(q='AliExpress')}">AliExpress Choice</a>
+    </div>
+    <div class="lk">
+     <h4>Herramientas</h4>
+     <a th:href="@{/asistente}">Preguntar al asistente IA</a>
+     <a th:href="@{/asistente(modo='BUILD')}">Armar lista con presupuesto</a>
+     <a th:href="@{/escanear}">Escanear código GTIN</a>
+     <a th:href="@{/comparar}">Comparar lado a lado</a>
+    </div>
+    <a class="promo" th:href="@{/asistente(modo='BUILD')}">
+     <span class="chip teal"><svg class="ic"><use href="#i-spark"/></svg>Asistente IA</span>
+     <h3 style="font-size:22px">Arma cualquier compra con presupuesto</h3>
+     <p class="ink2" style="font-size:14px">Comparamos precios y advertimos envíos o impuestos desconocidos.</p>
+    </a>
+   </div>
+  </div>
+ </header>
+
+ <div class="pop" id="p-user" style="--o:top right" th:if="${isAuthenticated}">
+  <div class="row" style="padding:10px 12px 12px;--g:12px">
+   <span class="avatar" th:text="${currentUserInitials}">US</span>
+   <div><b style="display:block" th:text="${currentUserName}">Usuario</b><span class="mut" style="font-size:13px" th:text="${currentUserEmail}">correo</span></div>
+  </div>
+  <div class="msep"></div>
+  <a class="mi" th:href="@{/cuenta#favoritos}"><svg class="ic"><use href="#i-heart"/></svg>Favoritos</a>
+  <a class="mi" th:href="@{/cuenta#alertas}"><svg class="ic"><use href="#i-bell"/></svg>Alertas de precio</a>
+  <a class="mi" th:href="@{/cuenta#armados}"><svg class="ic"><use href="#i-spark"/></svg>Mis armados IA</a>
+  <a class="mi" th:href="@{/cuenta#preferencias}"><svg class="ic"><use href="#i-gear"/></svg>Preferencias</a>
+  <th:block th:if="${isAdmin}">
+   <div class="msep"></div>
+   <a class="mi" th:href="@{/admin}"><svg class="ic"><use href="#i-shield"/></svg>Administración<span class="end chip dark" style="height:20px;font-size:11px">Admin</span></a>
+  </th:block>
+  <div class="msep"></div>
+  <form th:action="@{/salir}" method="post">
+   <button type="submit" class="mi dg"><svg class="ic"><use href="#i-logout"/></svg>Cerrar sesión</button>
+  </form>
+ </div>
+
+ <div class="backdrop" id="bd"></div>
+ <aside class="drawer" id="mnav" aria-label="Menú móvil">
+  <div class="dh">
+   <a class="logo" th:href="@{/}"><svg><use href="#logo"/></svg><span>SAMP</span></a>
+   <button class="ibtn" type="button" data-close aria-label="Cerrar"><svg class="ic"><use href="#i-x"/></svg></button>
+  </div>
+  <div class="db">
+   <a class="mi" th:href="@{/}"><svg class="ic"><use href="#i-home"/></svg>Inicio</a>
+   <a class="mi" th:href="@{/resultados}"><svg class="ic"><use href="#i-search"/></svg>Explorar ofertas</a>
+   <a class="mi" th:href="@{/asistente}"><svg class="ic"><use href="#i-spark"/></svg>Asistente IA</a>
+   <a class="mi" th:href="@{/escanear}"><svg class="ic"><use href="#i-barcode"/></svg>Escanear GTIN</a>
+   <a class="mi" th:href="@{/comparar}"><svg class="ic"><use href="#i-cols"/></svg>Comparar</a>
+   <div class="msep"></div>
+   <a class="mi" th:href="@{/cuenta#favoritos}"><svg class="ic"><use href="#i-heart"/></svg>Mi cuenta</a>
+   <a class="mi" th:if="${isAdmin}" th:href="@{/admin}"><svg class="ic"><use href="#i-shield"/></svg>Administración</a>
+  </div>
+ </aside>
+
+ <div class="palette" id="pal" role="dialog" aria-label="Búsqueda rápida">
+  <form class="pin" th:action="@{/resultados}" method="get">
+   <svg class="ic lg"><use href="#i-search"/></svg>
+   <input name="q" placeholder="Busca un producto, marca o código GTIN y pulsa Enter" aria-label="Buscar">
+   <span class="kbd">Esc</span>
+  </form>
+  <div class="pb">
+   <div class="mhead">Accesos rápidos</div>
+   <a class="mi" th:href="@{/resultados(q='Sony WH-1000XM5')}"><svg class="ic"><use href="#i-search"/></svg>Sony WH-1000XM5</a>
+   <a class="mi" th:href="@{/resultados(q='Logitech G502')}"><svg class="ic"><use href="#i-search"/></svg>Logitech G502 HERO</a>
+   <a class="mi" th:href="@{/escanear}"><svg class="ic"><use href="#i-barcode"/></svg>Escanear código de barras</a>
+   <a class="mi" th:href="@{/asistente(modo='BUILD')}"><svg class="ic"><use href="#i-spark"/></svg>Armar lista con el asistente IA</a>
+  </div>
+  <div class="pf"><span><span class="kbd">Enter</span> buscar</span><span><span class="kbd">Esc</span> cerrar</span><span style="margin-left:auto">5 tiendas Colombia</span></div>
+ </div>
+
+ <div class="toasts" id="toasts" aria-live="polite"></div>
+</th:block>
+
+<!-- Fragmento FOOTER + barra móvil + scripts modulares -->
+<th:block th:fragment="footer(pageJs)">
+ <footer class="foot">
+  <div class="wrap">
+   <div class="cols">
+    <div>
+     <a class="logo" th:href="@{/}"><svg><use href="#logo"/></svg><span>SAMP<small>MEJORES PRECIOS</small></span></a>
+     <p style="margin-top:18px;max-width:40ch">Sistema Automatizado de Mejores Precios. Comparamos productos en 5 tiendas para Colombia mostrando moneda original, fecha y transparencia total de envíos e impuestos.</p>
+    </div>
+    <div><h4>Explorar</h4><ul><li><a th:href="@{/resultados}">Resultados</a></li><li><a th:href="@{/comparar}">Comparar</a></li><li><a th:href="@{/asistente}">Asistente IA</a></li><li><a th:href="@{/escanear}">Escanear GTIN</a></li></ul></div>
+    <div><h4>Tu cuenta</h4><ul><li><a th:href="@{/cuenta#favoritos}">Favoritos</a></li><li><a th:href="@{/cuenta#alertas}">Alertas</a></li><li><a th:href="@{/cuenta#armados}">Mis armados</a></li><li><a th:href="@{/entrar}">Ingresar</a></li></ul></div>
+    <div><h4>Tiendas</h4><ul><li><a th:href="@{/resultados(q='Mercado Libre')}">Mercado Libre</a></li><li><a th:href="@{/resultados(q='Amazon')}">Amazon</a></li><li><a th:href="@{/resultados(q='Temu')}">Temu</a></li><li><a th:href="@{/resultados(q='Falabella')}">Falabella</a></li><li><a th:href="@{/resultados(q='AliExpress')}">AliExpress</a></li></ul></div>
+    <div><h4>Transparencia</h4><ul><li><a th:href="@{/estados}">Estados del sistema</a></li><li><a th:href="@{/admin}">Administración</a></li></ul></div>
+   </div>
+   <div class="bt">
+    <span>© 2026 SAMP · Sistema Automatizado de Mejores Precios. SAMP no vende productos ni procesa pagos.</span>
+    <span>Moneda de referencia: USD · Visualización: COP</span>
+   </div>
+  </div>
+ </footer>
+
+ <nav class="tabbar" aria-label="Accesos móviles">
+  <a th:href="@{/}"><svg class="ic lg"><use href="#i-home"/></svg>Inicio</a>
+  <a th:href="@{/resultados}"><svg class="ic lg"><use href="#i-search"/></svg>Buscar</a>
+  <a th:href="@{/asistente}"><svg class="ic lg"><use href="#i-spark"/></svg>IA</a>
+  <a th:href="@{/escanear}"><svg class="ic lg"><use href="#i-barcode"/></svg>GTIN</a>
+  <a th:href="@{/cuenta}"><svg class="ic lg"><use href="#i-user"/></svg>Cuenta</a>
+ </nav>
+
+ <th:block th:replace="~{fragments/layout :: scripts(${pageJs})}"></th:block>
+</th:block>
+
+<!-- Fragmento SCRIPTS modulares (para páginas sin footer como asistente, entrar y admin) -->
+<th:block th:fragment="scripts(pageJs)">
+ <script th:src="@{/js/core/icons-sprite.js}"></script>
+ <script th:src="@{/js/core/navigation.js}"></script>
+ <script th:src="@{/js/core/ui-components.js}"></script>
+ <script th:if="${pageJs != null}" th:src="@{'/js/pages/' + ${pageJs} + '.js'}"></script>
+</th:block>
+
+</body>
+</html>

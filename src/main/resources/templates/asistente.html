@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Asistente y Armador IA · SAMP', 'asistente')}"></head>
+<body data-page="ia">
+
+<th:block th:replace="~{fragments/layout :: navbar('ia')}"></th:block>
+
+<div class="app">
+ <aside class="side" aria-label="Modos y ejemplos">
+  <a class="btn btn-n block" th:href="@{/asistente}"><svg class="ic sm"><use href="#i-plus"/></svg>Nueva consulta</a>
+  <div class="mhead" style="padding-left:6px;margin-top:8px">Modos de uso</div>
+  <a class="conv" th:href="@{/asistente(modo='CHAT')}" th:attr="aria-current=${mode == 'CHAT'} ? 'page' : 'false'"><b>Consultar catálogo</b><small>Precios, tiendas y comprar/esperar</small></a>
+  <a class="conv" th:href="@{/asistente(modo='BUILD',categoria='GENERAL',presupuesto=2000000)}" th:attr="aria-current=${mode == 'BUILD'} ? 'page' : 'false'"><b>Armar lista o setup</b><small>Cualquier categoría con presupuesto</small></a>
+  <a class="conv" th:href="@{/asistente(modo='BUILD',categoria='HOGAR',presupuesto=1000000)}"><b>Kit hogar inteligente</b><small>Presupuesto $ 1.000.000 COP</small></a>
+  <a class="conv" th:href="@{/asistente(modo='BUILD',categoria='PC',presupuesto=2500000)}"><b>Setup escritorio / PC</b><small>Con validación de compatibilidad</small></a>
+  <div style="margin-top:auto" class="banner info"><svg class="ic"><use href="#i-shield"/></svg><span style="font-size:13px">Solo lectura sobre el catálogo de SAMP. No procesa pagos ni inventa precios.</span></div>
+ </aside>
+
+ <section class="chat" aria-label="Conversación IA">
+  <div class="modebar">
+   <span class="chip teal"><svg class="ic"><use href="#i-spark"/></svg>Asistente IA SAMP</span>
+   <select id="ai-mode" class="input" style="width:auto;height:38px;font-size:13px;font-weight:700" aria-label="Modo">
+    <option value="CHAT" th:selected="${mode == 'CHAT'}">Modo Consulta de productos</option>
+    <option value="BUILD" th:selected="${mode == 'BUILD'}">Modo Armar lista / setup</option>
+   </select>
+   <input id="ai-cat" class="input" style="width:150px;height:38px;font-size:13px" th:value="${category}" placeholder="Categoría (libre)" aria-label="Categoría">
+   <input id="ai-budget" type="number" class="input num" style="width:170px;height:38px;font-size:13px" th:value="${budgetCop}" placeholder="Presupuesto COP" aria-label="Presupuesto COP">
+  </div>
+
+  <div class="msgs" id="msgs">
+   <div class="m u"><div class="bub" th:text="${initialQuestion}">Pregunta</div></div>
+   <div class="m a">
+    <span class="av"><svg class="ic"><use href="#i-spark"/></svg></span>
+    <div class="body">
+     <div class="tools">
+      <span class="tc" th:each="toolName : ${initialReply.toolsInvoked()}" th:text="${toolName + ' ✓'}">tool</span>
+     </div>
+     <div class="txt" th:text="${initialReply.answer()}">Respuesta</div>
+     <div class="val">
+      <svg class="ic sm"><use href="#i-shield"/></svg>
+      <span th:text="'Validado (' + ${initialReply.providerUsed()} + ' · ' + ${initialReply.modelUsed()} + ' · ' + ${initialReply.latencyMs()} + ' ms)'">Validado</span>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <div class="composer">
+   <div class="sugs">
+    <button type="button" data-prompt="¿Dónde sale más barato el Logitech G502 HERO?">Comparar Logitech G502</button>
+    <button type="button" data-prompt="¿Conviene comprar o esperar por los Sony WH-1000XM5?">Comprar o esperar Sony</button>
+    <button type="button" data-prompt="Arma un kit de escritorio y audio con presupuesto de 2000000" data-build="true">Armar kit de escritorio</button>
+    <button type="button" data-prompt="¿Qué tiendas están activas en Colombia y cómo envían?">Ver las 5 tiendas</button>
+   </div>
+   <form class="box" id="ai-form">
+    <textarea id="ai-input" rows="1" placeholder="Pregunta por cualquier producto o describe qué quieres armar con tu presupuesto" aria-label="Mensaje"></textarea>
+    <button class="send" type="submit" aria-label="Enviar"><svg class="ic"><use href="#i-send"/></svg></button>
+   </form>
+   <p class="disc">El asistente solo lee datos de SAMP mediante 10 herramientas de solo lectura y señala siempre si los datos son REAL o DEMO.</p>
+  </div>
+ </section>
+
+ <aside class="ctx" aria-label="Herramientas y modelo">
+  <h4>10 herramientas de solo lectura</h4>
+  <ul class="tl">
+   <li th:each="t : ${availableTools}"><span class="sdot ok"></span><code th:text="${t.name()}">tool</code></li>
+  </ul>
+  <h4>Proveedor activo</h4>
+  <div class="panel" style="padding:14px;display:grid;gap:8px;font-size:13px">
+   <div class="row between"><span class="mut">Proveedor</span><b id="ctx-prov" th:text="${initialReply.providerUsed()}">mock</b></div>
+   <div class="row between"><span class="mut">Modelo</span><b class="mono" id="ctx-mod" th:text="${initialReply.modelUsed()}">samp-mock-v1</b></div>
+   <div class="row between"><span class="mut">Herramientas</span><b>10 de 10</b></div>
+  </div>
+  <h4>Guardrails activos</h4>
+  <p class="hint">Bloqueo de inyección de prompts, redacción de correos/teléfonos y verificación de salida contra el catálogo antes de responder.</p>
+ </aside>
+</div>
+
+<th:block th:replace="~{fragments/layout :: scripts('asistente')}"></th:block>
+</body></html>

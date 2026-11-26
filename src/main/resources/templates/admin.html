@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Administración · SAMP', 'admin')}"></head>
+<body data-page="admin">
+
+<div class="adm">
+ <aside class="sb" aria-label="Administración">
+  <a class="logo" th:href="@{/}"><svg><use href="#logo"/></svg><span>SAMP<small>ADMINISTRACIÓN</small></span></a>
+  <a href="#resumen" data-nav="resumen"><svg class="ic"><use href="#i-act"/></svg>Resumen</a>
+  <div class="grp">Datos</div>
+  <a href="#tiendas" data-nav="tiendas"><svg class="ic"><use href="#i-cart"/></svg>Tiendas (5)</a>
+  <a href="#usuarios" data-nav="usuarios"><svg class="ic"><use href="#i-users"/></svg>Usuarios</a>
+  <a href="#ia" data-nav="ia"><svg class="ic"><use href="#i-spark"/></svg>Asistente IA</a>
+  <div class="env">
+   <div class="row" style="--g:8px"><span class="sdot ok pulse"></span><b>SAMP Activo</b></div>
+   <span>Java 21 · Supabase 52 tablas</span>
+   <a th:href="@{/}" class="link" style="color:var(--teal);font-size:13px">Volver al sitio público →</a>
+  </div>
+ </aside>
+
+ <div class="main">
+  <header class="tb">
+   <b class="disp" style="font-size:18px">Panel de Administración SAMP</b>
+   <div class="row" style="margin-left:auto;--g:10px">
+    <a class="btn btn-s sm" th:href="@{/resultados(live='true')}"><svg class="ic sm"><use href="#i-refresh"/></svg>Probar scraping en vivo</a>
+    <span class="avatar" th:text="${currentUserInitials}">AD</span>
+   </div>
+  </header>
+
+  <div class="cnt">
+   <section data-view="resumen">
+    <div class="vh"><div><h1>Resumen de plataforma</h1><p class="mut">Control exclusivo para perfil ADMIN</p></div></div>
+    <div class="kpis">
+     <div class="kpi"><small>Tiendas Colombia</small><b class="num" th:text="${storeStatuses.size()}">5</b><span class="mut" style="font-size:13px">Con respaldo DEMO</span></div>
+     <div class="kpi"><small>Ofertas indexadas</small><b class="num" th:text="${totalOffers}">0</b><span class="mut" style="font-size:13px">Transparencia total</span></div>
+     <div class="kpi"><small>Usuarios registrados</small><b class="num" th:text="${users.size()}">2</b><span class="mut" style="font-size:13px">Roles ADMIN / REGISTERED</span></div>
+     <div class="kpi"><small>Herramientas IA</small><b class="num" th:text="${toolsCount}">10</b><span class="mut" style="font-size:13px">Solo lectura</span></div>
+    </div>
+    <div class="tw">
+     <table class="tbl">
+      <thead><tr><th>Tienda</th><th>Código</th><th>Origen</th><th>Ofertas</th><th>Estado</th></tr></thead>
+      <tbody>
+       <tr th:each="st : ${storeStatuses}">
+        <td><b th:text="${st.storeName()}">Tienda</b></td>
+        <td class="mono" th:text="${st.storeCode()}">CODE</td>
+        <td><span class="chip" th:classappend="${st.dataKind().name() == 'REAL'} ? ' real' : ' demo'" th:text="${st.dataKind()}">DEMO</span></td>
+        <td class="num" th:text="${st.itemCount()}">0</td>
+        <td th:text="${st.note()}">OK</td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+   </section>
+
+   <section data-view="tiendas" hidden>
+    <div class="vh"><div><h1>Tiendas y conectores</h1><p class="mut">Prioridad 1: Scraping respetando robots.txt · Prioridad 2: Catálogo respaldo DEMO</p></div></div>
+    <div class="tw">
+     <table class="tbl">
+      <thead><tr><th>Tienda</th><th>Código</th><th>Modo efectivo</th><th>Estado de ejecución</th></tr></thead>
+      <tbody>
+       <tr th:each="st : ${storeStatuses}">
+        <td><b th:text="${st.storeName()}">Tienda</b></td>
+        <td class="mono" th:text="${st.storeCode()}">CODE</td>
+        <td><span class="chip" th:classappend="${st.dataKind().name() == 'REAL'} ? ' real' : ' demo'" th:text="${st.dataKind()}">DEMO</span></td>
+        <td th:text="${st.note()}">Nota</td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+   </section>
+
+   <section data-view="usuarios" hidden>
+    <div class="vh"><div><h1>Usuarios y roles</h1><p class="mut">Control de acceso basado en perfiles (VISITOR, REGISTERED, ADMIN)</p></div></div>
+    <div class="tw">
+     <table class="tbl">
+      <thead><tr><th>ID</th><th>Nombre</th><th>Correo</th><th>Roles</th><th>Estado</th></tr></thead>
+      <tbody>
+       <tr th:each="u : ${users}">
+        <td class="mono" th:text="${u.id}">1</td>
+        <td><b th:text="${u.displayName}">Nombre</b></td>
+        <td th:text="${u.email}">correo</td>
+        <td><span class="chip blue" th:each="r : ${u.roles}" th:text="${r.name}" style="margin-right:4px">ROLE</span></td>
+        <td><span class="chip real" th:if="${u.enabled}">Activo</span><span class="chip bad" th:if="${!u.enabled}">Desactivado</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+   </section>
+
+   <section data-view="ia" hidden>
+    <div class="vh"><div><h1>Configuración de Asistente IA</h1><p class="mut">Intercambiable entre MockProvider y Gemini mediante configuración</p></div></div>
+    <div class="banner info"><svg class="ic"><use href="#i-spark"/></svg><div>Las <b>10 herramientas de solo lectura</b> están activas con guardrails contra prompt injection y validación de salida.</div></div>
+   </section>
+  </div>
+ </div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<th:block th:replace="~{fragments/layout :: scripts(null)}"></th:block>
+</body></html>

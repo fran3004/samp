@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Tu cuenta · SAMP', 'cuenta')}"></head>
+<body data-page="cuenta">
+
+<th:block th:replace="~{fragments/layout :: navbar('cuenta')}"></th:block>
+
+<main class="page"><div class="wrap">
+ <div class="acc">
+  <nav class="anav" aria-label="Tu cuenta">
+   <div class="who">
+    <span class="avatar" th:text="${currentUserInitials}">US</span>
+    <div><b th:text="${currentUserName}">Usuario</b><div class="mut" style="font-size:13px" th:text="${currentUserEmail}">correo</div></div>
+   </div>
+   <a href="#favoritos" data-nav="favoritos"><svg class="ic"><use href="#i-heart"/></svg>Favoritos</a>
+   <a href="#alertas" data-nav="alertas"><svg class="ic"><use href="#i-bell"/></svg>Alertas de precio</a>
+   <a href="#notificaciones" data-nav="notificaciones"><svg class="ic"><use href="#i-mail"/></svg>Notificaciones</a>
+   <a href="#armados" data-nav="armados"><svg class="ic"><use href="#i-spark"/></svg>Mis armados IA</a>
+   <a href="#preferencias" data-nav="preferencias"><svg class="ic"><use href="#i-gear"/></svg>Preferencias</a>
+   <a th:if="${isAdmin}" th:href="@{/admin}"><svg class="ic"><use href="#i-shield"/></svg>Panel Admin</a>
+   <form th:action="@{/salir}" method="post" style="margin-top:12px">
+    <button type="submit" class="btn btn-q block" style="color:var(--bad)"><svg class="ic sm"><use href="#i-logout"/></svg>Cerrar sesión</button>
+   </form>
+  </nav>
+
+  <section data-view="favoritos">
+   <div class="vh"><div><h1>Favoritos</h1><p class="mut">Productos seguidos con comparación transparente</p></div></div>
+   <div class="grid">
+    <a class="pcard" th:each="g : ${favoriteGroups}" th:href="@{'/producto/' + ${g.groupKey()}}">
+     <div class="ph"><div class="tg"><span class="chip" th:classappend="${g.bestOffer().dataKind().name() == 'REAL'} ? ' real' : ' demo'" th:text="${g.bestOffer().dataKind()}">DEMO</span></div>
+      <img th:if="${!#strings.isEmpty(g.imageUrl())}" th:src="${g.imageUrl()}" th:alt="${g.canonicalTitle()}">
+     </div>
+     <h3 th:text="${g.canonicalTitle()}">Producto</h3>
+     <div class="pr"><b th:text="'$ ' + ${#numbers.formatDecimal(g.bestOffer().totalInTarget().amount, 0, 'POINT', 0, 'COMMA')} + ' COP'">$ 0</b></div>
+     <div class="meta" th:text="${g.bestOffer().storeName() + ' · ' + g.buyAdvice().recommendation()}">Tienda</div>
+    </a>
+   </div>
+  </section>
+
+  <section data-view="alertas" hidden>
+   <div class="vh"><div><h1>Alertas de precio</h1><p class="mut">Se evalúan automáticamente en cada ejecución programada (cada 6 h)</p></div><a class="btn btn-p" th:href="@{/resultados}">Explorar productos</a></div>
+   <div class="banner info"><svg class="ic"><use href="#i-bell"/></svg><div>Abre cualquier ficha de producto y pulsa <b>Crear alerta</b> para definir tu precio objetivo en COP o USD.</div></div>
+  </section>
+
+  <section data-view="notificaciones" hidden>
+   <div class="vh"><div><h1>Notificaciones</h1><p class="mut">Avisos de bajadas de precio y actualizaciones de tasas</p></div></div>
+   <div class="banner ok"><svg class="ic"><use href="#i-check"/></svg><div>Tasa de referencia USD/COP actualizada: <b>1 USD = $ 4.250 COP</b>.</div></div>
+  </section>
+
+  <section data-view="armados" hidden>
+   <div class="vh"><div><h1>Mis armados IA</h1><p class="mut">Listas, setups o kits armados con presupuesto en cualquier categoría</p></div><a class="btn btn-p" th:href="@{/asistente(modo='BUILD')}">Nuevo armado con IA</a></div>
+   <div class="banner info"><svg class="ic"><use href="#i-spark"/></svg><div>Usa el <b>Asistente IA en modo Armar</b> para crear configuraciones de estudio, hogar, gaming o regalos con validación de presupuesto y envíos.</div></div>
+  </section>
+
+  <section data-view="preferencias" hidden class="pref">
+   <div class="vh"><div><h1>Preferencias</h1><p class="mut">Configuración de moneda e idioma de visualización</p></div></div>
+   <div class="pr"><div><b>Moneda de visualización</b><span class="hint">Referencia en USD; visualización por defecto en COP.</span></div><select class="input"><option>COP · Peso colombiano</option><option>USD · Dólar estadounidense</option></select></div>
+   <div class="pr"><div><b>Idioma</b></div><select class="input"><option>Español (Colombia)</option><option>English (US)</option></select></div>
+   <div class="pr"><div><b>Mostrar ofertas de demostración (DEMO)</b><span class="hint">Siempre visibles con su etiqueta transparente.</span></div><input type="checkbox" class="switch" checked aria-label="Mostrar DEMO"></div>
+   <div style="margin-top:20px"><button class="btn btn-p" type="button" data-toast="Preferencias guardadas">Guardar cambios</button></div>
+  </section>
+ </div>
+</div></main>
+
+<th:block th:replace="~{fragments/layout :: footer(null)}"></th:block>
+</body></html>

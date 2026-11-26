@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Entrar o crear cuenta · SAMP', 'entrar')}"></head>
+<body data-page="entrar">
+
+<div class="auth">
+ <section class="vis">
+  <a class="logo" th:href="@{/}"><svg><use href="#logo"/></svg><span>SAMP<small>MEJORES PRECIOS</small></span></a>
+  <h2>Tus favoritos, alertas y armados en un solo lugar.</h2>
+  <p>Buscar y comparar es público. Con una cuenta guardas productos, configuras alertas de precio y conservas tus listas armadas con el asistente IA.</p>
+ </section>
+
+ <section class="form">
+  <div class="fbox" data-tabs-scope>
+   <div class="seg" style="margin-bottom:24px" role="tablist">
+    <button type="button" aria-selected="true" data-show="in">Entrar</button>
+    <button type="button" data-show="up">Crear cuenta</button>
+   </div>
+
+   <div class="banner ok" style="margin-bottom:16px" th:if="${registerSuccess != null}">
+    <svg class="ic"><use href="#i-check"/></svg>
+    <span th:text="${registerSuccess}">Cuenta creada</span>
+   </div>
+
+   <div class="banner bad" style="margin-bottom:16px" th:if="${loginError}">
+    <svg class="ic"><use href="#i-alert"/></svg>
+    <div><b>Credenciales incorrectas.</b> Verifica tu correo y contraseña e inténtalo de nuevo.</div>
+   </div>
+
+   <div class="banner bad" style="margin-bottom:16px" th:if="${registerError != null}">
+    <svg class="ic"><use href="#i-alert"/></svg>
+    <div><b th:text="${registerError}">Error de registro</b> <span th:text="${registerHint}"></span></div>
+   </div>
+
+   <div data-pane="in">
+    <h1>Hola de nuevo</h1>
+    <p class="mut" style="margin:6px 0 22px">Entra con tu correo y contraseña.</p>
+    <form class="stack-v" style="--g:16px" th:action="@{/entrar}" method="post">
+     <div class="field">
+      <label for="username">Correo electrónico</label>
+      <div class="input-ic"><svg class="ic"><use href="#i-mail"/></svg><input class="input" id="username" name="username" type="email" required placeholder="tu@correo.co" autocomplete="email"></div>
+     </div>
+     <div class="field">
+      <label for="password">Contraseña</label>
+      <div class="input-ic"><svg class="ic"><use href="#i-lock"/></svg><input class="input" id="password" name="password" type="password" required autocomplete="current-password"><button type="button" class="ibtn sm end" data-reveal="#password" aria-label="Mostrar contraseña"><svg class="ic sm"><use href="#i-eye"/></svg></button></div>
+     </div>
+     <button class="btn btn-p lg block" type="submit">Entrar</button>
+    </form>
+    <div class="demo-box">
+     <b>Cuentas de prueba (control de acceso por roles):</b><br>
+     · Administrador: <span class="mono">admin@samp.co</span> / <span class="mono">AdminSamp2026!</span><br>
+     · Comprador: <span class="mono">comprador@samp.co</span> / <span class="mono">Comprador2026!</span>
+    </div>
+    <div class="or">o</div>
+    <a class="btn btn-q block" th:href="@{/}">Seguir buscando sin cuenta</a>
+   </div>
+
+   <div data-pane="up" hidden>
+    <h1>Crea tu cuenta</h1>
+    <p class="mut" style="margin:6px 0 22px">Gratis. Solo usamos tu correo para avisos que tú actives.</p>
+    <form class="stack-v" style="--g:16px" th:action="@{/registro}" method="post">
+     <div class="field">
+      <label for="displayName">Nombre completo</label>
+      <input class="input" id="displayName" name="displayName" required minlength="2" placeholder="Ej. Laura Méndez">
+     </div>
+     <div class="field">
+      <label for="regEmail">Correo electrónico</label>
+      <input class="input" id="regEmail" name="email" type="email" required placeholder="nombre@correo.co">
+     </div>
+     <div class="field">
+      <label for="regPassword">Contraseña (mínimo 8 caracteres)</label>
+      <input class="input" id="regPassword" name="password" type="password" required minlength="8" placeholder="Mínimo 8 caracteres">
+     </div>
+     <button class="btn btn-p lg block" type="submit">Crear cuenta</button>
+    </form>
+   </div>
+  </div>
+ </section>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<th:block th:replace="~{fragments/layout :: scripts('entrar')}"></th:block>
+</body></html>

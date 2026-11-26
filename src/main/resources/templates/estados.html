@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Estado del sistema · SAMP', null)}"></head>
+<body data-page="estados">
+
+<th:block th:replace="~{fragments/layout :: navbar('estados')}"></th:block>
+
+<main class="page"><div class="wrap">
+ <div class="empty" th:if="${errorTitle != null}">
+  <span class="art"><svg class="ic xl"><use href="#i-alert"/></svg></span>
+  <span class="chip bad" th:text="'Error ' + ${errorCode}">Error</span>
+  <h1 th:text="${errorTitle}">Ha ocurrido un problema</h1>
+  <p th:text="${errorHint}">Verifica los datos ingresados e inténtalo de nuevo.</p>
+  <div class="row wrapf" style="--g:10px;justify-content:center">
+   <a class="btn btn-p" th:href="@{/}">Volver al inicio</a>
+   <a class="btn btn-s" th:href="@{/resultados}">Explorar catálogo</a>
+  </div>
+ </div>
+
+ <div class="stack-v" style="--g:24px" th:if="${errorTitle == null}">
+  <h1 class="ph-title">Estados de transparencia y resiliencia</h1>
+  <p class="mut">SAMP comunica de forma clara los estados de carga, vacío, error y fallo parcial de tiendas.</p>
+  <div class="banner ok"><svg class="ic"><use href="#i-check"/></svg><div><b>Sistema operativo:</b> 5 tiendas configuradas para Colombia con respaldo DEMO transparente y 52 tablas activas en Supabase.</div></div>
+  <div class="banner"><svg class="ic"><use href="#i-alert"/></svg><div><b>Fallo parcial de tienda:</b> Cuando una tienda restringe scraping o no responde, SAMP mantiene los resultados del resto y rotula el respaldo como DEMO.</div></div>
+  <div class="banner info"><svg class="ic"><use href="#i-info"/></svg><div><b>Costos desconocidos:</b> Nunca asumimos envío o impuestos faltantes como cero; esas ofertas se muestran como «Total estimado incompleto».</div></div>
+ </div>
+</div></main>
+
+<th:block th:replace="~{fragments/layout :: footer(null)}"></th:block>
+</body></html>

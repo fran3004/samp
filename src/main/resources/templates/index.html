@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('SAMP · Sistema Automatizado de Mejores Precios', 'index')}"></head>
+<body data-page="inicio">
+
+<th:block th:replace="~{fragments/layout :: navbar('inicio')}"></th:block>
+
+<main>
+<section class="hero">
+ <div class="wrap">
+  <h1 class="rv" style="--i:1">¿Qué quieres <em>comprar?</em></h1>
+  <p class="lead rv" style="--i:2">Buscamos el mismo producto en Mercado Libre, Amazon, Temu, Falabella y AliExpress, mostrando el total real: precio, envío e impuestos, con fecha y fuente.</p>
+  <form class="bigsearch rv" style="--i:3" th:action="@{/resultados}" method="get" role="search">
+   <svg class="ic" aria-hidden="true"><use href="#i-search"/></svg>
+   <input name="q" aria-label="Buscar productos o códigos de barras" data-type="Sony WH-1000XM5|Logitech G502 HERO|Freidora de Aire Ninja|3017620422003" autocomplete="off">
+   <a class="ibtn cam tip" data-tip="Buscar con una foto" th:href="@{/escanear#foto}" aria-label="Buscar con una foto"><svg class="ic lg"><use href="#i-camera"/></svg></a>
+   <a class="ibtn tip" data-tip="Escanear código de barras" th:href="@{/escanear}" aria-label="Escanear código de barras"><svg class="ic lg"><use href="#i-barcode"/></svg></a>
+   <button class="btn btn-p" type="submit">Comparar</button>
+  </form>
+  <div class="try rv" style="--i:4">Prueba:
+   <a th:href="@{/resultados(q='Sony WH-1000XM5')}">Sony WH-1000XM5</a>
+   <a th:href="@{/resultados(q='Logitech G502')}">Logitech G502</a>
+   <a th:href="@{/resultados(q='Freidora Ninja')}">Freidora Ninja</a>
+   <a th:href="@{/asistente(modo='BUILD')}"><svg class="ic sm"><use href="#i-spark"/></svg>Armar lista con IA</a>
+   <a th:href="@{/resultados(gtin='3017620422003')}"><span class="mono">3017620422003</span></a>
+  </div>
+  <div class="prog rv" style="--i:5" data-progress aria-live="polite">
+   <span class="pstore" th:each="st : ${storeStatuses}"
+         th:attr="data-result=${st.storeName() + ' · ' + st.itemCount() + ' (' + st.dataKind() + ')'}">
+    <span class="store" th:style="${st.storeCode() == 'MERCADOLIBRE_CO'} ? '--c:var(--s-meli)' : (${st.storeCode() == 'AMAZON_CO'} ? '--c:var(--s-amazon)' : (${st.storeCode() == 'TEMU_CO'} ? '--c:var(--s-temu)' : (${st.storeCode() == 'FALABELLA_CO'} ? '--c:var(--s-falabella)' : '--c:var(--s-ali)')))"
+          th:text="${#strings.substring(st.storeName(), 0, 2).toUpperCase()}">ML</span>
+    <span class="lbl2" th:text="${st.storeName()}">Tienda</span>
+    <span class="st w"></span>
+   </span>
+  </div>
+  <div class="side" th:if="${!#lists.isEmpty(featuredGroups)}">
+   <div class="mini rv" style="--i:6">
+    <svg class="gauge" viewBox="0 0 46 46"><circle cx="23" cy="23" r="19" fill="none" stroke="#E1F5EC" stroke-width="6"/><circle cx="23" cy="23" r="19" fill="none" stroke="#17A673" stroke-width="6" stroke-linecap="round" stroke-dasharray="119.4" stroke-dashoffset="26" transform="rotate(-90 23 23)" style="animation:gauge 1.4s var(--ease) 1.4s both"/></svg>
+    <div>
+     <b th:text="${featuredGroups[0].buyAdvice().recommendation()}">Conviene comprar</b>
+     <small th:text="${featuredGroups[0].canonicalTitle()}">Producto</small>
+    </div>
+   </div>
+   <div class="mini rv" style="--i:7">
+    <span class="store" style="--c:var(--s-meli)">CO</span>
+    <div>
+     <b class="num" th:text="'$ ' + ${#numbers.formatDecimal(featuredGroups[0].bestOffer().totalInTarget().amount, 0, 'POINT', 0, 'COMMA')}">$ 0</b>
+     <small th:text="${featuredGroups[0].bestOffer().storeName() + ' · ' + featuredGroups[0].bestOffer().dataKind()}">Tienda</small>
+    </div>
+   </div>
+  </div>
+
+  <div class="fan" aria-label="Ofertas comparadas en las 5 tiendas">
+   <a class="fc" th:each="g, iter : ${featuredGroups}" th:classappend="${iter.index == 0} ? ' on'"
+      th:href="@{'/producto/' + ${g.groupKey()}}">
+    <div class="p">
+     <span class="chip" th:classappend="${g.bestOffer().completeTotal()} ? ' real' : ' warn'"
+           th:text="${g.bestOffer().completeTotal()} ? 'Total completo' : 'Costos pendientes'">Total completo</span>
+     <img th:if="${!#strings.isEmpty(g.imageUrl())}" th:src="${g.imageUrl()}" th:alt="${g.canonicalTitle()}">
+    </div>
+    <b th:text="${g.canonicalTitle()}">Producto</b>
+    <span class="v num" th:text="'$ ' + ${#numbers.formatDecimal(g.bestOffer().totalInTarget().amount, 0, 'POINT', 0, 'COMMA')} + ' COP'">$ 0</span>
+    <small>
+     <span class="chip demo" th:if="${g.bestOffer().dataKind().name() == 'DEMO'}" style="height:22px;font-size:11px">DEMO</span>
+     <span class="chip real" th:if="${g.bestOffer().dataKind().name() == 'REAL'}" style="height:22px;font-size:11px">REAL</span>
+     <span th:text="${g.offers().size() + ' oferta(s) · ' + g.bestOffer().storeName()}">Tiendas</span>
+    </small>
+   </a>
+  </div>
+ </div>
+</section>
+
+<section class="sec s"><div class="wrap">
+ <div class="sec-h io"><div><h2>Explora por categoría</h2></div><a class="link" th:href="@{/resultados}">Ver todas <svg class="ic sm"><use href="#i-arrow"/></svg></a></div>
+ <div class="catg">
+  <a class="cat io" style="--i:0" th:href="@{/resultados(q='Sony')}"><span class="ci"><svg class="ic"><use href="#i-head"/></svg></span>Audio<small>Comparación GTIN</small></a>
+  <a class="cat io" style="--i:1" th:href="@{/resultados(q='Logitech')}"><span class="ci"><svg class="ic"><use href="#i-pad"/></svg></span>Periféricos<small>Gaming y oficina</small></a>
+  <a class="cat io" style="--i:2" th:href="@{/resultados(q='Freidora')}"><span class="ci"><svg class="ic"><use href="#i-speaker"/></svg></span>Hogar<small>Electrodomésticos</small></a>
+  <a class="cat io" style="--i:3" th:href="@{/resultados(q='Hub')}"><span class="ci"><svg class="ic"><use href="#i-cpu"/></svg></span>Accesorios<small>Temu y AliExpress</small></a>
+  <a class="cat io" style="--i:4" th:href="@{/asistente(modo='BUILD')}"><span class="ci"><svg class="ic"><use href="#i-spark"/></svg></span>Armar con IA<small>Cualquier categoría</small></a>
+ </div>
+</div></section>
+
+<section class="sec" style="padding-top:32px"><div class="wrap">
+ <div class="sec-h io"><div><span class="eyebrow">Más que buscar</span><h2 style="margin-top:12px">Tres formas de llegar al mejor precio</h2></div></div>
+ <div class="bento">
+  <article class="bx ia io">
+   <span class="chip teal" style="align-self:flex-start"><svg class="ic"><use href="#i-spark"/></svg>Asistente IA general</span>
+   <h3 style="margin-top:20px">Consulta productos o arma cualquier lista con presupuesto.</h3>
+   <p>El asistente usa exclusivamente 10 herramientas de solo lectura sobre SAMP. Cada precio citado se valida contra el catálogo antes de mostrarse.</p>
+   <div class="chatp">
+    <div class="bub u">¿Conviene comprar hoy los Sony WH-1000XM5 o esperar?</div>
+    <div class="row wrapf" style="--g:8px"><span class="tool">buscar_productos</span><span class="tool">comparar_ofertas</span><span class="tool">prediccion_compra ✓</span></div>
+    <div class="bub a">Comparamos Mercado Libre, Amazon y Falabella en COP con tasa fechada e historial de 30 días, señalando envíos e impuestos reales o DEMO.</div>
+   </div>
+   <div class="go"><a class="btn btn-t" th:href="@{/asistente}">Abrir el asistente IA <svg class="ic sm"><use href="#i-right"/></svg></a></div>
+  </article>
+  <article class="bx pc io" style="--i:1">
+   <span class="chip blue" style="align-self:flex-start"><svg class="ic"><use href="#i-layers"/></svg>Armador general</span>
+   <h3 style="margin-top:20px">Arma setups, kits, regalos o PC dentro de tu presupuesto.</h3>
+   <p>Validamos tu presupuesto, advertimos si algún envío es desconocido y revisamos compatibilidad técnica cuando aplica.</p>
+   <div class="go"><a class="link" th:href="@{/asistente(modo='BUILD')}">Empezar una configuración <svg class="ic sm"><use href="#i-arrow"/></svg></a></div>
+  </article>
+  <article class="bx sc io" style="--i:2">
+   <span class="chip teal" style="align-self:flex-start"><svg class="ic"><use href="#i-barcode"/></svg>Escáner GTIN</span>
+   <h3 style="margin-top:20px">Escanea o escribe el código de barras.</h3>
+   <p style="max-width:26ch">Verifica equivalencia exacta por GTIN/EAN y compara en segundos contra las tiendas en línea.</p>
+   <div class="vf" aria-hidden="true"><span class="bc"></span><span class="lz"></span></div>
+   <div class="go"><a class="link" th:href="@{/escanear}">Abrir el escáner <svg class="ic sm"><use href="#i-arrow"/></svg></a></div>
+  </article>
+ </div>
+</div></section>
+
+<section class="sec surf"><div class="wrap">
+ <div class="sec-h io"><div><span class="eyebrow">Cómo funciona</span><h2 style="margin-top:12px">Del buscador a la tienda, sin letra pequeña</h2></div></div>
+ <div class="steps">
+  <div class="step io"><span class="n">1</span><h3>Consultamos las 5 tiendas</h3><p>Respetamos robots.txt y pausas entre peticiones. Si una tienda bloquea el acceso, activamos respaldo DEMO claramente rotulado.</p></div>
+  <div class="step io" style="--i:1"><span class="n">2</span><h3>Igualamos con reglas verificables</h3><p>Dos ofertas son «el mismo producto» solo si comparten GTIN o marca/modelo exactos; si no, aparecen como «similares».</p></div>
+  <div class="step io" style="--i:2"><span class="n">3</span><h3>Calculamos el total real</h3><p>Sumamos precio, envío e impuestos conocidos en COP. Lo desconocido nunca se asume como cero.</p><div class="formula">Pf = Pp + Pe + Pi</div></div>
+ </div>
+</div></section>
+
+<section class="sec s"><div class="wrap">
+ <div class="sec-h io"><div><h2>Las 5 tiendas configuradas para Colombia</h2><p>Estado transparente de cada fuente y su modo de operación.</p></div><span class="chip line"><svg class="ic"><use href="#i-github"/></svg>GitHub Actions · cada 6 h</span></div>
+ <div class="src">
+  <div class="srcc io" th:each="st : ${storeStatuses}">
+   <span class="store lg sq"
+         th:style="${st.storeCode() == 'MERCADOLIBRE_CO'} ? '--c:var(--s-meli)' : (${st.storeCode() == 'AMAZON_CO'} ? '--c:var(--s-amazon)' : (${st.storeCode() == 'TEMU_CO'} ? '--c:var(--s-temu)' : (${st.storeCode() == 'FALABELLA_CO'} ? '--c:var(--s-falabella)' : '--c:var(--s-ali)')))"
+         th:text="${#strings.substring(st.storeName(), 0, 2).toUpperCase()}">ML</span>
+   <div>
+    <b th:text="${st.storeName()}">Tienda</b>
+    <small><span class="sdot ok"></span><span th:text="${st.note()}">Estado</span></small>
+   </div>
+   <div class="r">
+    <span class="chip" th:classappend="${st.dataKind().name() == 'REAL'} ? ' real' : ' demo'"
+          th:text="${st.dataKind().name() == 'REAL'} ? 'Dato real' : 'Demostración'">DEMO</span>
+    <span class="mut num" style="font-size:13px;font-weight:600" th:text="${st.itemCount() + ' ofertas'}">0</span>
+   </div>
+  </div>
+ </div>
+</div></section>
+
+<section class="sec s" style="padding-top:24px;padding-bottom:96px"><div class="wrap">
+ <div class="cta io">
+  <div><h2>Deja que el precio venga a ti.</h2><p>Crea una cuenta gratis para guardar favoritos, configurar alertas de precio y conservar tus listas armadas con IA.</p>
+   <div class="row wrapf" style="margin-top:28px;--g:10px"><a class="btn btn-n lg" th:href="@{/entrar#crear}">Crear cuenta gratis</a><a class="btn lg" style="color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.5)" th:href="@{/cuenta#alertas}">Ver alertas</a></div></div>
+  <div class="alert">
+   <div class="row" style="--g:14px">
+    <div class="grow"><b class="disp" style="font-size:18px">Transparencia garantizada</b><div class="mut" style="font-size:13px;font-weight:600">SAMP no procesa pagos ni oculta costos desconocidos.</div></div>
+    <span class="chip blue"><svg class="ic"><use href="#i-shield"/></svg>Verificado</span>
+   </div>
+   <div class="bar" style="margin:14px 0 8px"><i style="--v:100%"></i></div>
+   <div class="row between" style="font-size:13px;font-weight:700"><span>5 tiendas Colombia</span><span class="mut">Enlace directo oficial</span></div>
+  </div>
+ </div>
+</div></section>
+</main>
+
+<th:block th:replace="~{fragments/layout :: footer(null)}"></th:block>
+</body></html>

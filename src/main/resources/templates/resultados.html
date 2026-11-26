@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Resultados para «' + ${queryText} + '» · SAMP', 'resultados')}"></head>
+<body data-page="resultados">
+
+<th:block th:replace="~{fragments/layout :: navbar('resultados')}"></th:block>
+
+<main class="page"><div class="wrap">
+ <nav class="crumb" aria-label="Ruta"><a th:href="@{/}">Inicio</a><svg class="ic"><use href="#i-chevr"/></svg><span>Búsqueda</span></nav>
+ <div class="rhead">
+  <div>
+   <h1>Resultados para <q th:text="${queryText}">búsqueda</q></h1>
+   <p class="mut" style="margin-top:6px"><b class="ink2 num" th:text="${totalOffers + ' ofertas'}">0 ofertas</b> en <b class="ink2" th:text="${groups.size() + ' producto(s)'}">0</b> · moneda <b class="mono" th:text="${currency}">COP</b></p>
+  </div>
+  <div class="prog" data-progress aria-live="polite">
+   <span class="pstore" th:each="st : ${storeStatuses}"
+         th:attr="data-result=${st.storeName() + ' · ' + st.itemCount() + ' (' + st.dataKind() + ')'}">
+    <span class="store" th:style="${st.storeCode() == 'MERCADOLIBRE_CO'} ? '--c:var(--s-meli)' : (${st.storeCode() == 'AMAZON_CO'} ? '--c:var(--s-amazon)' : (${st.storeCode() == 'TEMU_CO'} ? '--c:var(--s-temu)' : (${st.storeCode() == 'FALABELLA_CO'} ? '--c:var(--s-falabella)' : '--c:var(--s-ali)')))"
+          th:text="${#strings.substring(st.storeName(), 0, 2).toUpperCase()}">ML</span>
+    <span class="lbl2" th:text="${st.storeName()}">Tienda</span>
+    <span class="st w"></span>
+   </span>
+  </div>
+ </div>
+
+ <div class="lay">
+  <aside class="fil" aria-label="Filtros">
+   <form th:action="@{/resultados}" method="get" class="stack-v" style="--g:12px">
+    <div class="row between"><b class="disp" style="font-size:20px">Filtros</b><a class="btn btn-q sm" th:href="@{/resultados}">Limpiar</a></div>
+    <div class="field">
+     <label for="fq">Texto o marca</label>
+     <input class="input" id="fq" name="q" th:value="${rawQuery}" placeholder="Ej. Sony, Logitech, Ninja">
+    </div>
+    <div class="field">
+     <label for="fgtin">Código GTIN / EAN</label>
+     <input class="input mono" id="fgtin" name="gtin" th:value="${gtin}" placeholder="Ej. 3017620422003">
+    </div>
+    <div class="field">
+     <label for="fcur">Moneda</label>
+     <select class="input" id="fcur" name="currency">
+      <option value="COP" th:selected="${currency == 'COP'}">COP · Peso colombiano</option>
+      <option value="USD" th:selected="${currency == 'USD'}">USD · Dólar estadounidense</option>
+     </select>
+    </div>
+    <label class="tgl"><span>Solo total completo<small>Envío e impuestos conocidos</small></span><input type="checkbox" class="switch" name="onlyComplete" value="true" th:checked="${onlyComplete}"></label>
+    <label class="tgl"><span>Intentar scraping en vivo<small>Respeta robots.txt; si bloquea usa DEMO</small></span><input type="checkbox" class="switch" name="live" value="true" th:checked="${live}"></label>
+    <button type="submit" class="btn btn-p block">Aplicar filtros</button>
+   </form>
+  </aside>
+
+  <section aria-label="Resultados">
+   <div class="tool">
+    <div class="grow">
+     <span class="chip lg line" th:text="'Moneda: ' + ${currency}">Moneda: COP</span>
+     <span class="chip lg real" th:if="${onlyComplete}">Solo total completo</span>
+     <span class="chip lg demo" th:if="${!live}">Catálogo respaldo DEMO rápido</span>
+     <span class="chip lg blue" th:if="${live}">Modo en vivo + respaldo DEMO</span>
+    </div>
+    <div class="seg view" role="tablist" aria-label="Vista">
+     <button aria-selected="true" aria-label="Cuadrícula" data-show="g"><svg class="ic sm"><use href="#i-grid"/></svg></button>
+     <button aria-label="Lista" data-show="l"><svg class="ic sm"><use href="#i-list"/></svg></button>
+    </div>
+   </div>
+
+   <div class="banner" style="margin-bottom:24px" th:if="${#lists.size(storeStatuses) > 0}">
+    <svg class="ic"><use href="#i-info"/></svg>
+    <div><b>Transparencia de fuentes:</b> <span class="ink2">Cada tarjeta indica si los datos son REAL o DEMO y si falta envío o impuestos. Las ofertas incompletas nunca se coronan como «el más barato».</span></div>
+    <a class="btn btn-q sm end" th:href="@{/resultados(q=${rawQuery},gtin=${gtin},currency=${currency},live='true')}"><svg class="ic sm"><use href="#i-refresh"/></svg>Consultar en vivo</a>
+   </div>
+
+   <div class="empty" th:if="${#lists.isEmpty(groups)}">
+    <span class="art"><svg class="ic xl"><use href="#i-search"/></svg></span>
+    <h3 th:text="'No encontramos «' + ${queryText} + '»'">Sin resultados</h3>
+    <p>Revisamos las 5 tiendas configuradas para Colombia. Prueba con otra palabra clave, escanea el GTIN o pregúntale al asistente IA.</p>
+    <div class="row wrapf" style="--g:10px;justify-content:center">
+     <a class="btn btn-s" th:href="@{/escanear}"><svg class="ic sm"><use href="#i-barcode"/></svg>Escanear GTIN</a>
+     <a class="btn btn-p" th:href="@{/asistente(q=${rawQuery})}"><svg class="ic sm"><use href="#i-spark"/></svg>Preguntar a la IA</a>
+    </div>
+   </div>
+
+   <div data-tabs-scope th:if="${!#lists.isEmpty(groups)}">
+    <div data-pane="g">
+     <div class="group" th:each="g : ${groups}">
+      <div class="ghead">
+       <span class="chip" th:classappend="${g.exactMatch()} ? ' real' : ' line'" th:text="${g.matchBadge()}">Mismo producto</span>
+       <h2 th:text="${g.canonicalTitle()}">Producto</h2>
+       <span class="line"></span>
+       <span class="mono mut" style="font-size:13px" th:if="${g.gtin() != null}" th:text="'GTIN ' + ${g.gtin()}">GTIN</span>
+       <a class="link" th:href="@{'/producto/' + ${g.groupKey()}(currency=${currency})}" style="font-size:14px">Ver ficha e historial <svg class="ic sm"><use href="#i-arrow"/></svg></a>
+      </div>
+      <div class="grid">
+       <a class="pcard" th:each="o, oIter : ${g.offers()}"
+          th:href="@{'/producto/' + ${g.groupKey()}(currency=${currency})}"
+          th:style="${oIter.index == 0 && o.completeTotal()} ? 'outline:3px solid var(--act);outline-offset:6px;border-radius:28px' : ''">
+        <div class="ph">
+         <div class="tg">
+          <span class="chip blue" th:if="${oIter.index == 0 && o.completeTotal()}">Mejor total</span>
+          <span class="chip warn" th:if="${!o.completeTotal()}">Costos pendientes</span>
+          <span class="chip" th:classappend="${o.dataKind().name() == 'REAL'} ? ' real' : ' demo'" th:text="${o.dataKind()}">DEMO</span>
+         </div>
+         <button class="fav" type="button" aria-label="Guardar"><span class="b"></span><svg class="ic"><use href="#i-heart"/></svg></button>
+         <img th:if="${!#strings.isEmpty(o.imageUrl())}" th:src="${o.imageUrl()}" th:alt="${o.title()}">
+        </div>
+        <h3 th:text="${o.title()}">Título</h3>
+        <div class="br" th:text="${o.storeName() + ' · Envío: ' + (o.shippingKnown() ? (o.shippingCost().isZero() ? 'Gratis' : o.shippingCost()) : 'Desconocido')}">Tienda</div>
+        <div class="pr">
+         <b th:text="'$ ' + ${#numbers.formatDecimal(o.totalInTarget().amount, 0, 'POINT', 0, 'COMMA')} + ' ' + ${o.totalInTarget().currency}">$ 0</b>
+         <span class="mut" style="font-size:12px" th:text="${o.comparisonLabel()}">Total estimado</span>
+        </div>
+        <div class="meta">
+         <span th:text="'Origen: ' + ${o.originalPrice()}">Moneda origen</span>
+         <span class="mut" th:text="${#temporals.format(o.fetchedAt(), 'dd/MM HH:mm')}">Fecha</span>
+        </div>
+       </a>
+      </div>
+     </div>
+    </div>
+
+    <div data-pane="l" hidden>
+     <div class="stack-v" style="--g:12px">
+      <a class="lrow" th:each="g : ${groups}" th:href="@{'/producto/' + ${g.groupKey()}(currency=${currency})}">
+       <span class="im"><img th:if="${!#strings.isEmpty(g.imageUrl())}" th:src="${g.imageUrl()}" th:alt="${g.canonicalTitle()}"></span>
+       <div>
+        <div class="row" style="--g:6px;margin-bottom:6px">
+         <span class="chip" th:classappend="${g.bestOffer().completeTotal()} ? ' blue' : ' warn'" th:text="${g.bestOffer().comparisonLabel()}">Total</span>
+         <span class="chip" th:classappend="${g.bestOffer().dataKind().name() == 'REAL'} ? ' real' : ' demo'" th:text="${g.bestOffer().dataKind()}">DEMO</span>
+        </div>
+        <h3 th:text="${g.canonicalTitle()}">Producto</h3>
+        <div class="mut" style="font-size:14px" th:text="${g.offers().size() + ' oferta(s) · ' + g.bestOffer().storeName() + ' · ' + g.buyAdvice().recommendation()}">Detalles</div>
+       </div>
+       <div class="pr">
+        <b class="num" th:text="'$ ' + ${#numbers.formatDecimal(g.bestOffer().totalInTarget().amount, 0, 'POINT', 0, 'COMMA')} + ' ' + ${g.bestOffer().totalInTarget().currency}">$ 0</b>
+        <span class="mut" style="font-size:13px" th:text="${g.matchBadge()}">Equivalencia</span>
+       </div>
+      </a>
+     </div>
+    </div>
+   </div>
+  </section>
+ </div>
+</div></main>
+
+<div class="cmpbar" role="region" aria-label="Comparar">
+ <svg class="ic"><use href="#i-cols"/></svg>
+ <b style="font-size:14px">Comparar productos lado a lado</b>
+ <a class="btn btn-t sm" th:href="@{/comparar(currency=${currency})}">Comparar</a>
+</div>
+
+<th:block th:replace="~{fragments/layout :: footer(null)}"></th:block>
+</body></html>
