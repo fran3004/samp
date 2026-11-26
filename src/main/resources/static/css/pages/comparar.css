@@ -1,0 +1,18 @@
+/* =====================================================================
+   SAMP · Página de comparación lado a lado
+   ===================================================================== */
+.cmp { display: grid; grid-template-columns: 220px repeat(3, minmax(0, 1fr)); gap: 0 20px; margin-top: 32px; }
+.cmp .hd { position: sticky; top: var(--nav-h); z-index: 5; background: #fff; padding: 16px 0 20px; }
+.pc .im { aspect-ratio: 4/3; background: var(--photo); border-radius: var(--r-lg); display: grid; place-items: center; margin-bottom: 14px; }
+.pc .im img { width: 64%; height: 72%; object-fit: contain; border-radius: 12px; }
+.pc h3 { font-size: 18px; }
+.pc .pr { font: 800 24px var(--f-disp); margin-top: 6px; }
+.rowc { display: contents; }
+.rowc > * { padding: 16px 0; border-top: 1px solid var(--line); font-size: 15px; }
+.rowc > :first-child { color: var(--mut); font-weight: 700; font-size: 14px; }
+.only .rowc.same { display: none; }
+.grp { grid-column: 1/-1; padding: 28px 0 8px; font: 800 20px var(--f-disp); }
+
+@media (max-width: 900px) {
+  .cmp { grid-template-columns: 120px repeat(3, minmax(160px, 1fr)); overflow-x: auto; }
+}

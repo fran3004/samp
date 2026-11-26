@@ -1,0 +1,36 @@
+/* =====================================================================
+   SAMP · Página de resultados de búsqueda y filtros
+   ===================================================================== */
+.rhead { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin: 14px 0 22px; }
+.rhead h1 { font-size: clamp(30px, 3.6vw, 44px); }
+.rhead h1 q { quotes: "«" "»"; color: var(--act); }
+.lay { display: grid; grid-template-columns: 272px minmax(0, 1fr); gap: 48px; align-items: start; }
+.fil { position: sticky; top: calc(var(--nav-h) + 20px); }
+.fil .tgl { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 0; border-top: 1px solid var(--line); font-weight: 700; }
+.fil .tgl small { display: block; font-weight: 500; color: var(--mut); font-size: 13px; }
+.tool { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+.tool .grow { display: flex; gap: 8px; flex-wrap: wrap; }
+.group { margin-bottom: 40px; }
+.ghead { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+.ghead h2 { font-size: 22px; }
+.ghead .line { flex: 1; height: 1px; background: var(--line); }
+.grid { --c: 3; }
+
+.lrow { display: grid; grid-template-columns: 120px minmax(0, 1fr) 220px; gap: 24px; align-items: center; padding: 16px; border-radius: var(--r-lg); box-shadow: inset 0 0 0 1.5px var(--line); background: #fff; transition: box-shadow var(--t) var(--ease), transform var(--t) var(--ease); }
+.lrow:hover { box-shadow: var(--sh-2); transform: translateY(-2px); }
+.lrow .im { aspect-ratio: 1; background: var(--photo); border-radius: 18px; display: grid; place-items: center; }
+.lrow img { width: 76%; height: 76%; object-fit: contain; border-radius: 10px; }
+.lrow h3 { font-size: 19px; }
+.lrow .pr { text-align: right; }
+.lrow .pr b { display: block; font: 800 24px var(--f-disp); }
+
+.cmpbar { position: fixed; left: 50%; bottom: 24px; translate: -50% 0; z-index: 30; display: flex; align-items: center; gap: 14px; padding: 10px 10px 10px 18px; border-radius: var(--pill); background: var(--ink); color: #fff; box-shadow: var(--sh-3); }
+
+@media (max-width: 1100px) { .grid { --c: 2; } }
+@media (max-width: 900px) {
+  .lay { grid-template-columns: 1fr; }
+  .fil { position: static; }
+  .lrow { grid-template-columns: 88px 1fr; }
+  .lrow .pr { grid-column: 1/-1; text-align: left; }
+  .cmpbar { bottom: 92px; }
+}

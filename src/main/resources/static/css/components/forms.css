@@ -1,0 +1,58 @@
+/* =====================================================================
+   SAMP · Controles de formulario, switches, rangos, segmentados y pestañas
+   ===================================================================== */
+.field { display: grid; gap: 8px; }
+.field > label, .lbl { font-weight: 700; font-size: 14px; color: var(--ink); }
+.hint { font-size: 13px; color: var(--mut); }
+.input {
+  height: 50px; border-radius: var(--r-sm); border: 0; background: #fff;
+  box-shadow: inset 0 0 0 1.5px var(--line-2); padding: 0 16px; width: 100%;
+  font-size: 16px; transition: box-shadow var(--t-fast) ease; outline: 0;
+}
+.input:hover { box-shadow: inset 0 0 0 1.5px var(--mut-2); }
+.input:focus { box-shadow: inset 0 0 0 2px var(--act), var(--ring); }
+.input.err { box-shadow: inset 0 0 0 2px var(--bad); }
+.input-ic { position: relative; }
+.input-ic .ic { position: absolute; left: 16px; top: 50%; translate: 0 -50%; color: var(--mut); }
+.input-ic .input { padding-left: 46px; }
+.input-ic .end { position: absolute; right: 6px; top: 50%; translate: 0 -50%; }
+textarea.input { height: auto; padding: 14px 16px; resize: vertical; min-height: 96px; }
+select.input {
+  appearance: none;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' stroke='%235B6B7D' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='m6 8 4 4 4-4'/%3E%3C/svg%3E") no-repeat right 14px center;
+  padding-right: 44px; cursor: pointer;
+}
+
+.check { display: flex; align-items: center; gap: 12px; cursor: pointer; font-weight: 500; color: var(--ink-2); padding: 6px 0; }
+.check input { appearance: none; width: 22px; height: 22px; border-radius: 7px; box-shadow: inset 0 0 0 1.75px #A7B5C5; display: grid; place-items: center; transition: background-color var(--t-fast), box-shadow var(--t-fast); flex: none; cursor: pointer; }
+.check input:checked { background: var(--act); box-shadow: none; }
+.check input:checked::after { content: ""; width: 6px; height: 11px; border: solid #fff; border-width: 0 2.5px 2.5px 0; transform: rotate(45deg) translate(-1px, -1px); animation: pop .22s var(--ease); }
+.check input[type=radio] { border-radius: 50%; }
+.check input[type=radio]:checked::after { width: 8px; height: 8px; border: 0; border-radius: 50%; background: #fff; transform: none; }
+.check .n { margin-left: auto; color: var(--mut); font-size: 14px; }
+
+.switch { appearance: none; width: 46px; height: 28px; border-radius: 14px; background: var(--line-2); position: relative; cursor: pointer; transition: background-color var(--t) var(--ease); flex: none; }
+.switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(11, 23, 38, .25); transition: transform var(--t) var(--ease); }
+.switch:checked { background: var(--act); }
+.switch:checked::after { transform: translateX(18px); }
+.switch:active::after { width: 26px; }
+.switch:checked:active::after { transform: translateX(14px); }
+
+.range { appearance: none; width: 100%; height: 6px; border-radius: 3px; background: linear-gradient(var(--act), var(--act)) 0/var(--v, 50%) 100% no-repeat, var(--line); cursor: pointer; }
+.range::-webkit-slider-thumb { appearance: none; width: 24px; height: 24px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 2px var(--act), var(--sh-2); transition: transform var(--t-fast) var(--ease); }
+.range:active::-webkit-slider-thumb { transform: scale(1.15); }
+
+.seg { display: inline-flex; padding: 4px; border-radius: var(--pill); background: var(--surf); position: relative; isolation: isolate; }
+.seg button { height: 36px; padding: 0 16px; border-radius: var(--pill); font-weight: 700; font-size: 14px; color: var(--mut); transition: color var(--t-fast) ease; position: relative; z-index: 1; white-space: nowrap; }
+.seg button[aria-selected=true] { color: var(--ink); }
+.seg .pill { position: absolute; top: 4px; bottom: 4px; border-radius: var(--pill); background: #fff; box-shadow: var(--sh-1); z-index: 0; transition: transform var(--t) var(--ease-io), width var(--t) var(--ease-io); }
+
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); position: relative; overflow-x: auto; scrollbar-width: none; }
+.tabs button { height: 52px; padding: 0 18px; font: 700 16px var(--f-disp); color: var(--mut); transition: color var(--t-fast); white-space: nowrap; display: flex; align-items: center; gap: 8px; }
+.tabs button[aria-selected=true] { color: var(--ink); }
+.tabs button .chip { height: 22px; padding: 0 8px; font-size: 12px; }
+.tabs .bar { position: absolute; bottom: -1px; height: 3px; border-radius: 3px 3px 0 0; background: var(--act); transition: transform var(--t) var(--ease-io), width var(--t) var(--ease-io); }
+
+@media (max-width: 900px) {
+  .seg { max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+}

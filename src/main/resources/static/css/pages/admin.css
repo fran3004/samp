@@ -1,0 +1,30 @@
+/* =====================================================================
+   SAMP · Panel de administración (tiendas, conectores, usuarios e IA)
+   ===================================================================== */
+body { background: var(--surf); }
+.adm { display: grid; grid-template-columns: 256px minmax(0, 1fr); min-height: 100dvh; }
+.sb { position: sticky; top: 0; height: 100dvh; background: var(--night); color: #C9D6E4; display: flex; flex-direction: column; padding: 20px 14px; }
+.sb .logo { color: #fff; padding: 4px 8px 20px; }
+.sb .logo small { color: #7F92A8; }
+.sb .grp { font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: #6F839A; padding: 16px 12px 8px; }
+.sb a { display: flex; align-items: center; gap: 12px; height: 42px; padding: 0 12px; border-radius: 10px; font-weight: 600; font-size: 14px; color: #AFBDCD; transition: background-color 120ms, color 120ms; position: relative; }
+.sb a:hover { background: #13243A; color: #fff; }
+.sb a[aria-current=page] { background: #1A3150; color: #fff; }
+.sb a[aria-current=page]::before { content: ""; position: absolute; left: -14px; top: 10px; bottom: 10px; width: 3px; border-radius: 0 3px 3px 0; background: var(--teal); }
+.sb .env { margin-top: auto; padding: 14px; border-radius: 14px; background: #13243A; font-size: 13px; display: grid; gap: 8px; }
+.sb .env b { color: #fff; }
+
+.main { min-width: 0; }
+.tb { position: sticky; top: 0; z-index: 20; height: 68px; display: flex; align-items: center; gap: 16px; padding: 0 32px; background: rgba(244, 246, 249, .86); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
+.cnt { padding: 28px 32px 64px; }
+.vh { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+.vh h1 { font-size: 32px; }
+.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 16px; }
+.kpi { padding: 20px; border-radius: var(--r-lg); background: #fff; box-shadow: var(--sh-1); display: grid; gap: 4px; }
+.kpi small { color: var(--mut); font-weight: 700; font-size: 13px; display: flex; align-items: center; gap: 8px; }
+.kpi b { font: 800 32px/1.1 var(--f-disp); letter-spacing: -.02em; }
+.tw { background: #fff; border-radius: var(--r-lg); box-shadow: var(--sh-1); overflow: auto; }
+.tw .tbl th { background: #FBFCFD; }
+
+@media (max-width: 1100px) { .kpis { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 900px) { .adm { grid-template-columns: 1fr; } .sb { display: none; } .cnt { padding: 20px 16px 64px; } }

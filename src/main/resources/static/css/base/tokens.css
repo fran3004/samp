@@ -1,0 +1,76 @@
+/* =====================================================================
+   SAMP · Tokens de diseño (colores, tipografía, sombras, radios y movimiento)
+   ===================================================================== */
+:root {
+  /* Tinta y superficies */
+  --ink: #0B1726;
+  --ink-2: #35465A;
+  --mut: #5B6B7D;
+  --mut-2: #8595A8;
+  --line: #E3E9F0;
+  --line-2: #CBD5E1;
+  --bg: #FFFFFF;
+  --surf: #F4F6F9;
+  --surf-2: #EDF1F6;
+  --photo: #EAF0F7;
+  --night: #0B1726;
+  --night-2: #13243A;
+
+  /* Marca SAMP */
+  --brand: #0B7BF2;
+  --brand-deep: #1447C0;
+  --teal: #22E3D2;
+  --act: #0A62C4;
+  --act-d: #074C99;
+  --act-50: #E8F1FE;
+  --act-100: #D3E5FD;
+  --teal-ink: #0B6B62;
+  --teal-50: #DDFBF7;
+
+  /* Estados */
+  --ok: #0F6B4B;
+  --ok-50: #E1F5EC;
+  --warn: #8A4B00;
+  --warn-50: #FFF2DA;
+  --bad: #B42318;
+  --bad-50: #FDECEA;
+  --demo: #3B3F86;
+  --demo-50: #ECEEFA;
+
+  /* Monogramas de las 5 tiendas de Colombia */
+  --s-meli: #2A6FDB;
+  --s-amazon: #C26A00;
+  --s-temu: #D9531E;
+  --s-falabella: #2E7D32;
+  --s-ali: #C62828;
+  --s-demo: #6E4A9E;
+
+  /* Forma y sombras */
+  --r-xs: 8px;
+  --r-sm: 12px;
+  --r: 16px;
+  --r-lg: 24px;
+  --r-xl: 32px;
+  --r-2xl: 40px;
+  --pill: 999px;
+  --sh-1: 0 1px 2px rgba(11, 23, 38, .06), 0 2px 8px rgba(11, 23, 38, .04);
+  --sh-2: 0 1px 2px rgba(11, 23, 38, .06), 0 12px 32px rgba(11, 23, 38, .08);
+  --sh-3: 0 2px 4px rgba(11, 23, 38, .06), 0 24px 56px rgba(11, 23, 38, .16);
+  --ring: 0 0 0 4px var(--act-100);
+
+  /* Movimiento */
+  --ease: cubic-bezier(.23, 1, .32, 1);
+  --ease-io: cubic-bezier(.77, 0, .175, 1);
+  --ease-drawer: cubic-bezier(.32, .72, 0, 1);
+  --t-press: 140ms;
+  --t-fast: 180ms;
+  --t: 240ms;
+  --t-slow: 420ms;
+  --t-show: 900ms;
+
+  /* Tipografía */
+  --f-disp: 'Red Hat Display', system-ui, sans-serif;
+  --f-text: 'Red Hat Text', system-ui, sans-serif;
+  --f-mono: 'Red Hat Mono', ui-monospace, monospace;
+  --nav-h: 72px;
+}

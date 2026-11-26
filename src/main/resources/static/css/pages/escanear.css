@@ -1,0 +1,20 @@
+/* =====================================================================
+   SAMP · Página de escáner de código de barras (GTIN) y búsqueda visual
+   ===================================================================== */
+body { background: var(--surf); }
+.sc { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 40px; align-items: start; margin-top: 24px; }
+.cam { position: relative; aspect-ratio: 4/3; border-radius: var(--r-2xl); overflow: hidden; background: radial-gradient(120% 90% at 50% 40%, #2A3C52, #0B1726 70%); display: grid; place-items: center; box-shadow: var(--sh-3); }
+.cam .obj { width: 54%; aspect-ratio: 1.3; border-radius: 20px; background: linear-gradient(160deg, #F4F1EA, #DCD5C6); display: grid; place-items: center; padding: 18px; text-align: center; }
+.cam .bc { width: 88%; height: 68px; background: #fff; border-radius: 8px; display: grid; padding: 8px 10px 4px; align-content: end; }
+.cam .bc i { height: 38px; background: repeating-linear-gradient(90deg, #111 0 2px, transparent 2px 4px, #111 4px 7px, transparent 7px 8px, #111 8px 9px, transparent 9px 12px); }
+.cam .bc span { font: 500 12px var(--f-mono); color: #111; letter-spacing: .12em; }
+.frame { position: absolute; left: 50%; top: 50%; width: 64%; height: 36%; translate: -50% -50%; border: 3px solid var(--teal); border-radius: 14px; }
+.lz { position: absolute; left: 4%; right: 4%; top: 8%; height: 2px; background: var(--teal); --laser: 110px; animation: laser 2.2s var(--ease-io) infinite; }
+.res { padding: 28px; border-radius: var(--r-xl); background: #fff; box-shadow: var(--sh-2); }
+.det { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: var(--r); background: var(--ok-50); color: var(--ok); font-weight: 700; margin-bottom: 20px; }
+.vm { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
+.vm a { border-radius: 18px; background: #fff; padding: 10px; box-shadow: inset 0 0 0 1.5px var(--line); }
+.vm .im { aspect-ratio: 1; border-radius: 12px; background: var(--photo); display: grid; place-items: center; margin-bottom: 8px; }
+.vm img { width: 70%; height: 70%; object-fit: contain; }
+
+@media (max-width: 900px) { .sc, .vm { grid-template-columns: 1fr; } }

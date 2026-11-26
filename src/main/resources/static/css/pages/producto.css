@@ -1,0 +1,56 @@
+/* =====================================================================
+   SAMP · Página de detalle de producto, ofertas e historial de 30 días
+   ===================================================================== */
+.pdp { display: grid; grid-template-columns: 1.05fr .95fr; gap: 64px; align-items: start; margin-top: 20px; }
+.gal { position: sticky; top: calc(var(--nav-h) + 20px); }
+.gal .main { aspect-ratio: 1; background: var(--photo); border-radius: var(--r-2xl); position: relative; overflow: hidden; display: grid; place-items: center; }
+.gal .main img { width: 76%; height: 76%; object-fit: contain; border-radius: 20px; filter: drop-shadow(0 24px 24px rgba(11, 23, 38, .16)); }
+.gal .tg { position: absolute; top: 20px; left: 20px; display: flex; gap: 8px; z-index: 2; }
+
+.info h1 { font-size: clamp(32px, 3.2vw, 44px); margin: 12px 0 8px; }
+.idl { display: flex; gap: 16px; flex-wrap: wrap; color: var(--mut); font-size: 14px; font-weight: 600; }
+.best { margin: 24px 0 18px; padding: 28px; background: var(--surf); border-radius: var(--r-xl); }
+.best .big { font: 800 clamp(40px, 4vw, 56px)/1 var(--f-disp); letter-spacing: -.035em; margin: 12px 0 6px; }
+.brk { display: grid; gap: 10px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--line-2); }
+.brk div { display: flex; justify-content: space-between; font-size: 15px; }
+.brk dt { color: var(--ink-2); display: flex; gap: 8px; align-items: center; }
+.brk dd { font-weight: 700; }
+.brk .tot { padding-top: 10px; border-top: 1px dashed var(--line-2); font: 800 18px var(--f-disp); }
+
+.acts { display: flex; gap: 10px; flex-wrap: wrap; }
+.verdict { display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: center; padding: 22px 24px; border-radius: var(--r-lg); box-shadow: inset 0 0 0 1.5px #BFE6D3; background: linear-gradient(120deg, var(--ok-50), #fff 70%); margin-top: 18px; }
+.verdict svg.g { width: 92px; height: 56px; }
+.verdict h3 { font-size: 20px; }
+.verdict p { font-size: 14px; color: var(--ink-2); margin-top: 4px; }
+
+.sec2 { margin-top: 72px; }
+.offer { display: grid; grid-template-columns: minmax(220px, 1.4fr) .8fr .8fr .8fr 1fr auto; gap: 20px; align-items: center; padding: 20px 24px; border-radius: var(--r-lg); background: #fff; box-shadow: inset 0 0 0 1.5px var(--line); margin-bottom: 12px; }
+.offer.top { box-shadow: inset 0 0 0 2px var(--act), var(--sh-2); }
+.offer .n { display: flex; gap: 14px; align-items: center; }
+.offer .n b { font: 800 17px var(--f-disp); }
+.offer .n small { display: block; color: var(--mut); font-size: 13px; font-weight: 600; }
+.offer .k small { display: block; color: var(--mut); font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; margin-bottom: 2px; }
+.offer .k b { font: 800 17px var(--f-disp); }
+.offer .k .u { color: var(--warn); font-size: 14px; display: inline-flex; gap: 4px; align-items: center; }
+
+.histg { display: grid; grid-template-columns: 1fr 300px; gap: 32px; align-items: start; }
+.stats { display: grid; gap: 12px; }
+.stat { padding: 18px 20px; border-radius: var(--r); background: var(--surf); }
+.stat small { color: var(--mut); font-weight: 700; font-size: 13px; }
+.stat b { display: block; font: 800 24px var(--f-disp); margin-top: 2px; }
+
+.specs { display: grid; grid-template-columns: 1fr 1fr; gap: 0 48px; }
+.specs div { display: flex; justify-content: space-between; gap: 20px; padding: 14px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+.specs dt { color: var(--mut); }
+.specs dd { font-weight: 700; }
+
+.how details { border-top: 1px solid var(--line); padding: 20px 0; }
+.how summary { font: 800 19px var(--f-disp); cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+.how p { margin-top: 12px; max-width: 72ch; color: var(--ink-2); }
+
+@media (max-width: 900px) {
+  .pdp, .histg, .specs { grid-template-columns: 1fr; gap: 24px; }
+  .gal { position: static; }
+  .offer { grid-template-columns: 1fr 1fr; }
+  .offer .n, .offer .go { grid-column: 1/-1; }
+}
