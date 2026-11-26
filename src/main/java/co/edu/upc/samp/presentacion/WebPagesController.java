@@ -3,6 +3,7 @@ package co.edu.upc.samp.presentacion;
 import co.edu.upc.samp.entidades.SearchQuery;
 import co.edu.upc.samp.entidades.excepciones.SampException;
 import co.edu.upc.samp.servicios.BuyOrWaitAdvisor;
+import co.edu.upc.samp.servicios.DatabaseCatalogService;
 import co.edu.upc.samp.servicios.SearchService;
 import co.edu.upc.samp.servicios.ia.AiOrchestrator;
 import co.edu.upc.samp.servicios.ia.ToolRegistry;
@@ -35,26 +36,30 @@ public class WebPagesController {
     private final AiOrchestrator aiOrchestrator;
     private final ToolRegistry toolRegistry;
     private final AuthService authService;
+    private final DatabaseCatalogService databaseCatalogService;
     private final Gson gson = new Gson();
 
     /**
      * Construye el controlador inyectando únicamente servicios de negocio.
      *
-     * @param searchService  servicio de búsqueda paralela y comparación
-     * @param aiOrchestrator orquestador del asistente de IA general
-     * @param toolRegistry   registro de las 10 herramientas de IA
-     * @param authService    servicio de autenticación y usuarios
+     * @param searchService          servicio de búsqueda paralela y comparación
+     * @param aiOrchestrator         orquestador del asistente de IA general
+     * @param toolRegistry           registro de las 10 herramientas de IA
+     * @param authService            servicio de autenticación y usuarios
+     * @param databaseCatalogService servicio de resumen de persistencia en Supabase
      */
     public WebPagesController(
             SearchService searchService,
             AiOrchestrator aiOrchestrator,
             ToolRegistry toolRegistry,
-            AuthService authService
+            AuthService authService,
+            DatabaseCatalogService databaseCatalogService
     ) {
         this.searchService = searchService;
         this.aiOrchestrator = aiOrchestrator;
         this.toolRegistry = toolRegistry;
         this.authService = authService;
+        this.databaseCatalogService = databaseCatalogService;
     }
 
     /**
@@ -272,6 +277,8 @@ public class WebPagesController {
         model.addAttribute("totalOffers", snapshot.totalOffers());
         model.addAttribute("users", authService.findAllUsers());
         model.addAttribute("toolsCount", toolRegistry.allTools().size());
+        model.addAttribute("dbSummary", databaseCatalogService.getSummary());
+        model.addAttribute("dbBacked", authService.isDatabaseBacked());
         return "admin";
     }
 

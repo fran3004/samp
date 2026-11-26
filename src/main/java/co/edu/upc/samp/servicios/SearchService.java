@@ -9,6 +9,7 @@ import co.edu.upc.samp.servicios.conectores.CatalogFallbackConnector;
 import co.edu.upc.samp.servicios.conectores.ScrapingStoreConnector;
 import co.edu.upc.samp.servicios.emparejamiento.MatchStrategy;
 import co.edu.upc.samp.servicios.emparejamiento.ProductMatcher;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -38,9 +39,37 @@ public class SearchService {
     private final PriceCalculator priceCalculator;
     private final ProductMatcher productMatcher;
     private final BuyOrWaitAdvisor buyOrWaitAdvisor;
+    private final DatabaseCatalogService databaseCatalogService;
 
     /**
-     * Inicializa el servicio de búsqueda con los conectores de scraping, el respaldo DEMO y el motor de precios.
+     * Inicializa el servicio de búsqueda con conectores, respaldo DEMO, motor de precios y catálogo JPA opcional.
+     *
+     * @param scrapingConnectors     conectores concretos de las 5 tiendas
+     * @param fallbackConnector      conector de respaldo transparente DEMO
+     * @param priceCalculator        calculadora de precio final y conversión de moneda
+     * @param productMatcher         motor de emparejamiento verificable
+     * @param buyOrWaitAdvisor       asesor de historial de 30 días
+     * @param databaseCatalogService servicio opcional conectado a PostgreSQL/Supabase
+     */
+    @Autowired
+    public SearchService(
+            List<ScrapingStoreConnector> scrapingConnectors,
+            CatalogFallbackConnector fallbackConnector,
+            PriceCalculator priceCalculator,
+            ProductMatcher productMatcher,
+            BuyOrWaitAdvisor buyOrWaitAdvisor,
+            @Autowired(required = false) DatabaseCatalogService databaseCatalogService
+    ) {
+        this.scrapingConnectors = scrapingConnectors;
+        this.fallbackConnector = fallbackConnector;
+        this.priceCalculator = priceCalculator;
+        this.productMatcher = productMatcher;
+        this.buyOrWaitAdvisor = buyOrWaitAdvisor;
+        this.databaseCatalogService = databaseCatalogService;
+    }
+
+    /**
+     * Sobrecarga de constructor para pruebas unitarias sin conexión a base de datos.
      *
      * @param scrapingConnectors conectores concretos de las 5 tiendas
      * @param fallbackConnector  conector de respaldo transparente DEMO
@@ -55,11 +84,7 @@ public class SearchService {
             ProductMatcher productMatcher,
             BuyOrWaitAdvisor buyOrWaitAdvisor
     ) {
-        this.scrapingConnectors = scrapingConnectors;
-        this.fallbackConnector = fallbackConnector;
-        this.priceCalculator = priceCalculator;
-        this.productMatcher = productMatcher;
-        this.buyOrWaitAdvisor = buyOrWaitAdvisor;
+        this(scrapingConnectors, fallbackConnector, priceCalculator, productMatcher, buyOrWaitAdvisor, null);
     }
 
     /**
@@ -250,18 +275,27 @@ public class SearchService {
                     ));
                 }
             } catch (ConnectorException ex) {
-                List<RawOffer> backup = fallbackConnector.searchForStore(code, query);
-                return new StoreResult(backup, new StoreQueryStatus(
-                        code, name, DataKind.DEMO, true, backup.size(),
-                        "Respaldo DEMO activo (" + ex.getMessage() + ")."
-                ));
+                return resolvePersistedOrDemo(code, name, query,
+                        "Respaldo activo (" + ex.getMessage() + ").");
             }
         }
+        return resolvePersistedOrDemo(code, name, query, null);
+    }
+
+    private StoreResult resolvePersistedOrDemo(String code, String name, SearchQuery query, String liveFailureNote) {
+        if (databaseCatalogService != null && databaseCatalogService.isDatabaseActive()) {
+            List<RawOffer> dbOffers = databaseCatalogService.findOffersForStore(code, query);
+            DataKind kind = dbOffers.isEmpty() ? DataKind.DEMO : dbOffers.getFirst().dataKind();
+            String note = liveFailureNote != null
+                    ? liveFailureNote + " Leyendo Supabase PostgreSQL."
+                    : (dbOffers.isEmpty() ? "Sin coincidencias en Supabase." : "Catálogo persistido en Supabase PostgreSQL.");
+            return new StoreResult(dbOffers, new StoreQueryStatus(code, name, kind, kind == DataKind.DEMO, dbOffers.size(), note));
+        }
         List<RawOffer> backup = fallbackConnector.searchForStore(code, query);
-        return new StoreResult(backup, new StoreQueryStatus(
-                code, name, DataKind.DEMO, true, backup.size(),
-                backup.isEmpty() ? "Sin coincidencias en catálogo DEMO." : "Catálogo DEMO verificado."
-        ));
+        String note = liveFailureNote != null
+                ? liveFailureNote
+                : (backup.isEmpty() ? "Sin coincidencias en catálogo DEMO." : "Catálogo DEMO verificado.");
+        return new StoreResult(backup, new StoreQueryStatus(code, name, DataKind.DEMO, true, backup.size(), note));
     }
 
     private List<ProductComparisonGroup> groupAndRankOffers(List<RawOffer> rawOffers, String targetCurrency) {
@@ -300,7 +334,7 @@ public class SearchService {
             List<ComparedOffer> compared = entry.getValue().stream()
                     .map(raw -> toComparedOffer(raw, targetCurrency))
                     .sorted(Comparator
-                            .comparing(ComparedOffer::completeTotal).reversed()
+                            .comparing(ComparedOffer::completeTotal, Comparator.reverseOrder())
                             .thenComparing(o -> o.totalInTarget().getAmount()))
                     .toList();
 
@@ -311,7 +345,12 @@ public class SearchService {
                     : (exact ? "Mismo producto verificado" : "Productos similares");
 
             BigDecimal bestCop = priceCalculator.convert(best.totalInTarget(), "COP", null).getAmount();
-            var history = buyOrWaitAdvisor.buildDemoHistory30Days(entry.getKey(), bestCop);
+            List<BuyOrWaitAdvisor.PricePoint> history = (databaseCatalogService != null && databaseCatalogService.isDatabaseActive())
+                    ? databaseCatalogService.findPriceHistory30Days(best.gtin() != null ? best.gtin() : entry.getKey(), priceCalculator)
+                    : List.of();
+            if (history.isEmpty()) {
+                history = buyOrWaitAdvisor.buildDemoHistory30Days(entry.getKey(), bestCop);
+            }
             var advice = buyOrWaitAdvisor.advise(bestCop, history);
 
             groups.add(new ProductComparisonGroup(

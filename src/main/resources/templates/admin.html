@@ -12,8 +12,9 @@
   <a href="#usuarios" data-nav="usuarios"><svg class="ic"><use href="#i-users"/></svg>Usuarios</a>
   <a href="#ia" data-nav="ia"><svg class="ic"><use href="#i-spark"/></svg>Asistente IA</a>
   <div class="env">
-   <div class="row" style="--g:8px"><span class="sdot ok pulse"></span><b>SAMP Activo</b></div>
-   <span>Java 21 · Supabase 52 tablas</span>
+   <div class="row" style="--g:8px"><span class="sdot ok pulse"></span><b th:text="${dbBacked} ? 'Supabase Conectado' : 'Modo Local (sin BD)'">SAMP Activo</b></div>
+   <span th:if="${dbBacked}" th:text="'PostgreSQL 17 · ' + ${dbSummary.historyPointsCount()} + ' puntos historial'">PostgreSQL 17 · 52 tablas</span>
+   <span th:if="${!dbBacked}">Java 21 · Respaldo en memoria</span>
    <a th:href="@{/}" class="link" style="color:var(--teal);font-size:13px">Volver al sitio público →</a>
   </div>
  </aside>

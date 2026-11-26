@@ -1,9 +1,12 @@
 package co.edu.upc.samp.servicios.seguridad;
 
+import co.edu.upc.samp.datos.jpa.RoleJpaRepository;
+import co.edu.upc.samp.datos.jpa.UserJpaRepository;
 import co.edu.upc.samp.entidades.Role;
 import co.edu.upc.samp.entidades.User;
 import co.edu.upc.samp.entidades.excepciones.DuplicateEntityException;
 import co.edu.upc.samp.entidades.excepciones.ValidationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +20,9 @@ import java.util.regex.Pattern;
 /**
  * Servicio de autenticación, registro y control de acceso por roles ({@code VISITOR}, {@code REGISTERED}, {@code ADMIN}).
  *
- * <p>Valida estrictamente formato de correo, longitud mínima de contraseña y duplicados,
- * devolviendo mensajes claros en español ante cualquier error.
+ * <p>Cuando existe conexión activa a PostgreSQL/Supabase, lee y persiste usuarios directamente
+ * en las tablas {@code users}, {@code roles} y {@code user_roles} mediante JPA; en modo sin
+ * base de datos opera de forma transparente sobre cuentas de demostración en memoria.
  */
 @Service
 public class AuthService {
@@ -26,27 +30,47 @@ public class AuthService {
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
 
     private final PasswordEncoder passwordEncoder;
-    private final Map<String, User> usersByEmail = new ConcurrentHashMap<>();
+    private final UserJpaRepository userJpaRepository;
+    private final RoleJpaRepository roleJpaRepository;
+    private final Map<String, User> fallbackUsersByEmail = new ConcurrentHashMap<>();
     private long nextId = 1L;
 
     /**
-     * Inicializa el servicio de autenticación y siembra cuentas de demostración
-     * para los roles {@code ADMIN} y {@code REGISTERED}.
+     * Constructor principal con repositorios JPA opcionales (activos cuando hay Supabase/Postgres).
      *
-     * @param passwordEncoder codificador BCrypt de contraseñas
+     * @param passwordEncoder   codificador BCrypt
+     * @param userJpaRepository repositorio JPA de usuarios (opcional)
+     * @param roleJpaRepository repositorio JPA de roles (opcional)
      */
-    public AuthService(PasswordEncoder passwordEncoder) {
+    @Autowired
+    public AuthService(
+            PasswordEncoder passwordEncoder,
+            @Autowired(required = false) UserJpaRepository userJpaRepository,
+            @Autowired(required = false) RoleJpaRepository roleJpaRepository
+    ) {
         this.passwordEncoder = passwordEncoder;
-        seedDefaultAccounts();
+        this.userJpaRepository = userJpaRepository;
+        this.roleJpaRepository = roleJpaRepository;
+        seedFallbackAccounts();
     }
 
-    private void seedDefaultAccounts() {
-        registerInternal("admin@samp.co", "AdminSamp2026!", "Administrador SAMP", List.of("ADMIN", "REGISTERED"));
-        registerInternal("comprador@samp.co", "Comprador2026!", "Comprador Colombia", List.of("REGISTERED"));
+    /**
+     * Sobrecarga de constructor para pruebas unitarias en memoria sin contexto JPA.
+     *
+     * @param passwordEncoder codificador BCrypt
+     */
+    public AuthService(PasswordEncoder passwordEncoder) {
+        this(passwordEncoder, null, null);
+    }
+
+    private void seedFallbackAccounts() {
+        registerInMemory("admin@samp.co", "AdminSamp2026!", "Administrador SAMP", List.of("ADMIN", "REGISTERED"));
+        registerInMemory("comprador@samp.co", "Comprador2026!", "Comprador Colombia", List.of("REGISTERED"));
     }
 
     /**
      * Registra un nuevo usuario validando correo, nombre y contraseña segura.
+     * Persiste en Supabase/PostgreSQL si JPA está activo.
      *
      * @param email       correo electrónico único
      * @param rawPassword contraseña en texto plano (mínimo 8 caracteres)
@@ -56,10 +80,22 @@ public class AuthService {
     public User register(String email, String rawPassword, String displayName) {
         validateRegistrationInput(email, rawPassword, displayName);
         String normalizedEmail = email.trim().toLowerCase();
-        if (usersByEmail.containsKey(normalizedEmail)) {
+
+        if (userJpaRepository != null && roleJpaRepository != null) {
+            if (userJpaRepository.existsByEmailIgnoreCase(normalizedEmail)) {
+                throw new DuplicateEntityException("usuario", "correo electrónico", normalizedEmail);
+            }
+            User user = new User(normalizedEmail, passwordEncoder.encode(rawPassword), displayName.trim());
+            Role registered = roleJpaRepository.findByNameIgnoreCase("REGISTERED")
+                    .orElseGet(() -> roleJpaRepository.save(new Role("REGISTERED")));
+            user.addRole(registered);
+            return userJpaRepository.save(user);
+        }
+
+        if (fallbackUsersByEmail.containsKey(normalizedEmail)) {
             throw new DuplicateEntityException("usuario", "correo electrónico", normalizedEmail);
         }
-        return registerInternal(normalizedEmail, rawPassword, displayName.trim(), List.of("REGISTERED"));
+        return registerInMemory(normalizedEmail, rawPassword, displayName.trim(), List.of("REGISTERED"));
     }
 
     /**
@@ -73,17 +109,13 @@ public class AuthService {
         if (email == null || rawPassword == null) {
             return Optional.empty();
         }
-        User user = usersByEmail.get(email.trim().toLowerCase());
-        if (user == null || !user.isEnabled()) {
-            return Optional.empty();
-        }
-        return passwordEncoder.matches(rawPassword, user.getPasswordHash())
-                ? Optional.of(user)
-                : Optional.empty();
+        return findByEmail(email)
+                .filter(User::isEnabled)
+                .filter(u -> passwordEncoder.matches(rawPassword, u.getPasswordHash()));
     }
 
     /**
-     * Busca un usuario registrado por su correo electrónico.
+     * Busca un usuario registrado por su correo electrónico (Supabase/JPA o respaldo en memoria).
      *
      * @param email correo del usuario
      * @return usuario encontrado o vacío
@@ -92,7 +124,11 @@ public class AuthService {
         if (email == null || email.isBlank()) {
             return Optional.empty();
         }
-        return Optional.ofNullable(usersByEmail.get(email.trim().toLowerCase()));
+        String normalized = email.trim().toLowerCase();
+        if (userJpaRepository != null) {
+            return userJpaRepository.findByEmailIgnoreCase(normalized);
+        }
+        return Optional.ofNullable(fallbackUsersByEmail.get(normalized));
     }
 
     /**
@@ -101,16 +137,28 @@ public class AuthService {
      * @return lista de usuarios
      */
     public List<User> findAllUsers() {
-        return new ArrayList<>(usersByEmail.values());
+        if (userJpaRepository != null) {
+            return userJpaRepository.findAll();
+        }
+        return new ArrayList<>(fallbackUsersByEmail.values());
     }
 
-    private synchronized User registerInternal(String email, String rawPassword, String displayName, List<String> roles) {
+    /**
+     * Indica si el servicio está operando contra PostgreSQL/Supabase real.
+     *
+     * @return {@code true} si JPA está conectado
+     */
+    public boolean isDatabaseBacked() {
+        return userJpaRepository != null;
+    }
+
+    private synchronized User registerInMemory(String email, String rawPassword, String displayName, List<String> roles) {
         User user = new User(email, passwordEncoder.encode(rawPassword), displayName);
         user.setId(nextId++);
         for (String roleName : roles) {
             user.addRole(new Role(roleName));
         }
-        usersByEmail.put(user.getEmail(), user);
+        fallbackUsersByEmail.put(user.getEmail(), user);
         return user;
     }
 

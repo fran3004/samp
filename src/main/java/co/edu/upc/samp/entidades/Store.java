@@ -8,6 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 
@@ -26,6 +28,7 @@ public class Store {
     @Column(nullable = false, unique = true, length = 50)
     private String code;
 
+    @JdbcTypeCode(SqlTypes.CHAR)
     @Column(name = "country_code", nullable = false, length = 2)
     private String countryCode;
 
@@ -35,6 +38,7 @@ public class Store {
     @Column(name = "base_url", nullable = false, length = 500)
     private String baseUrl;
 
+    @JdbcTypeCode(SqlTypes.CHAR)
     @Column(name = "default_currency", nullable = false, length = 3)
     private String defaultCurrency;
 

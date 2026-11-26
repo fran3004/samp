@@ -6,6 +6,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -21,9 +23,11 @@ public class ExchangeRate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JdbcTypeCode(SqlTypes.CHAR)
     @Column(name = "base_currency", nullable = false, length = 3)
     private String baseCurrency;
 
+    @JdbcTypeCode(SqlTypes.CHAR)
     @Column(name = "quote_currency", nullable = false, length = 3)
     private String quoteCurrency;
 
