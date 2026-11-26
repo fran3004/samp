@@ -34,21 +34,56 @@ public interface AiProvider {
     boolean supportsVision();
 
     /**
+     * Turno previo de la conversación para mantener continuidad natural en lenguaje humano.
+     *
+     * @param role rol del mensaje ({@code user} o {@code model})
+     * @param text contenido del mensaje
+     */
+    record ConversationTurn(String role, String text) {
+    }
+
+    /**
      * Solicitud inmutable enviada a un proveedor de IA.
      *
      * @param userMessage  pregunta o requerimiento del comprador
      * @param mode         modo de conversación ({@code CHAT} o {@code BUILD})
+     * @param intent       intención detectada ({@code GREETING}, {@code FAREWELL}, {@code THANKS}, {@code SHOPPING}, {@code BUILD}, {@code OFF_TOPIC})
      * @param budgetCop    presupuesto opcional en COP
      * @param category     categoría libre opcional para armar listas/setups
      * @param toolEvidence evidencia verificada de solo lectura proveniente del catálogo
+     * @param history      turnos recientes de la conversación
      */
     record AiRequest(
             String userMessage,
             String mode,
+            String intent,
             Long budgetCop,
             String category,
-            List<AiTool.ToolResult> toolEvidence
+            List<AiTool.ToolResult> toolEvidence,
+            List<ConversationTurn> history
     ) {
+        /**
+         * Constructor compacto que garantiza colecciones inmutables y valores por defecto seguros.
+         */
+        public AiRequest {
+            intent = (intent == null || intent.isBlank()) ? "SHOPPING" : intent;
+            toolEvidence = toolEvidence == null ? List.of() : List.copyOf(toolEvidence);
+            history = history == null ? List.of() : List.copyOf(history);
+        }
+
+        /**
+         * Sobrecarga de conveniencia para solicitudes de un solo turno sin historial previo.
+         */
+        public AiRequest(
+                String userMessage,
+                String mode,
+                Long budgetCop,
+                String category,
+                List<AiTool.ToolResult> toolEvidence
+        ) {
+            this(userMessage, mode, "BUILD".equalsIgnoreCase(mode) ? "BUILD" : "SHOPPING",
+                    budgetCop, category, toolEvidence, List.of());
+        }
     }
 
     /**

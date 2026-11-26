@@ -1,23 +1,55 @@
 package co.edu.upc.samp.servicios.ia;
 
 import co.edu.upc.samp.servicios.SearchService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
- * Orquestador central del asistente de IA general de SAMP (chat de consultas + modo armar).
+ * Orquestador central del asistente de IA general de SAMP (chat conversacional + modo armar).
  *
- * <p>Ejecuta en orden: {@link AiGuardrails} -> herramientas de solo lectura ({@link ToolRegistry})
+ * <p>Ejecuta en orden: {@link AiGuardrails} -> clasificación de intención conversacional
+ * (saludo, despedida, agradecimiento, compras/productos, armado o fuera de tema)
+ * -> herramientas de solo lectura ({@link ToolRegistry}) cuando aplica
  * -> {@link AiProvider} configurado (Gemini con respaldo automático a {@link MockAiProvider})
  * -> {@link OutputValidator}.
  */
 @Service
 public class AiOrchestrator {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AiOrchestrator.class);
+
+    private static final Pattern GREETING_PATTERN = Pattern.compile(
+            "^(hola+|buenas?( tardes| noches| dias)?|buen dia|buenos dias|hey+|hello+|hi|saludos|que tal|que mas|como estas|como vas|quien eres|hola samp)[\\s!?.,]*$");
+    private static final Pattern FAREWELL_PATTERN = Pattern.compile(
+            "^(chao+|chau+|adios|hasta luego|hasta pronto|nos vemos|bye+|me voy|feliz dia|feliz tarde|feliz noche|hasta manana)[\\s!?.,]*$");
+    private static final Pattern THANKS_PATTERN = Pattern.compile(
+            "^(muchas )?gracias( por todo| totales)?|(te lo )?agradezco|perfecto gracias|ok gracias|vale gracias|excelente gracias[\\s!?.,]*$");
+
+    private static final List<String> SHOPPING_KEYWORDS = List.of(
+            "precio", "precios", "barato", "barata", "economico", "economica", "cuesta", "vale", "valor",
+            "comprar", "compra", "esperar", "historial", "baja", "sube", "oferta", "ofertas", "descuento",
+            "comparar", "compara", "mejor", "mejores", "recomienda", "recomendacion", "recomiendame",
+            "tienda", "tiendas", "mercado libre", "mercadolibre", "amazon", "temu", "falabella", "aliexpress",
+            "envio", "impuesto", "arancel", "garantia", "stock", "disponible", "alerta", "gtin", "codigo",
+            "producto", "productos", "marca", "modelo", "catalogo", "especificaciones", "caracteristicas",
+            "armar", "arma", "setup", "kit", "presupuesto", "combo", "lista", "regalo", "samp", "demo", "ayuda",
+            "como funciona", "sony", "wh-1000xm5", "audifono", "audifonos", "auricular", "logitech", "g502",
+            "mouse", "raton", "teclado", "monitor", "pantalla", "portatil", "laptop", "computador", "pc",
+            "celular", "telefono", "smartphone", "tablet", "reloj", "smartwatch", "parlante", "camara",
+            "consola", "playstation", "xbox", "nintendo", "ninja", "freidora", "licuadora", "cafetera",
+            "nevera", "lavadora", "televisor", "tv", "hub", "usb", "cargador", "cable", "ssd", "ram",
+            "grafica", "gpu", "procesador", "cpu", "silla", "escritorio", "microfono", "nutella",
+            "tenis", "zapatos", "ropa", "mochila", "bolso", "perfume", "colchon", "hogar", "cocina", "gaming"
+    );
 
     private final MockAiProvider mockProvider;
     private final GeminiAiProvider geminiProvider;
@@ -73,7 +105,7 @@ public class AiOrchestrator {
     }
 
     /**
-     * Atiende una consulta libre sobre productos o una solicitud para armar cualquier configuración.
+     * Atiende una consulta libre o solicitud de armado sin historial previo.
      *
      * @param rawMessage pregunta o necesidad del usuario
      * @param mode       {@code CHAT} o {@code BUILD}
@@ -82,22 +114,49 @@ public class AiOrchestrator {
      * @return respuesta trazable con herramientas invocadas y validación
      */
     public ChatReply ask(String rawMessage, String mode, Long budgetCop, String category) {
+        return ask(rawMessage, mode, budgetCop, category, List.of());
+    }
+
+    /**
+     * Atiende una consulta libre sobre productos, conversación natural (saludos/despedidas)
+     * o armado con presupuesto manteniendo el contexto reciente de la conversación.
+     *
+     * @param rawMessage pregunta o mensaje del usuario
+     * @param mode       {@code CHAT} o {@code BUILD}
+     * @param budgetCop  presupuesto máximo opcional en COP
+     * @param category   categoría libre opcional
+     * @param history    turnos recientes de conversación
+     * @return respuesta trazable con herramientas invocadas y validación
+     */
+    public ChatReply ask(
+            String rawMessage,
+            String mode,
+            Long budgetCop,
+            String category,
+            List<AiProvider.ConversationTurn> history
+    ) {
         AiGuardrails.GuardResult guard = guardrails.screen(rawMessage);
         if (!guard.allowed()) {
             return new ChatReply(guard.reason(), "guardrails", "policy", List.of(), false, 1L);
         }
 
         String sanitized = guard.sanitized();
-        boolean buildMode = "BUILD".equalsIgnoreCase(mode) || looksLikeBuildIntent(sanitized);
-        List<AiTool.ToolResult> evidence = collectEvidence(sanitized, buildMode, budgetCop, category);
+        String intent = classifyIntent(sanitized, mode, history);
+        boolean buildMode = "BUILD".equals(intent);
+
+        List<AiTool.ToolResult> evidence = ("SHOPPING".equals(intent) || buildMode)
+                ? collectEvidence(sanitized, buildMode, budgetCop, category)
+                : List.of();
         List<String> toolsInvoked = evidence.stream().map(AiTool.ToolResult::toolName).toList();
 
         AiProvider.AiRequest request = new AiProvider.AiRequest(
                 sanitized,
                 buildMode ? "BUILD" : "CHAT",
+                intent,
                 budgetCop,
                 category,
-                evidence
+                evidence,
+                history
         );
 
         AiProvider.AiResponse response = invokeWithFallback(request);
@@ -117,11 +176,45 @@ public class AiOrchestrator {
         );
     }
 
+    private String classifyIntent(String message, String mode, List<AiProvider.ConversationTurn> history) {
+        String normalized = normalizeAscii(message);
+
+        if (GREETING_PATTERN.matcher(normalized).matches()) {
+            return "GREETING";
+        }
+        if (FAREWELL_PATTERN.matcher(normalized).matches()) {
+            return "FAREWELL";
+        }
+        if (THANKS_PATTERN.matcher(normalized).matches()) {
+            return "THANKS";
+        }
+        if ("BUILD".equalsIgnoreCase(mode) || looksLikeBuildIntent(normalized)) {
+            return "BUILD";
+        }
+        if (normalized.matches(".*\\b\\d{8,14}\\b.*")) {
+            return "SHOPPING";
+        }
+        for (String kw : SHOPPING_KEYWORDS) {
+            if (normalized.contains(kw)) {
+                return "SHOPPING";
+            }
+        }
+        // Si hay conversación activa de compras y el usuario hace una pregunta corta de seguimiento ("¿y ese?", "¿cuál mejor?")
+        if (history != null && !history.isEmpty() && normalized.length() <= 60
+                && (normalized.contains("ese") || normalized.contains("esa") || normalized.contains("cual")
+                || normalized.contains("cuanto") || normalized.contains("otro") || normalized.contains("otra")
+                || normalized.contains("mas ") || normalized.contains("diferencia") || normalized.contains("conviene"))) {
+            return "SHOPPING";
+        }
+        return "OFF_TOPIC";
+    }
+
     private AiProvider.AiResponse invokeWithFallback(AiProvider.AiRequest request) {
         if ("gemini".equalsIgnoreCase(configuredProvider) && geminiProvider.isConfigured()) {
             try {
                 return geminiProvider.chat(request);
-            } catch (RuntimeException ignored) {
+            } catch (RuntimeException ex) {
+                LOG.warn("Fallo al invocar Gemini ({}); usando respaldo MockAiProvider.", ex.getMessage());
                 return mockProvider.chat(request);
             }
         }
@@ -131,12 +224,12 @@ public class AiOrchestrator {
     @SuppressWarnings("unchecked")
     private List<AiTool.ToolResult> collectEvidence(String query, boolean buildMode, Long budgetCop, String category) {
         List<AiTool.ToolResult> results = new ArrayList<>();
-        String lower = query.toLowerCase(Locale.ROOT);
+        String lower = normalizeAscii(query);
 
-        if (lower.contains("tienda") || lower.contains("envío") || lower.contains("envio")) {
+        if (lower.contains("tienda") || lower.contains("envio")) {
             toolRegistry.find("listar_tiendas").ifPresent(t -> results.add(t.execute(Map.of())));
         }
-        if (lower.contains("cómo funciona") || lower.contains("como funciona") || lower.contains("ayuda") || lower.contains("demo")) {
+        if (lower.contains("como funciona") || lower.contains("ayuda") || lower.contains("demo")) {
             toolRegistry.find("consultar_ayuda").ifPresent(t -> results.add(t.execute(Map.of())));
         }
 
@@ -171,10 +264,9 @@ public class AiOrchestrator {
         return results;
     }
 
-    private boolean looksLikeBuildIntent(String text) {
-        String lower = text.toLowerCase(Locale.ROOT);
-        return lower.contains("armar") || lower.contains("arma ") || lower.contains("setup")
-                || lower.contains("kit") || lower.contains("presupuesto") || lower.contains("combo");
+    private boolean looksLikeBuildIntent(String normalized) {
+        return normalized.contains("armar") || normalized.contains("arma ") || normalized.contains("setup")
+                || normalized.contains("kit") || normalized.contains("presupuesto") || normalized.contains("combo");
     }
 
     private String extractKeyword(String message) {
@@ -186,5 +278,13 @@ public class AiOrchestrator {
             }
         }
         return message.length() > 40 ? message.substring(0, 40) : message;
+    }
+
+    private String normalizeAscii(String input) {
+        if (input == null) {
+            return "";
+        }
+        String decomposed = Normalizer.normalize(input.trim().toLowerCase(Locale.ROOT), Normalizer.Form.NFD);
+        return decomposed.replaceAll("\\p{M}", "").replaceAll("\\s+", " ");
     }
 }

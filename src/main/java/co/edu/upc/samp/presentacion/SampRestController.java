@@ -3,6 +3,7 @@ package co.edu.upc.samp.presentacion;
 import co.edu.upc.samp.entidades.SearchQuery;
 import co.edu.upc.samp.servicios.SearchService;
 import co.edu.upc.samp.servicios.ia.AiOrchestrator;
+import co.edu.upc.samp.servicios.ia.AiProvider;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,8 +44,15 @@ public class SampRestController {
      * @param mode      {@code CHAT} o {@code BUILD}
      * @param budgetCop presupuesto opcional en COP
      * @param category  categoría libre opcional
+     * @param history   turnos recientes de la conversación para mantener contexto
      */
-    public record AiChatRequest(String message, String mode, Long budgetCop, String category) {
+    public record AiChatRequest(
+            String message,
+            String mode,
+            Long budgetCop,
+            String category,
+            List<AiProvider.ConversationTurn> history
+    ) {
     }
 
     /**
@@ -77,7 +86,8 @@ public class SampRestController {
         String mode = (body == null || body.mode() == null) ? "CHAT" : body.mode();
         Long budget = body == null ? null : body.budgetCop();
         String category = body == null ? "GENERAL" : body.category();
-        return aiOrchestrator.ask(msg, mode, budget, category);
+        List<AiProvider.ConversationTurn> history = (body == null || body.history() == null) ? List.of() : body.history();
+        return aiOrchestrator.ask(msg, mode, budget, category, history);
     }
 
     /**

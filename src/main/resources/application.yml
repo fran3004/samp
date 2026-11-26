@@ -46,7 +46,7 @@ samp:
   default-locale: ${SAMP_DEFAULT_LOCALE:es-CO}
   ai:
     provider: ${SAMP_AI_PROVIDER:mock}
-    model: ${SAMP_AI_MODEL:gemini-2.5-flash}
+    model: ${SAMP_AI_MODEL:gemini-3.1-flash-lite}
     gemini-api-key: ${GEMINI_API_KEY:}
     max-tool-calls: 5
   scraper:
